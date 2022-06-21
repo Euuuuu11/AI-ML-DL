@@ -14,7 +14,7 @@ x = x.T
 # x = x.transpose()
 # x = x.reshape(10,2)    
 print(x)
-print(x.shape)    #10, 2)
+print(x.shape)    #10, 3)
 
 # [숙제] 모델을 완성하시오
 # 예측 : [[10, 1.4, 0]]
