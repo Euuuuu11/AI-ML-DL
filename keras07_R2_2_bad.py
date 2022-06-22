@@ -1,10 +1,11 @@
-#1. R2를 음수가 아닌 0.5 이하로 만들것 
+#1. R2를 음수가 아닌 0.5 이하로 만들것  = 손실함수 바꿨음.
 #2. 데이터 건들지마
 #3. 레이어는 인풋 아웃풋 포함 7개 이상
 #4. batch_size=1
 #5. 히든레이어의 노드는 10개 이상 100개 이하
 #6. train 70%
 #7. epoch 100번 이상
+#8. loss지표는 mse, mae
 
 from sympy import randMatrix
 from tensorflow.keras.models import Sequential
@@ -22,6 +23,33 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 #2. 모델구성
 model = Sequential()
 model.add(Dense(5, input_dim=1))
+model.add(Dense(30))
+model.add(Dense(20))
+model.add(Dense(20))
+model.add(Dense(50))
+model.add(Dense(50))
+model.add(Dense(100))
+model.add(Dense(10))
+model.add(Dense(50))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(10))
 model.add(Dense(10))
 model.add(Dense(10))
 model.add(Dense(10))
@@ -32,7 +60,7 @@ model.add(Dense(10))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
-model.compile(loss='bce', optimizer='adam')
+model.compile(loss='mse', optimizer='adam')
 model.fit(x_train, y_train, epochs=100, batch_size=1)
 
 #4. 평가, 예측
@@ -47,7 +75,8 @@ print('r2스코어 : ', r2)
 
 
 # loss :  -101.66159057617188
-# r2스코어 :  -0.501895603680083
+# r2스코어 :  0.29887812873067143
+# = 손실함수(mse에서 bce) 바꿨음.
 
 
 
