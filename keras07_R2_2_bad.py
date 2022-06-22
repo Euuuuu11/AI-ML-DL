@@ -72,12 +72,12 @@ y_predict = model.predict(x)
 from sklearn.metrics import r2_score
 r2 = r2_score(y, y_predict)
 print('r2스코어 : ', r2)
+print('메롱')
 
 
-# loss :  -101.66159057617188
-# r2스코어 :  0.29887812873067143
-# = 손실함수(mse에서 bce) 바꿨음.
-
+# loss :  17.328336715698242
+# r2스코어 :  0.21903246283730848
+# 레이어의 개수를 엄청 많이 늘렸다. 
 
 
 
