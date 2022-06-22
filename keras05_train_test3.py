@@ -1,21 +1,27 @@
+from pickle import TRUE
 import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-
+from sklearn.model_selection import train_test_split
 #1. 데이터
 x = np.array([1,2,3,4,5,6,7,8,9,10])
 y = np.array([1,2,3,4,5,6,7,8,9,10])
 
-#[과제] 넘파이 리스트의 슬라이싱!! 7:3으로 잘라라
-x_train = x[:7]   #0부터 7-1 번째꺼 까지
-x_test = x[7:10]
-y_train = y[:7]
-y_test = y[7:10]
+#[검색] train과 test를 섞어서 7:3으로 찾을 수 있는 방법 찾아라
 
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y,  test_size=0.3, 
+    train_size=0.7,
+    shuffle =True,
+    random_state=66 )
 # x_train = np.array([1,2,3,4,5,6,7])
 # x_test = np.array([8,9,10])
 # y_train = np.array([1,2,3,4,5,6,7])
 # y_test = np.array([8,9,10])
+print(x_train) # 2 7 6 3 4 8 5
+print(x_test) # 1 9 10
+print(y_train)
+print(y_test)
 
 #2. 모델구성
 model = Sequential()
@@ -33,5 +39,5 @@ result = model.predict([11])
 print('11의 예측값 : ', result)
 
 
-# loss :  4.7232548240572214e-05
-# 11의 예측값 :  [[10.989697]]
+# loss :  0.0334785021841526
+# 11의 예측값 :  [[10.764925]]
