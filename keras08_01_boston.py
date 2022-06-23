@@ -10,7 +10,7 @@ x = datasets.data
 y = datasets. target
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-             train_size=0.7, shuffle=True, random_state=100)
+             train_size=0.7, shuffle=True, random_state=50)
 # print(x)
 # print(y)
 # print(x.shape, y.shape)  # (506, 13) (506, )
@@ -27,7 +27,7 @@ model.add(Dense(33))
 model.add(Dense(44))
 model.add(Dense(55))
 model.add(Dense(66))
-model.add(Dense(77))
+model.add(Dense(75))
 model.add(Dense(88))
 model.add(Dense(99))
 model.add(Dense(1))
