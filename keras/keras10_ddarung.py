@@ -40,20 +40,20 @@ print(y)
 print(y.shape) # (1459, )
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-             train_size=0.7, shuffle=True, random_state=85)
+             train_size=0.7, shuffle=True, random_state=76)
 #2. 모델구성
 model = Sequential()
-model.add(Dense(50, input_dim=9))
-model.add(Dense(35))
+model.add(Dense(100, input_dim=9))
 model.add(Dense(70))
-model.add(Dense(45))
-model.add(Dense(90))
-model.add(Dense(27))
+model.add(Dense(100))
+model.add(Dense(80))
+model.add(Dense(100))
+model.add(Dense(500))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=1000, batch_size=5)
+model.fit(x_train, y_train, epochs=800, batch_size=100)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
@@ -67,5 +67,5 @@ def RMSE(y_test, y_predict) : # def 함수를 만드는거
 rmse = RMSE(y_test, y_predict) 
 print("RMSE : ", rmse)
 
-# loss :  2713.16162109375
-# RMSE :  52.088021884639005
+# loss :  2414.65625
+# RMSE :  49.13915047131235
