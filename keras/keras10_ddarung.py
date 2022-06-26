@@ -40,20 +40,21 @@ print(y)
 print(y.shape) # (1459, )
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-             train_size=0.7, shuffle=True, random_state=76)
+             train_size=0.7, shuffle=True, random_state=85)
 #2. 모델구성
 model = Sequential()
-model.add(Dense(100, input_dim=9))
-model.add(Dense(70))
-model.add(Dense(100))
-model.add(Dense(80))
-model.add(Dense(100))
-model.add(Dense(500))
+model.add(Dense(10, input_dim=9))
+model.add(Dense(10))
+model.add(Dense(10))
+model.add(Dense(20))
+model.add(Dense(20))
+model.add(Dense(20))
+model.add(Dense(10))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=800, batch_size=100)
+model.fit(x_train, y_train, epochs=300, batch_size=32)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
