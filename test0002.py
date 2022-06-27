@@ -1,9 +1,3 @@
-from sympy import print_ccode
+import tensorflow as tf
 
-
-a = 1
-b = 2
-c = a+ b
-d = a * b
-print(c)
-print(d)
+print("텐서플로", tf.__version__)
