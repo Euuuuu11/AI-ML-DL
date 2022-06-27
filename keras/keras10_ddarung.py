@@ -40,21 +40,19 @@ print(y)
 print(y.shape) # (1459, )
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-             train_size=0.7, shuffle=True, random_state=85)
+             train_size=0.99, shuffle=True, random_state=777)
 #2. 모델구성
 model = Sequential()
 model.add(Dense(10, input_dim=9))
-model.add(Dense(10))
-model.add(Dense(10))
-model.add(Dense(20))
-model.add(Dense(20))
-model.add(Dense(20))
-model.add(Dense(10))
+model.add(Dense(20, activation='selu'))
+model.add(Dense(30, activation='selu'))
+model.add(Dense(40, activation='selu'))
+model.add(Dense(10, activation='selu'))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=300, batch_size=32)
+model.fit(x_train, y_train, epochs=350, batch_size=10)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
@@ -68,7 +66,29 @@ def RMSE(y_test, y_predict) : # def 함수를 만드는거
 rmse = RMSE(y_test, y_predict) 
 print("RMSE : ", rmse)
 
-# loss :  2414.65625
-# RMSE :  49.13915047131235
 
 
+
+# loss :  2135.846435546875            epochs=210 -> epochs=400
+# RMSE :  46.21521732764418           random_state=777, batch_size=100
+
+# loss :  2124.783447265625            epochs=400 -> epochs=500
+# RMSE :  46.09537331966037
+
+# loss :  2118.128662109375           노드량 늘림 .  epochs=250
+# RMSE :  46.02313321380063             random_state=750
+
+# loss :  2111.258056640625          다른조건은 다 동일 하고, epochs=888 훈련량 늘림 .
+# RMSE :  45.94842612876985           
+
+# loss :  2040.7791748046875               epochs=888 -> epochs=889
+# RMSE :  45.17498537358058
+
+# loss :  904.0668334960938              train_size=0.99
+# RMSE :  30.06770403590947               epochs=300
+
+# loss :  869.8753051757812      batch_size=100 -> batch_size=10 
+# RMSE :  29.493652657330966      activation='selu' 사용, random_state=777, epochs=350
+
+# loss :  420.6038513183594      위와 동일 .
+# RMSE :  20.508630439421065
