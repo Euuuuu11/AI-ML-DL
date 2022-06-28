@@ -17,8 +17,10 @@ test_set = pd.read_csv(path + 'test.csv')
 # print(train_set.shape)  # (10886, 12)
 # print(test_set.shape)   # (6493, 9)
 # train_set.info() # 데이터 온전한지 확인.
-train_set['datetime'] = pd.to_datetime(train_set['datetime'])
-train_set['year'] = train_set['datetime'].dt.year
+train_set['datetime'] = pd.to_datetime(train_set['datetime']) 
+#datetime은 날짜와 시간을 나타내는 정보이므로 DTYPE을 datetime으로 변경.
+#세부 날짜별 정보를 보기 위해 날짜 데이터를 년도,월,일, 시간으로 나눈다.
+train_set['year'] = train_set['datetime'].dt.year  # 분과 초는 모든값이 0이므로 추가x
 train_set['month'] = train_set['datetime'].dt.month
 train_set['day'] = train_set['datetime'].dt.day
 train_set['hour'] = train_set['datetime'].dt.hour
