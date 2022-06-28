@@ -6,7 +6,8 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
-
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, MaxAbsScaler
+from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
 
 #1. 데이터
 
@@ -45,12 +46,22 @@ print(x.shape) # (10886, 15)
 print(y.shape) # (10886, )
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-             train_size=0.75, shuffle=True, random_state=31)
+             train_size=0.8, shuffle=True, random_state=66)
+
+scaler = RobustScaler()  # 아주 동 떨어진 데이터를 제거
+                         # 중간값과 사분위 값을 조정 # 전체 데이터와 아주 동떨어진 데이터 포인트에 영향을 받지않음.
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)
+test_set = scaler.transform(test_set)
 #2. 모델구성
 model = Sequential()
 model.add(Dense(80, input_dim=15,activation='relu'))
+model.add(Dropout(0.2))  # 입력 단위를 무작위로 0으로 
+                         #설정하여 과적합을 방지하는 데 도움이 됩니다
 model.add(Dense(50,activation='relu'))
+model.add(Dropout(0.2))
 model.add(Dense(20,activation='relu'))
+model.add(Dropout(0.2))
 model.add(Dense(10,activation='relu'))
 model.add(Dense(1))
 
@@ -72,7 +83,7 @@ print("RMSE : ", rmse)
 
 ############### 제출용 ####################
 y_summit = model.predict(test_set)          
-print(y_summit.shape) # (6493, 1)
+# print(y_summit.shape) # (6493, 1)
 
 submission = pd.read_csv('C:\study\_data\kaggle_bike\samplesubmission.csv',index_col=0)
 submission['count'] = y_summit
