@@ -37,8 +37,8 @@ x = train_set.drop(['count'], axis=1) #drop 지운다. axis 열을 따라 동작
 #print(x.shape) # (1459, 9)
 
 y = train_set['count']
-#print(y)
-#print(y.shape) # (1459, )
+# print(y)
+# print(y.shape) # (1459, )
 
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
@@ -77,9 +77,13 @@ y_summit = model.predict(test_set)
 
 
 submission = pd.read_csv('C:\study\_data\ddarung\submission.csv',index_col=0)
-#submission.head()
 submission['count'] = y_summit
 submission.to_csv('C:\study\_data\ddarung\submission.csv', index=True)
+
+
+
+
+
 
 
 
