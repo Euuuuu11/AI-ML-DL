@@ -223,7 +223,7 @@ y = train_set['SalePrice']
 # print(y.shape)  # (1460,  )
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-             train_size=0.9999, shuffle=True, random_state=777)
+             train_size=0.9, shuffle=True, random_state=777)
 
 scaler = RobustScaler()  # 아주 동 떨어진 데이터를 제거
                          # 중간값과 사분위 값을 조정 # 전체 데이터와 아주 동떨어진 데이터 포인트에 영향을 받지않음.
