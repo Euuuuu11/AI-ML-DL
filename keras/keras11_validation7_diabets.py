@@ -21,19 +21,19 @@ print(datasets.DESCR)
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(20, input_dim=10))
+model.add(Dense(10, input_dim=10))
+model.add(Dense(50))
+model.add(Dense(40))
+model.add(Dense(50))
+model.add(Dense(60))
 model.add(Dense(20))
 model.add(Dense(10))
-model.add(Dense(30))
-model.add(Dense(80))
-model.add(Dense(40))
-model.add(Dense(60))
-model.add(Dense(60))
+model.add(Dense(10))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=100,
+model.fit(x_train, y_train, epochs=501,
           batch_size=15,validation_split=0.2)
 
 #4. 평가, 예측
@@ -53,5 +53,5 @@ print('r2스코어 : ', r2)
 # r2스코어 :  0.6490527187925481
 
 # validation 사용 후
-# loss :  2194.271240234375
-# r2스코어 :  0.6676967174451189
+# loss :  2177.955810546875
+# r2스코어 :  0.6701675391497158
