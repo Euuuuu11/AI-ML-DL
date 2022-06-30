@@ -9,7 +9,8 @@ datasets = load_diabetes()
 x = datasets.data
 y = datasets.target
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-             train_size=0.9, shuffle=True, random_state=10)
+             train_size=0.8,random_state=72)
+
 
 print(x)
 print(y)
@@ -20,19 +21,20 @@ print(datasets.DESCR)
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(15, input_dim=10))
-model.add(Dense(25))
-model.add(Dense(35))
-model.add(Dense(45))
-model.add(Dense(55))
-model.add(Dense(65))
-model.add(Dense(75))
-model.add(Dense(85))
+model.add(Dense(20, input_dim=10))
+model.add(Dense(20))
+model.add(Dense(10))
+model.add(Dense(30))
+model.add(Dense(80))
+model.add(Dense(40))
+model.add(Dense(60))
+model.add(Dense(60))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=250, batch_size=20)
+model.fit(x_train, y_train, epochs=100,
+          batch_size=15,validation_split=0.2)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -49,3 +51,7 @@ print('r2스코어 : ', r2)
 
 # loss :  2119.338134765625
 # r2스코어 :  0.6490527187925481
+
+# validation 사용 후
+# loss :  2194.271240234375
+# r2스코어 :  0.6676967174451189
