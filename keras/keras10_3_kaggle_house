@@ -3,8 +3,8 @@ from tabnanny import verbose
 from typing import Counter
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense,Dropout
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers import Dense,Dropout
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, MaxAbsScaler
@@ -224,7 +224,7 @@ y = train_set['SalePrice']
 # print(y.shape)  # (1460,  )
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-             train_size=0.9, shuffle=True, random_state=3)
+             train_size=0.9, shuffle=True, random_state=777)
 
 scaler = RobustScaler()  # 아주 동 떨어진 데이터를 제거
                          # 중간값과 사분위 값을 조정 # 전체 데이터와 아주 동떨어진 데이터 포인트에 영향을 받지않음.
@@ -239,7 +239,7 @@ model.add(Dense(100,activation='selu'))
 model.add(Dropout(0.2))
 model.add(Dense(100))
 model.add(Dropout(0.2))
-model.add(Dense(80,activation='selu'))
+model.add(Dense(60,activation='selu'))
 model.add(Dropout(0.2))
 model.add(Dense(60))
 model.add(Dropout(0.2))
@@ -248,7 +248,7 @@ model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mae', optimizer='adam')
-model.fit(x_train, y_train, epochs=5001, batch_size=100,verbose=1)
+model.fit(x_train, y_train, epochs=1001, batch_size=100)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
