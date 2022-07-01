@@ -1,3 +1,4 @@
+from subprocess import call
 from tabnanny import verbose
 from sklearn.datasets import load_boston
 from tensorflow.python.keras.models import Sequential
@@ -11,7 +12,7 @@ x = datasets.data
 y = datasets. target
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-             train_size=0.8, shuffle=True, random_state=32)
+             train_size=0.8, shuffle=True, random_state=66)
 # print(x)
 # print(y)
 # print(x.shape, y.shape)  # (506, 13) (506, )
@@ -22,30 +23,37 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(11, input_dim=13))
-model.add(Dense(22))
-model.add(Dense(33))
-model.add(Dense(44))
-model.add(Dense(55))
-model.add(Dense(66))
-model.add(Dense(75))
-model.add(Dense(88))
-model.add(Dense(99))
+model.add(Dense(100, input_dim=13, activation='selu'))
+model.add(Dense(80))
+model.add(Dense(80, activation='selu'))
+model.add(Dense(60))
+model.add(Dense(10, activation='selu'))
 model.add(Dense(1))
 
 import time
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
 
+from tensorflow.python.keras.callbacks import EarlyStopping
+es = EarlyStopping(monitor='loss', patience=10, mode='min', 
+              verbose=1, restore_best_weights=True) 
+
 start_time = time.time()
 print(start_time)
 
 hist = model.fit(x_train, y_train,
-          epochs=10, batch_size=1,validation_split=0.2,
-          verbose=1, )
+          epochs=1000, batch_size=1,validation_split=0.2,
+          verbose=1, callbacks=[es] )
 
 end_time = time.time() - start_time
 print("걸린시간 : ", end_time)
+
+y_predict = model.predict(x_test)
+
+from sklearn.metrics import r2_score
+r2 = r2_score(y_test, y_predict)
+print('r2스코어 : ', r2)
+
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
 print("loss : ", loss) 
@@ -77,3 +85,11 @@ plt.xlabel('epochs')
 # plt.legend(loc='upper right') # 라벨 값 명칭의 위치
 plt.legend
 plt.show()
+
+
+# loss :  17.505720138549805
+# r2스코어 :  0.78811021977448
+
+# EarlyStopping 후
+# loss :  13.131475448608398
+# r2스코어 :  0.8428928454653812
