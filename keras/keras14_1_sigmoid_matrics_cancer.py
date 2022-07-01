@@ -23,32 +23,37 @@ model.add(Dense(100, input_dim=30,activation='sigmoid'))
 model.add(Dense(80))
 model.add(Dense(80))
 model.add(Dense(60))
-model.add(Dense(40,activation='sigmoid'))
+model.add(Dense(40,activation='relu'))  # 'relu' 히든 레이어에서만 사용 가능(음수는 없애고, linear와 동일)
 model.add(Dense(10,activation='sigmoid'))
-model.add(Dense(1,activation='sigmoid')) # 이진분류 마지막은 무조건 'sigmoid'
+model.add(Dense(1,activation='sigmoid')) # 이진분류 마지막은 무조건 'sigmoid'(0 ~ 1까지)
 
 #3. 컴파일, 훈련
 model.compile(loss='binary_crossentropy', optimizer='adam',
-              metrics=['accuracy','mse']) # 2개 이상은 list
+              metrics=['accuracy']) # 2개 이상은 list
 
 from tensorflow.python.keras.callbacks import EarlyStopping
-es = EarlyStopping(monitor='loss', patience=500, mode='min', 
+es = EarlyStopping(monitor='val_loss', patience=500, mode='min', 
               verbose=1, restore_best_weights=True) 
 
 hist = model.fit(x_train, y_train,
-          epochs=1000, batch_size=10,validation_split=0.2,
+          epochs=1, batch_size=10,validation_split=0.2,
           verbose=1,  callbacks=[es] )
 
 y_predict = model.predict(x_test)
+y_predict = y_predict.round(0)
+print(y_predict)
 
-# from sklearn.metrics import r2_score, accuracy_score
-# acc = accuracy_score(y_test, y_predict)
-# # r2 = r2_score(y_test, y_predict)
-# print('acc스코어 : ', acc)
+##### [과제 1.]accuracy_score 완성
+from sklearn.metrics import r2_score, accuracy_score
+acc = accuracy_score(y_test, y_predict)
+
+# r2 = r2_score(y_test, y_predict)
+
 print(y_predict)
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
+print('acc스코어 : ', acc)
 
 
 # import matplotlib
@@ -67,8 +72,8 @@ print('loss : ', loss)
 # plt.legend
 # plt.show()
 
-# loss :  0.05054597929120064
-# r2스코어 :  0.7848360488384248
+# loss :  [0.6240755915641785, 0.7719298005104065]
+# acc스코어 :  0.7719298245614035
 
 
 
