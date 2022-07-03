@@ -233,7 +233,7 @@ model = Sequential()
 model.add(Dense(100, input_dim=12,activation='relu'))
 model.add(Dense(80))
 model.add(Dense(80,activation='relu'))
-model.add(Dense(50))
+model.add(Dense(50,activation='relu'))
 model.add(Dense(50,activation='relu'))
 model.add(Dense(10))
 model.add(Dense(1))
@@ -263,3 +263,11 @@ print('r2스코어 : ', r2)
 
 # loss :  [21041.208984375, 1027447168.0]
 # r2스코어 :  0.6636377811403724
+
+
+
+# EarlyStopping, validation, activation
+# 적용했을 때 확실히 loss값은 줄고, r2스코어는 오르는 걸
+# 볼 수 있었고,
+# 모든 레이어에 activation을 적용했을 때 보다
+# 소수의 레이어에 activation 적용하니 loss값이 더 줄어들었다.
