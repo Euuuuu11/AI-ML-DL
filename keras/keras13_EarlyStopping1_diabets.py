@@ -9,7 +9,7 @@ datasets = load_diabetes()
 x = datasets.data
 y = datasets.target
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-             train_size=0.8,random_state=66)
+             train_size=0.8,random_state=72)
 
 
 # print(x)
@@ -21,12 +21,13 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(100, input_dim=10))
-model.add(Dense(80))
-model.add(Dense(80))
-model.add(Dense(60))
-model.add(Dense(60))
+model.add(Dense(10, input_dim=10))
 model.add(Dense(50))
+model.add(Dense(40))
+model.add(Dense(50))
+model.add(Dense(60))
+model.add(Dense(20))
+model.add(Dense(10))
 model.add(Dense(10))
 model.add(Dense(1))
 
@@ -34,11 +35,11 @@ model.add(Dense(1))
 model.compile(loss='mse', optimizer='adam')
 
 from tensorflow.python.keras.callbacks import EarlyStopping
-es = EarlyStopping(monitor='loss', patience=30, mode='min', 
+es = EarlyStopping(monitor='val_loss', patience=300, mode='min', 
               verbose=1, restore_best_weights=True) 
 
-hist = model.fit(x_train, y_train, epochs=105, validation_split=0.2,
-                 batch_size=105, verbose=1, callbacks=[es])
+hist = model.fit(x_train, y_train, epochs=1000, validation_split=0.2,
+                 batch_size=15, verbose=1, callbacks=[es])
 
 y_predict = model.predict(x_test)
 
@@ -59,9 +60,9 @@ print('loss : ', loss)
 # r2스코어 :  0.6490527187925481
 
 # validation 사용 후
-# loss :  2177.955810546875
-# r2스코어 :  0.6701675391497158
+# loss :  2193.794921875
+# r2스코어 :  0.6677688351801708
 
 # EarlyStopping 후
-# loss :  2347.046630859375
-# r2스코어 :  0.6445602394029314
+# loss :  2180.1416015625
+# r2스코어 :  0.6698365357420499

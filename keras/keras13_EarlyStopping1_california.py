@@ -33,7 +33,7 @@ model.add(Dense(1))
 model.compile(loss='mse', optimizer='adam')
 
 from tensorflow.python.keras.callbacks import EarlyStopping
-es = EarlyStopping(monitor='loss', patience=100, mode='min', 
+es = EarlyStopping(monitor='val_loss', patience=100, mode='min', 
               verbose=1, restore_best_weights=True) 
 
 hist = model.fit(x_train, y_train, epochs=105, validation_split=0.2,

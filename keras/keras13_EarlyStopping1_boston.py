@@ -35,7 +35,7 @@ import time
 model.compile(loss='mse', optimizer='adam')
 
 from tensorflow.python.keras.callbacks import EarlyStopping
-es = EarlyStopping(monitor='loss', patience=10, mode='min', 
+es = EarlyStopping(monitor='val_loss', patience=10, mode='min', 
               verbose=1, restore_best_weights=True) 
 
 start_time = time.time()

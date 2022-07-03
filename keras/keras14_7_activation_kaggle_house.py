@@ -230,33 +230,36 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(200, input_dim=12,activation='relu'))
-model.add(Dense(100,activation='relu'))
-model.add(Dense(100))
-model.add(Dense(60,activation='relu'))
-model.add(Dense(60))
-model.add(Dense(10,activation='relu'))
+model.add(Dense(100, input_dim=12,activation='relu'))
+model.add(Dense(80))
+model.add(Dense(80,activation='relu'))
+model.add(Dense(50))
+model.add(Dense(50,activation='relu'))
+model.add(Dense(10))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mae', optimizer='adam', metrics=['mse'])
 
 from tensorflow.python.keras.callbacks import EarlyStopping
-es = EarlyStopping(monitor='loss', patience=100, mode='min', 
+es = EarlyStopping(monitor='val_loss', patience=100, mode='min', 
               verbose=1, restore_best_weights=True) 
 
-model.fit(x_train, y_train, epochs=1001, batch_size=100, verbose=1, callbacks=[es])
+model.fit(x_train, y_train, epochs=1000, batch_size=10, verbose=1, callbacks=[es])
 
 #4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print('loss : ', loss)
-
 y_predict = model.predict(x_test)
 
-def RMSE(y_test, y_predict) : # def 함수를 만드는거 
-    return np. sqrt(mean_squared_error(y_test, y_predict)) # 루트 씌움
-rmse = RMSE(y_test, y_predict) 
-print("RMSE : ", rmse)
+from sklearn.metrics import r2_score
+r2 = r2_score(y_test, y_predict)
+print('r2스코어 : ', r2)
 
 
-# 과제  
+#1. EarlyStopping 적용,validation 적용, activation 적용
+# loss :  [19710.21875, 1222936576.0]
+# r2스코어 :  0.5996390981129505
+
+# loss :  [21041.208984375, 1027447168.0]
+# r2스코어 :  0.6636377811403724

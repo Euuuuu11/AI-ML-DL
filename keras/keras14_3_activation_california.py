@@ -33,7 +33,7 @@ model.add(Dense(1))
 model.compile(loss='mse', optimizer='adam',metrics=['mae'])
 
 from tensorflow.python.keras.callbacks import EarlyStopping
-es = EarlyStopping(monitor='loss', patience=100, mode='min', 
+es = EarlyStopping(monitor='val_loss', patience=100, mode='min', 
               verbose=1, restore_best_weights=True) 
 
 model.fit(x_train, y_train, epochs=1000, validation_split=0.2,
@@ -50,19 +50,18 @@ loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
 
 
-# R2 0.55 ~ 0.6 
 
-# loss :  0.6084719300270081
-# r2스코어 :  0.5540387047623216
 
-# validation 사용 후
+#1. validation 적용
 # loss :  0.5098468065261841
 # r2스코어 :  0.6256723529290654
 
-# EarlyStopping 후
+#2. EarlyStopping 적용,# validation 적용
 # loss :  0.4342330992221832
 # r2스코어 :  0.6648673057808461
 
-# 과제
+#3.  activation 적용
 # loss :  [0.420998215675354, 0.45419952273368835]
 # r2스코어 :  0.6750818151816421
+
+
