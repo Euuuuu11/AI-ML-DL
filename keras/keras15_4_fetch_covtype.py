@@ -21,16 +21,15 @@ print(np.unique(y, return_counts=True))    # [1 2 3 4 5 6 7]
 #2. pandas의 get_dummies
 y=pd.get_dummies(y)
 # print(y.shape)  # (581012, 7)
-
 x_train, x_test, y_train, y_test = train_test_split(x,y,
              train_size=0.8, shuffle=True, random_state=66)
 
 #2. 모델구성
 model = Sequential()
 model.add(Dense(100, input_dim=54,activation='relu'))
-model.add(Dense(80))
-model.add(Dense(50,activation='relu'))
-model.add(Dense(50))
+model.add(Dense(90))
+model.add(Dense(60,activation='relu'))
+model.add(Dense(60))
 model.add(Dense(10))
 model.add(Dense(7, activation='softmax'))
 
@@ -39,11 +38,11 @@ model.compile(loss='categorical_crossentropy', optimizer='adam',
               metrics=['accuracy'])
 
 from tensorflow.python.keras.callbacks import EarlyStopping
-es = EarlyStopping(monitor='val_loss', patience=400, mode='min', 
+es = EarlyStopping(monitor='val_loss', patience=100, mode='min', 
               verbose=1, restore_best_weights=True) 
 
 model.fit(x_train, y_train,
-          epochs=1, batch_size=100,validation_split=0.2,
+          epochs=50, batch_size=100,validation_split=0.2,
           verbose=1, callbacks=[es])
 
 #4. 평가,예측
@@ -67,11 +66,9 @@ acc = accuracy_score(y_test, y_predict)
 print('acc스코어 : ', acc)
 
 
-# loss :  0.7907939553260803
-
-
-
-# accuracy :  0.655929684638977
+# loss : 0.9328892827033997
+# accuracy : 0.5820589661598206
+# acc스코어 :  0.5820589829866699
 
 
 
