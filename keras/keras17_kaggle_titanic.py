@@ -12,7 +12,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 
 #1. 데이터
 path = './_data/kaggle_titanic/'
-train_set = pd.read_csv(path + 'train.csv')
+train_set = pd.read_csv(path + 'train.csv',index_col=0)
 test_set = pd.read_csv(path + 'test.csv',index_col=0)
 # print(train_set.shape, test_set.shape) # (891, 12) (418, 11)
 # print(train_set.columns.values)
@@ -44,6 +44,10 @@ test_set['Pclass_1']=(test_set['Pclass']==1)
 
 train_set=train_set.drop(columns='Pclass') # 'Pclass' 열 삭제
 test_set=test_set.drop(columns='Pclass')
+print(train_set)
+print(test_set)
+
+'''
 # print(train_set.columns.values)  # 'Pclass' 열이 삭제되고, 'Pclass123'이 생긴 걸 볼 수 있다.
 # ['PassengerId' 'Survived' 'Name' 'Sex' 'Age' 'SibSp' 'Parch' 'Ticket'
 #  'Fare' 'Embarked' 'Pclass_3' 'Pclass_2' 'Pclass_1']
@@ -97,14 +101,15 @@ test_set=test_set.drop(columns='Ticket')
 x = train_set.drop(['Survived'], axis=1).astype(float)
 y = train_set['Survived'].astype(float)
 
-print(x.shape, y.shape) # (891, 10) (891, )
+# print(x.shape, y.shape) # (891, 10) (891, )
+# print(train_set.columns.values)
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
              train_size=0.8, shuffle=True, random_state=66)
-
+56
 #2. 모델구성
 model = Sequential()
-model.add(Dense(200, input_dim=10,activation="relu"))
+model.add(Dense(200, input_dim=9,activation="relu"))
 model.add(Dense(100))
 model.add(Dense(100,activation="relu"))
 model.add(Dense(60))
@@ -113,13 +118,13 @@ model.add(Dense(10))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam', metrics=['mae'])
+model.compile(loss='mse', optimizer='adam', metrics=['accuracy'])
 
 from tensorflow.python.keras.callbacks import EarlyStopping
 es = EarlyStopping(monitor='val_loss', patience=100, mode='min', 
               verbose=1, restore_best_weights=True) 
 
-model.fit(x_train, y_train, epochs=100, batch_size=10, verbose=1, callbacks=[es],validation_split=0.2)
+model.fit(x_train, y_train, epochs=20, batch_size=10, verbose=1, callbacks=[es],validation_split=0.2)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -128,33 +133,20 @@ y_predict = model.predict(x_test)
 
 from sklearn.metrics import accuracy_score
 y_predict = model.predict(x_test)
-y_predict = tf.argmax(y_predict,axis=1)
-print(y_test,y_predict)
-y_test = np.argmax(y_test,axis=1)
+# print(y_test,y_predict)
+y_predict = y_predict.round(0) # y_predict를 반올림해서 0 아님 1로 바꿈.
+
 
 
 acc = accuracy_score(y_test, y_predict)
 print('acc스코어 : ', acc)
+print(x_test)
+print(test_set)
+y_summit = model.predict(test_set)
+
 # submission = pd.read_csv('C:\study\_data\kaggle_titanic\gender_submission.csv',index_col=0)
 # submission['Survived'] = y_summit
 # submission.to_csv('C:\study\_data\kaggle_titanic\gender_submission.csv', index=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+'''
 
 
