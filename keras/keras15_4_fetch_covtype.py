@@ -42,7 +42,7 @@ es = EarlyStopping(monitor='val_loss', patience=100, mode='min',
               verbose=1, restore_best_weights=True) 
 
 model.fit(x_train, y_train,
-          epochs=50, batch_size=100,validation_split=0.2,
+          epochs=55, batch_size=100,validation_split=0.2,
           verbose=1, callbacks=[es])
 
 #4. 평가,예측
@@ -66,9 +66,9 @@ acc = accuracy_score(y_test, y_predict)
 print('acc스코어 : ', acc)
 
 
-# loss : 0.9328892827033997
-# accuracy : 0.5820589661598206
-# acc스코어 :  0.5820589829866699
+# loss : 0.39712876081466675
+# accuracy : 0.8323279023170471
+# acc스코어 :  0.8323279089180141
 
 
 
