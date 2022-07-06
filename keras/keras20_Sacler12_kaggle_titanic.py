@@ -11,7 +11,7 @@ from sklearn.metrics import r2_score, accuracy_score
 from tensorflow.keras.utils import to_categorical
 from sklearn.preprocessing import OneHotEncoder
 import time
-
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 
 #1. 데이터
 path = './_data/kaggle_titanic/'
@@ -96,7 +96,15 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
                                                     random_state=66
                                                     )
 
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
 
+scaler.fit(x_train)
+print(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
 
 
 #2. 모델구성
@@ -170,5 +178,22 @@ print('loss : ' , loss)
 print('acc스코어 : ', acc) 
 model.summary()
 
+#1. 스케일러 하기 전
 # loss :  0.42792996764183044
 # acc스코어 :  0.8044692737430168
+
+#2. MinMaxScaler 
+# loss :   0.432650864124298
+# acc스코어 : 0.8100558659217877
+
+#3. StandardScaler  
+# loss :  0.4173644483089447
+# acc스코어 :   0.7932960893854749
+
+#4. MaxAbsScaler 
+# loss : 0.4160992503166199,
+# acc스코어 :   0.8156424581005587
+
+#5. RobustScaler 
+#  loss : 
+#  acc스코어 : 

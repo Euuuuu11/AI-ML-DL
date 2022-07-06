@@ -8,6 +8,7 @@ from tensorflow.python.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 
 #1. 데이터
 path = './_data/kaggle_house/'
@@ -224,8 +225,15 @@ y = train_set['SalePrice']
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
              train_size=0.9, shuffle=True, random_state=777)
+scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+# scaler = RobustScaler()
 
-
+scaler.fit(x_train)
+print(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
 
 
 #2. 모델구성
@@ -242,7 +250,7 @@ model.add(Dense(1))
 model.compile(loss='mae', optimizer='adam', metrics=['mse'])
 
 from tensorflow.python.keras.callbacks import EarlyStopping
-es = EarlyStopping(monitor='val_loss', patience=100, mode='min', 
+es = EarlyStopping(monitor='loss', patience=100, mode='min', 
               verbose=1, restore_best_weights=True) 
 
 model.fit(x_train, y_train, epochs=1000, batch_size=10, verbose=1, callbacks=[es])
@@ -257,17 +265,23 @@ r2 = r2_score(y_test, y_predict)
 print('r2스코어 : ', r2)
 
 
-#1. EarlyStopping 적용,validation 적용, activation 적용
-# loss :  [19710.21875, 1222936576.0]
-# r2스코어 :  0.5996390981129505
 
-# loss :  [21041.208984375, 1027447168.0]
-# r2스코어 :  0.6636377811403724
+#1. 스케일러 하기 전
+#  loss :  18605.42578125
+#  r2스코어 :  0.5690928024061801
 
+#2. MinMaxScaler 
+# loss :  17678.818359375
+# r2스코어 :  0.7290747928616876
 
+#3. StandardScaler  
+# loss :  18200.4140625
+# r2스코어 :  0.7449028384943979
 
-# EarlyStopping, validation, activation
-# 적용했을 때 확실히 loss값은 줄고, r2스코어는 오르는 걸
-# 볼 수 있었고,
-# 모든 레이어에 activation을 적용했을 때 보다
-# 소수의 레이어에 activation 적용하니 loss값이 더 줄어들었다.
+#4. MaxAbsScaler 
+# loss :  15705.376953125
+# r2스코어 :   0.8202869859522045
+
+#5. RobustScaler 
+#  loss :  18833.01953125
+#  r2스코어 :   0.6873299006943618
