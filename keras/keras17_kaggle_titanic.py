@@ -1,152 +1,174 @@
-# [타이타닉]
-from joblib import parallel_backend
-import pandas as pd
-from sklearn import datasets
-import tensorflow as tf
+import seaborn as sns
 import numpy as np
-from tensorflow.python.keras.models import Sequential   
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_breast_cancer
+from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense
 from sklearn.model_selection import train_test_split
+from tensorflow.python.keras.callbacks import EarlyStopping
+from sklearn.metrics import r2_score, accuracy_score
+from tensorflow.keras.utils import to_categorical
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.metrics import r2_score, mean_squared_error
+import time
+
 
 #1. 데이터
 path = './_data/kaggle_titanic/'
-train_set = pd.read_csv(path + 'train.csv',index_col=0)
-test_set = pd.read_csv(path + 'test.csv',index_col=0)
-# print(train_set.shape, test_set.shape) # (891, 12) (418, 11)
-# print(train_set.columns.values)
-# ['PassengerId' 'Survived' 'Pclass' 'Name' 'Sex' 'Age' 'SibSp' 'Parch'    
-# 'Ticket' 'Fare' 'Cabin' 'Embarked']
-# print(train_set['Survived'].value_counts()) # 0 549 , 1 342
+train_set = pd.read_csv(path + 'train.csv', # + 명령어는 문자를 앞문자와 더해줌
+                        index_col=0) # index_col=n n번째 컬럼을 인덱스로 인식
+# print(train_set)
+# print(train_set.shape) # (891, 11)
+# print(train_set.describe())
+# print(train_set.columns)
 
-#. 결측치 처리
-# print(train_set.isnull().sum())
-# print(test_set.isnull().sum())
+test_set = pd.read_csv(path + 'test.csv', # 예측에서 쓸거임                
+                       index_col=0)
+# print(test_set)
+# print(test_set.shape) # (418, 10)
+# print(test_set.describe())
 
-train_set=train_set.drop(columns='Cabin') # 'Cabin' 열 지움
-test_set=test_set.drop(columns='Cabin')
+print(train_set.Pclass.value_counts())
 
-train_set.loc[train_set['Sex']=='male', 'Sex']=0  # male = 0, female = 1
-train_set.loc[train_set['Sex']=='female','Sex']=1 # 으로 인식 할 수 있게 인코딩
-test_set.loc[test_set['Sex']=='male','Sex']=0
-test_set.loc[test_set['Sex']=='female','Sex']=1
-train_set['Sex']
-# train_set 데이터에 있는 Pclass_3(없으면 만듬)
-# train_set 데이터의 ['Pclass'] 열의 값이 3인 애들은 Tuer or False로 입력
-train_set['Pclass_3']=(train_set['Pclass']==3)
-train_set['Pclass_2']=(train_set['Pclass']==2)
-train_set['Pclass_1']=(train_set['Pclass']==1)
+Pclass1 = train_set["Survived"][train_set["Pclass"] == 1].value_counts(normalize = True)[1]*100
+Pclass2 = train_set["Survived"][train_set["Pclass"] == 2].value_counts(normalize = True)[1]*100
+Pclass3 = train_set["Survived"][train_set["Pclass"] == 3].value_counts(normalize = True)[1]*100
+print(f"Percentage of Pclass 1 who survived: {Pclass1}")
+print(f"Percentage of Pclass 2 who survived: {Pclass2}")
+print(f"Percentage of Pclass 3 who survived: {Pclass3}")
 
-test_set['Pclass_3']=(test_set['Pclass']==3)
-test_set['Pclass_2']=(test_set['Pclass']==2)
-test_set['Pclass_1']=(test_set['Pclass']==1)
+female = train_set["Survived"][train_set["Sex"] == 'female'].value_counts(normalize = True)[1]*100
+male = train_set["Survived"][train_set["Sex"] == 'male'].value_counts(normalize = True)[1]*100
+print(f"Percentage of females who survived: {female}")
+print(f"Percentage of males who survived: {male}")
 
-train_set=train_set.drop(columns='Pclass') # 'Pclass' 열 삭제
-test_set=test_set.drop(columns='Pclass')
-print(train_set)
-print(test_set)
-
-'''
-# print(train_set.columns.values)  # 'Pclass' 열이 삭제되고, 'Pclass123'이 생긴 걸 볼 수 있다.
-# ['PassengerId' 'Survived' 'Name' 'Sex' 'Age' 'SibSp' 'Parch' 'Ticket'
-#  'Fare' 'Embarked' 'Pclass_3' 'Pclass_2' 'Pclass_1']
-
-# 'Fare' 한개의 결측치를 0으로 채워줌
-test_set.loc[test_set['Fare'].isnull(),'Fare']=0
-
-# 'Age'라는 열은 별로 연관이 없을거 같아서 지워준다.
-train_set=train_set.drop(columns='Age')
-test_set=test_set.drop(columns='Age')
-
-# 'Sibsp' = 형제자매+배우자, 'Parch' = 부모+자녀
-# 'Sibsp' + 'Parch' + '1'(본인) = 'FamilySize' 
-train_set['FamilySize']=train_set['SibSp']+train_set['Parch']+1
-test_set['FamilySize']=test_set['SibSp']+test_set['Parch']+1
-# print(train_set.head())
-
-train_set['Single']=train_set['FamilySize']==1
-train_set['Nuclear']=(2<=train_set['FamilySize']) & (train_set['FamilySize']<=4)
-train_set['Big']=train_set['FamilySize']>=5
-
-test_set['Single']=test_set['FamilySize']==1
-test_set['Nuclear']=(2<=test_set['FamilySize']) & (test_set['FamilySize']<=4)
-test_set['Big']=test_set['FamilySize']>=5
-# print(train_set.head()) 
-# 'Nuclear' 이란 가구가 생존율이 제일 높다. 그래서 나머지 열은 삭제하겠다.
-train_set=train_set.drop(columns=['Single','Big','SibSp','Parch','FamilySize'])
-test_set=test_set.drop(columns=['Single','Big','SibSp','Parch','FamilySize'])
-# print(train_set.columns.values)
-
-# 인코딩
-train_set['EmbarkedC']=train_set['Embarked']=='C'
-train_set['EmbarkedS']=train_set['Embarked']=='S'
-train_set['EmbarkedQ']=train_set['Embarked']=='Q'
-test_set['EmbarkedC']=test_set['Embarked']=='C'
-test_set['EmbarkedS']=test_set['Embarked']=='S'
-test_set['EmbarkedQ']=test_set['Embarked']=='Q'
-
-# 원래 열 지움
-train_set=train_set.drop(columns='Embarked')
-test_set=test_set.drop(columns='Embarked')
-# print(train_set.columns.values)
+sns.barplot(x="SibSp", y="Survived", data=train_set)
 
 
-train_set=train_set.drop(columns='Name')
-test_set=test_set.drop(columns='Name')
+# df = pd.DataFrame(y)
+# print(df)
+# oh = OneHotEncoder(sparse=False) # sparse=true 는 매트릭스반환 False는 array 반환
+# y = oh.fit_transform(df)
+# print(y)
 
-train_set=train_set.drop(columns='Ticket')
-test_set=test_set.drop(columns='Ticket')
 
-x = train_set.drop(['Survived'], axis=1).astype(float)
-y = train_set['Survived'].astype(float)
 
-# print(x.shape, y.shape) # (891, 10) (891, )
-# print(train_set.columns.values)
+# print(test_set.columns)
+# print(train_set.info()) # info 정보출력
+# print(train_set.describe()) # describe 평균치, 중간값, 최소값 등등 출력
+
+#### 결측치 처리 1. 제거 ####
+
+train_set = train_set.fillna({"Embarked": "C"})
+train_set.Age = train_set.Age.fillna(value=train_set.Age.mean())
+
+train_set = train_set.drop(['Name'], axis = 1)
+test_set = test_set.drop(['Name'], axis = 1)
+
+train_set = train_set.drop(['Ticket'], axis = 1)
+test_set = test_set.drop(['Ticket'], axis = 1)
+
+train_set = train_set.drop(['Cabin'], axis = 1)
+test_set = test_set.drop(['Cabin'], axis = 1)
+
+train_set = pd.get_dummies(train_set,drop_first=True)
+test_set = pd.get_dummies(test_set,drop_first=True)
+
+test_set.Age = test_set.Age.fillna(value=test_set.Age.mean())
+test_set.Fare = test_set.Fare.fillna(value=test_set.Fare.mode())
+
+print(train_set, test_set, train_set.shape, test_set.shape)
+
+############################
+
+
+x = train_set.drop(['Survived'], axis=1)  # drop 데이터에서 ''사이 값 빼기
+print(x)
+print(x.columns)
+print(x.shape) # (891, 8)
+
+y = train_set['Survived'] 
+print(y)
+print(y.shape) # (891,)
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-             train_size=0.8, shuffle=True, random_state=66)
-56
+                                                    train_size=0.8,
+                                                    random_state=66
+                                                    )
+
+
+
+
 #2. 모델구성
 model = Sequential()
-model.add(Dense(200, input_dim=9,activation="relu"))
-model.add(Dense(100))
-model.add(Dense(100,activation="relu"))
-model.add(Dense(60))
-model.add(Dense(60,activation="relu"))
-model.add(Dense(10))
-model.add(Dense(1))
-
+model.add(Dense(300, input_dim=8, activation='relu')) #sigmoid : 이진분류일때 아웃풋에 activation = 'sigmoid' 라고 넣어줘서 아웃풋 값 범위를 0에서 1로 제한해줌
+model.add(Dense(200, activation='relu'))               # 출력이 0 or 1으로 나와야되기 때문, 그리고 최종으로 나온 값에 반올림을 해주면 0 or 1 완성
+model.add(Dense(200, activation='relu'))               # relu : 히든에서만 쓸수있음, 요즘에 성능 젤좋음
+model.add(Dense(200, activation='relu'))
+model.add(Dense(200, activation='relu'))
+model.add(Dense(200, activation='relu'))
+model.add(Dense(200, activation='relu'))
+model.add(Dense(200, activation='relu'))
+model.add(Dense(200, activation='relu'))
+model.add(Dense(200, activation='relu'))               
+model.add(Dense(1, activation='sigmoid'))   
+                                                                        
 #3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='binary_crossentropy', optimizer='adam',
+              metrics=['accuracy'])   # 이진분류에 한해 로스함수는 무조건 99퍼센트로 'binary_crossentropy'
+                                      # 컴파일에있는 metrics는 평가지표라고도 읽힘
 
-from tensorflow.python.keras.callbacks import EarlyStopping
-es = EarlyStopping(monitor='val_loss', patience=100, mode='min', 
-              verbose=1, restore_best_weights=True) 
 
-model.fit(x_train, y_train, epochs=20, batch_size=10, verbose=1, callbacks=[es],validation_split=0.2)
+earlyStopping = EarlyStopping(monitor='val_loss', patience=600, mode='auto', verbose=1, 
+                              restore_best_weights=True)        
+
+                  #restore_best_weights false 로 하면 중단한 지점의 웨이트값을 가져옴 true로하면 끊기기 전의 최적의 웨이트값을 가져옴
+
+
+
+model.fit(x_train, y_train, epochs=3000, batch_size=100,
+                 validation_split=0.2,
+                 callbacks=[earlyStopping],
+                 verbose=1)
+
+
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
-print('loss : ', loss)
 y_predict = model.predict(x_test)
 
-from sklearn.metrics import accuracy_score
-y_predict = model.predict(x_test)
-# print(y_test,y_predict)
-y_predict = y_predict.round(0) # y_predict를 반올림해서 0 아님 1로 바꿈.
+print(y_predict)
+y_predict = y_predict.round(0)
+print(y_predict)
 
 
-
-acc = accuracy_score(y_test, y_predict)
-print('acc스코어 : ', acc)
-print(x_test)
-print(test_set)
 y_summit = model.predict(test_set)
 
-# submission = pd.read_csv('C:\study\_data\kaggle_titanic\gender_submission.csv',index_col=0)
-# submission['Survived'] = y_summit
-# submission.to_csv('C:\study\_data\kaggle_titanic\gender_submission.csv', index=True)
-'''
+print(y_summit)
+print(y_summit.shape) # (418, 1)
+y_summit = y_summit.round()
+df = pd.DataFrame(y_summit)
+print(df)
+oh = OneHotEncoder(sparse=False) # sparse=true 는 매트릭스반환 False는 array 반환
+y_summit = oh.fit_transform(df)
+print(y_summit)
+y_summit = np.argmax(y_summit, axis= 1)
+submission_set = pd.read_csv(path + 'gender_submission.csv', # + 명령어는 문자를 앞문자와 더해줌
+                             index_col=0) # index_col=n n번째 컬럼을 인덱스로 인식
+
+print(submission_set)
+
+submission_set['Survived'] = y_summit
+print(submission_set)
 
 
+submission_set.to_csv(path + 'submission.csv', index = True)
+
+
+acc= accuracy_score(y_test, y_predict)
+print('loss : ' , loss)
+print('acc스코어 : ', acc) 
+model.summary()
+
+# loss :  0.42792996764183044
+# acc스코어 :  0.8044692737430168

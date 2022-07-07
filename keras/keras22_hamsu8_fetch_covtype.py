@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.datasets import fetch_covtype
-from tensorflow.python.keras.models import Sequential   
-from tensorflow.python.keras.layers import Dense
+from tensorflow.python.keras.models import Sequential, Model   
+from tensorflow.python.keras.layers import Dense, Input
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import tensorflow as tf
@@ -39,13 +39,13 @@ x_test = scaler.transform(x_test)
 
 
 #2. 모델구성
-model = Sequential()
-model.add(Dense(100, input_dim=54,activation='relu'))
-model.add(Dense(90))
-model.add(Dense(60,activation='relu'))
-model.add(Dense(60))
-model.add(Dense(10))
-model.add(Dense(7, activation='softmax'))
+input1 = Input(shape=(54))
+dense1 = Dense(90)(input1)
+dense2 = Dense(60,activation='relu')(dense1)
+dense3 = Dense(60)(dense2)
+dense4 = Dense(10)(dense3)
+output1 = Dense(7, activation='softmax')(dense4)
+model = Model(inputs = input1, outputs = output1)
 
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam',
@@ -79,22 +79,10 @@ y_test = tf.argmax(y_test,axis=1)
 acc = accuracy_score(y_test, y_predict)
 print('acc스코어 : ', acc)
 
-#1. 스케일러 하기 전
-#  loss :  0.4399690330028534
-#  acc스코어 :  0.8155727476915398
 
-#2. MinMaxScaler 
-# loss :   0.25421804189682007
-# acc스코어 : 0.8962161045756134
-
-#3. StandardScaler  
 # loss :  0.2370000034570694
 # acc스코어 :   0.9066633391564761
 
-#4. MaxAbsScaler 
-# loss :  
-# acc스코어 :   
-
-#5. RobustScaler 
-#  loss :  
-#  acc스코어 :  
+# 함수모델 변경 후
+# loss :  0.3876831531524658
+# acc스코어 :  0.8358648227670542

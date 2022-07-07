@@ -3,15 +3,15 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_breast_cancer
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense
+from tensorflow.python.keras.models import Sequential, Model
+from tensorflow.python.keras.layers import Dense, Input
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.callbacks import EarlyStopping
 from sklearn.metrics import r2_score, accuracy_score
 from tensorflow.keras.utils import to_categorical
 from sklearn.preprocessing import OneHotEncoder
 import time
-
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 
 #1. 데이터
 path = './_data/kaggle_titanic/'
@@ -96,22 +96,30 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
                                                     random_state=66
                                                     )
 
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+scaler = MaxAbsScaler()
+# scaler = RobustScaler()
 
+scaler.fit(x_train)
+print(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
 
 
 #2. 모델구성
-model = Sequential()
-model.add(Dense(300, input_dim=8, activation='relu')) #sigmoid : 이진분류일때 아웃풋에 activation = 'sigmoid' 라고 넣어줘서 아웃풋 값 범위를 0에서 1로 제한해줌
-model.add(Dense(200, activation='relu'))               # 출력이 0 or 1으로 나와야되기 때문, 그리고 최종으로 나온 값에 반올림을 해주면 0 or 1 완성
-model.add(Dense(200, activation='relu'))               # relu : 히든에서만 쓸수있음, 요즘에 성능 젤좋음
-model.add(Dense(200, activation='relu'))
-model.add(Dense(200, activation='relu'))
-model.add(Dense(200, activation='relu'))
-model.add(Dense(200, activation='relu'))
-model.add(Dense(200, activation='relu'))
-model.add(Dense(200, activation='relu'))
-model.add(Dense(200, activation='relu'))               
-model.add(Dense(1, activation='sigmoid'))   
+input1 = Input(shape=(8,))
+dense1 = Dense(200, activation='relu')(input1)               
+dense2 = Dense(200, activation='relu')(dense1)         
+dense3 = Dense(200, activation='relu')(dense2)
+dense4 = Dense(200, activation='relu')(dense3)
+dense5 = Dense(200, activation='relu')(dense4)
+dense6 = Dense(200, activation='relu')(dense5)
+dense7 = Dense(200, activation='relu')(dense6)
+dense8 = Dense(200, activation='relu')(dense7)
+dense9 = Dense(200, activation='relu')(dense8)               
+output1 = Dense(1, activation='sigmoid')(dense9)   
+model = Model(inputs = input1, outputs = output1)
                                                                         
 #3. 컴파일, 훈련
 model.compile(loss='binary_crossentropy', optimizer='adam',
@@ -170,5 +178,9 @@ print('loss : ' , loss)
 print('acc스코어 : ', acc) 
 model.summary()
 
-# loss :  0.42792996764183044
-# acc스코어 :  0.8044692737430168
+# loss : 0.4160992503166199,
+# acc스코어 :   0.8156424581005587
+
+# 함수모델 변경 후
+# loss :  0.4064211249351501
+# acc스코어 :  0.8268156424581006
