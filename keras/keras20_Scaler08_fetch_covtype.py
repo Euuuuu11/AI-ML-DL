@@ -92,8 +92,8 @@ print('acc스코어 : ', acc)
 # acc스코어 :   0.9066633391564761
 
 #4. MaxAbsScaler 
-# loss :  
-# acc스코어 :   
+# loss :  0.2800651490688324
+# acc스코어 :   0.8863024190425376
 
 #5. RobustScaler 
 #  loss :  

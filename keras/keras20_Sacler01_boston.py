@@ -20,10 +20,12 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 # scaler = MaxAbsScaler()
 scaler = RobustScaler()
 
-scaler.fit(x_train)
-#print(x_train)
-x_train = scaler.transform(x_train)
+# scaler.fit(x_train)
+# #print(x_train)
+# x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test) #x_train이작업된 범위에 맞춰서 진행
+x_train = scaler.fit_transform(x_train)
+
 
 #2. 모델구성
 model = Sequential()

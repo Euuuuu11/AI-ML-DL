@@ -41,7 +41,7 @@ model.add(Dense(1))
 model.summary()
 
 
-model.save("./_save/keras23_1_save_model.h5")
+# model.save("./_save/keras23_1_save_model.h5")
 '''
 import time
 #3. 컴파일, 훈련

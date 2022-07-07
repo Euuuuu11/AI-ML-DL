@@ -48,7 +48,7 @@ model.summary()
 model.load_weights("./_save/keras23_5_save_weights1.h5")
 model.load_weights("./_save/keras23_5_save_weights2.h5")
                 
-             
+            
 # RuntimeError: You must compile your model before training/testing. 
 # Use `model.compile(optimizer, loss)`.   # 컴파일 부분은 시작 해줘야 돌아감.
              
