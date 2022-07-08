@@ -1,7 +1,10 @@
+# dropout 과적합 방지
+# 평가, 예측엔 전체노드 적용
+
 from tabnanny import verbose
 from sklearn.datasets import load_boston
 from tensorflow.python.keras.models import Sequential,  load_model
-from tensorflow.python.keras.layers import Dense
+from tensorflow.python.keras.layers import Dense, Dropout
 import numpy as np  
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
@@ -31,18 +34,14 @@ x_test = scaler.transform(x_test)
 
 # 2. 모델구성
 model = Sequential()
-model.add(Dense(64, input_dim=13))
-model.add(Dense(32,activation="relu"))
+model.add(Dense(100, input_dim=13))
+model.add(Dropout(0.3))
+model.add(Dense(50,activation="relu"))
+model.add(Dropout(0.2))
 model.add(Dense(16,activation="relu"))
 model.add(Dense(1))
 model.summary()
 
-                
-            
-# RuntimeError: You must compile your model before training/testing. 
-# Use `model.compile(optimizer, loss)`.   # 컴파일 부분은 시작 해줘야 돌아감.
-             
-                   
 import time
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
@@ -53,13 +52,13 @@ date= datetime.datetime.now()      # 2022-07-07 17:22:07.702644
 date = date.strftime("%m%d_%H%M")  # 0707_1723
 print(date)
 
-filepath = './_ModelCheckpoint/k24'
+filepath = './_ModelCheckpoint/k26_1/'
 filename = '{epoch:04d}-{val_loss:.4f}.hdf5' # 04d 4자리수 까지 .4f 소수점 네자리까지
 
 es = EarlyStopping(monitor='val_loss', patience=10, mode='min', 
               verbose=1, restore_best_weights=True) 
 mcp = ModelCheckpoint(monitor='val_loss', mode='auto',verbose=1,
-                      save_best_only=True,filepath= "".join([filepath,'k24_',date, '_', filename]))
+                      save_best_only=True,filepath= "".join([filepath,'k26_',date, '_', filename]))
 
 start_time = time.time()
 print(start_time)
@@ -125,3 +124,7 @@ print('r2스코어 : ', r2)
 # loss3 :  18.041139602661133
 # r2스코어 :  0.8004786496646705
 '''
+
+# dropout 적용 후 
+# loss :  20.24698829650879
+# r2스코어 :  0.7760836586088403

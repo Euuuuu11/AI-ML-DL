@@ -4,11 +4,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_breast_cancer
 from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense
+from tensorflow.python.keras.layers import Dense, Dropout
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.callbacks import EarlyStopping
 from sklearn.metrics import r2_score, accuracy_score
-from tensorflow.python.keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 from sklearn.preprocessing import OneHotEncoder
 import time
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
@@ -109,17 +109,16 @@ x_test = scaler.transform(x_test)
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(300, input_dim=8, activation='relu')) #sigmoid : 이진분류일때 아웃풋에 activation = 'sigmoid' 라고 넣어줘서 아웃풋 값 범위를 0에서 1로 제한해줌
-model.add(Dense(200, activation='relu'))               # 출력이 0 or 1으로 나와야되기 때문, 그리고 최종으로 나온 값에 반올림을 해주면 0 or 1 완성
-model.add(Dense(200, activation='relu'))               # relu : 히든에서만 쓸수있음, 요즘에 성능 젤좋음
-model.add(Dense(200, activation='relu'))
-model.add(Dense(200, activation='relu'))
-model.add(Dense(200, activation='relu'))
-model.add(Dense(200, activation='relu'))
-model.add(Dense(200, activation='relu'))
-model.add(Dense(200, activation='relu'))
-model.add(Dense(200, activation='relu'))               
-model.add(Dense(1, activation='sigmoid'))   
+model.add(Dense(128, input_dim=8, activation='relu')) #sigmoid : 이진분류일때 아웃풋에 activation = 'sigmoid' 라고 넣어줘서 아웃풋 값 범위를 0에서 1로 제한해줌
+model.add(Dense(64, activation='relu'))               # 출력이 0 or 1으로 나와야되기 때문, 그리고 최종으로 나온 값에 반올림을 해주면 0 or 1 완성
+model.add(Dense(32, activation='relu'))               # relu : 히든에서만 쓸수있음, 요즘에 성능 젤좋음
+model.add(Dense(16, activation='relu'))
+model.add(Dropout(0.3))
+model.add(Dense(8, activation='relu'))
+model.add(Dropout(0.3))
+model.add(Dense(4, activation='relu'))
+model.add(Dropout(0.3))
+model.add(Dense(1, activation='sigmoid'))
                                                                         
 #3. 컴파일, 훈련
 model.compile(loss='binary_crossentropy', optimizer='adam',
@@ -132,13 +131,13 @@ date= datetime.datetime.now()      # 2022-07-07 17:22:07.702644
 date = date.strftime("%m%d_%H%M")  # 0707_1723
 print(date)
 
-filepath = './_ModelCheckpoint/k25_12/'
+filepath = './_ModelCheckpoint/k26_12/'
 filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
 
 es = EarlyStopping(monitor='val_loss', patience=600, mode='auto', verbose=1, 
                               restore_best_weights=True)        
 mcp = ModelCheckpoint(monitor='val_loss', mode='auto',verbose=1,
-                      save_best_only=True,filepath= "".join([filepath,'k25_',date, '_', filename])) 
+                      save_best_only=True,filepath= "".join([filepath,'k26_',date, '_', filename])) 
         
 
 
@@ -186,22 +185,6 @@ print('loss : ' , loss)
 print('acc스코어 : ', acc) 
 model.summary()
 
-#1. 스케일러 하기 전
-# loss :  0.42792996764183044
-# acc스코어 :  0.8044692737430168
-
-#2. MinMaxScaler 
-# loss :   0.432650864124298
-# acc스코어 : 0.8100558659217877
-
-#3. StandardScaler  
-# loss :  0.4173644483089447
-# acc스코어 :   0.7932960893854749
-
-#4. MaxAbsScaler 
-# loss : 0.4160992503166199,
-# acc스코어 :   0.8156424581005587
-
-#5. RobustScaler 
-#  loss : 0.4267340302467346
-#  acc스코어 : 0.8044692737430168
+# dropout 적용 후 
+# loss :  0.446487694978714
+# acc스코어 :  0.8100558659217877
