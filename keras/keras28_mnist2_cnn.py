@@ -9,23 +9,23 @@ import numpy as np
 
 
 #1. 데이터
-(x_train, y_train), (x_test, y_test) = cifar100.load_data()
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-print(x_train.shape, y_train.shape) # (50000, 32, 32, 3) (50000, 1)
-print(x_test.shape, y_test.shape)   # (10000, 32, 32, 3) (10000, 1)
+# print(x_train.shape, y_train.shape) # (60000, 28, 28) (60000, )
+# print(x_test.shape, y_test.shape)   # (10000, 28, 28) (10000, )
 
-# x_train = x_train.reshape(60000, 28, 28, 1)
-# x_test = x_test.reshape(10000, 28, 28, 1)
-# print(x_train.shape)             # (50000, 32, 32, 3)
+x_train = x_train.reshape(60000, 28, 28, 1)
+x_test = x_test.reshape(10000, 28, 28, 1)
+# # print(x_train.shape)             # (60000, 28, 28, 1)
 # print(np.unique(y_train, return_counts=True))
 
 from tensorflow.keras.utils import to_categorical
 y_train = to_categorical(y_train)
 y_test = to_categorical(y_test)
-print(np.unique(y_train, return_counts=True))
-print(np.unique(y_test, return_counts=True))
-print(y_train, y_test)
-print(y_test.shape, y_train.shape)
+# print(np.unique(y_train, return_counts=True))
+# print(np.unique(y_test, return_counts=True))
+# print(y_train, y_test)
+# print(y_test.shape, y_train.shape)
 
 
 #2. 모델구성
@@ -35,7 +35,7 @@ model  = Sequential()
 
 model.add(Conv2D(filters=64, kernel_size=(3, 3)
                  ,padding= 'same' ,
-                 input_shape=(32, 32, 3)))
+                 input_shape=(28, 28, 1)))
 model.add(MaxPooling2D())
 model.add(Conv2D(32, (2,2), 
                  padding="valid",  # 디폴트 값
@@ -44,7 +44,7 @@ model.add(Conv2D(16,(2,2),padding='valid', activation='relu'))
 model.add(Flatten())  # (N, )
 model.add(Dense(32, activation="relu"))
 model.add(Dense(32, activation="relu"))
-model.add(Dense(100, activation="softmax"))
+model.add(Dense(10, activation="softmax"))
 
 # model.summary()
 # (kernel_size * channels + bias) + filters  = summary Param 갯수 (CNN모델)
@@ -60,13 +60,13 @@ date= datetime.datetime.now()      # 2022-07-07 17:22:07.702644
 date = date.strftime("%m%d_%H%M")  # 0707_1723
 print(date)
 
-filepath = './_ModelCheckpoint/k29_2/'
+filepath = './_ModelCheckpoint/k28_2/'
 filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
 
 es = EarlyStopping(monitor='val_loss', patience=60, mode='auto', verbose=1, 
                               restore_best_weights=True)        
 mcp = ModelCheckpoint(monitor='val_loss', mode='auto',verbose=1,
-                      save_best_only=True,filepath= "".join([filepath,'k29_',date, '_', filename])) 
+                      save_best_only=True,filepath= "".join([filepath,'k28_',date, '_', filename])) 
         
 
 
@@ -88,6 +88,6 @@ y_test = np.argmax(y_test, axis=1)
 acc = accuracy_score(y_test, y_predict)
 print('acc스코어 : ', acc)
 
-
-# loss :  3.4802539348602295
-# acc스코어 :  0.1779
+# [과제]
+# loss :  0.06705739349126816
+# acc스코어 :  0.9824
