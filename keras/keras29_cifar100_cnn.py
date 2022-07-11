@@ -1,9 +1,5 @@
-# 만들기
-# acc 0.98 이상
-
-from tkinter import Y
 from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D   
+from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D,Dropout   
 from tensorflow.keras.datasets import mnist,fashion_mnist, cifar10, cifar100
 import numpy as np
 
@@ -29,28 +25,31 @@ print(y_test.shape, y_train.shape)
 
 
 #2. 모델구성
-model  = Sequential()
-# model.add(Dense(units=10, input_shape=(3, ))) #(batch_size, input_dim) 
-# (input_dim + bias) * units = summary Param 갯수 (Dense모델)
-
-model.add(Conv2D(filters=64, kernel_size=(3, 3)
-                 ,padding= 'same' ,
-                 input_shape=(32, 32, 3)))
-model.add(MaxPooling2D())
-model.add(Conv2D(32, (2,2), 
-                 padding="valid",  # 디폴트 값
-                 activation="relu"))
-model.add(Conv2D(16,(2,2),padding='valid', activation='relu'))
-model.add(Flatten())  # (N, )
-model.add(Dense(32, activation="relu"))
-model.add(Dense(32, activation="relu"))
-model.add(Dense(100, activation="softmax"))
+model = Sequential()
+model.add(Conv2D(filters=64, kernel_size=(3, 3), padding='same', 
+                 activation='relu', input_shape=(32, 32, 3)))
+model.add(MaxPooling2D(2, 2))  
+model.add(Dropout(0.25))     
+model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))                
+model.add(MaxPooling2D(2, 2))   
+model.add(Dropout(0.25))     
+model.add(Conv2D(128, (3, 3), padding='same', activation='relu'))
+model.add(MaxPooling2D(2, 2))     
+model.add(Dropout(0.4))     
+model.add(Conv2D(128, (3, 3), padding='same', activation='relu'))   
+model.add(MaxPooling2D(2, 2))     
+model.add(Dropout(0.4))
+model.add(Flatten())   
+model.add(Dense(128, activation='tanh'))
+model.add(Dropout(0.2))
+model.add(Dense(100, activation='softmax'))
+model.summary()  
 
 # model.summary()
 # (kernel_size * channels + bias) + filters  = summary Param 갯수 (CNN모델)
 
 #3. 컴파일, 훈련
-model.compile(loss='categorical_crossentropy', optimizer='adam',
+model.compile(loss='categorical_crossentropy', optimizer='Nadam',
               metrics=['accuracy'])   # 이진분류에 한해 로스함수는 무조건 99퍼센트로 'binary_crossentropy'
                                       # 컴파일에있는 metrics는 평가지표라고도 읽힘
                                       
@@ -70,8 +69,8 @@ mcp = ModelCheckpoint(monitor='val_loss', mode='auto',verbose=1,
         
 
 
-model.fit(x_train, y_train, epochs=100, batch_size=100,
-                 validation_split=0.2,
+model.fit(x_train, y_train, epochs=100, batch_size=128,
+                 validation_split=0.3,
                  callbacks=[es,mcp],
                  verbose=1)
 

@@ -21,7 +21,11 @@ model.add(Dense(32, activation="relu"))
 model.add(Dense(10, activation="softmax"))
 
 model.summary()
-# (kernel_size * channels + bias) + filters  = summary Param 갯수 (CNN모델)
+# (kernel_size * channels + bias) + filters  = summary Param 갯수 (CNN)
+
+
+
+
 
 
 

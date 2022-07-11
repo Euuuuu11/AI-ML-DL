@@ -1,7 +1,6 @@
 # 만들기
 # acc 0.98 이상
 
-from tkinter import Y
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D   
 from tensorflow.keras.datasets import mnist,fashion_mnist, cifar10, cifar100

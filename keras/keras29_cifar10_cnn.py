@@ -1,7 +1,6 @@
 # 만들기
 # acc 0.98 이상
 
-from tkinter import Y
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D   
 from tensorflow.keras.datasets import mnist,fashion_mnist, cifar10, cifar100
@@ -50,7 +49,7 @@ model.add(Dense(10, activation="softmax"))
 # (kernel_size * channels + bias) + filters  = summary Param 갯수 (CNN모델)
 
 #3. 컴파일, 훈련
-model.compile(loss='categorical_crossentropy', optimizer='adam',
+model.compile(loss='categorical_crossentropy', optimizer='Nadam',
               metrics=['accuracy'])   # 이진분류에 한해 로스함수는 무조건 99퍼센트로 'binary_crossentropy'
                                       # 컴파일에있는 metrics는 평가지표라고도 읽힘
                                       
