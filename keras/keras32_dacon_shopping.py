@@ -61,13 +61,13 @@ y = train_set['Weekly_Sales']
 # print(x.columns)
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-                                    train_size=0.8,random_state=64)
+                                    train_size=0.7,random_state=64)
    
 
 
-# scaler = MinMaxScaler()
+scaler = MinMaxScaler()
 # scaler = StandardScaler()
-scaler = MaxAbsScaler()
+# scaler = MaxAbsScaler()
 # scaler = RobustScaler()
 
 scaler.fit(x_train)
@@ -109,7 +109,7 @@ earlyStopping = EarlyStopping(monitor='val_loss', patience=600, mode='auto', ver
 
 
 
-model.fit(x_train, y_train, epochs=600, batch_size=32,
+model.fit(x_train, y_train, epochs=1005, batch_size=32,
                  validation_split=0.2,
                  callbacks=[earlyStopping],
                  verbose=1)
@@ -138,14 +138,11 @@ submission.to_csv('C:\study\_data\dacon_shopping\sample_submission.csv', index=T
 # MinMaxScaler
 # RMSE :  576988.5458324888
 
-
-
 # StandardScaler
 # RMSE :  547947.5501600921
 
+# MaxAbsScaler
+# RMSE :  583482.5175482633
 
-# scaler = MaxAbsScaler()
-
-
-
-# scaler = RobustScaler()
+# RobustScaler
+# RMSE :  617641.3658200757
