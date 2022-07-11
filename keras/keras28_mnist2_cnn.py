@@ -40,7 +40,7 @@ model.add(MaxPooling2D())
 model.add(Conv2D(32, (2,2), 
                  padding="valid",  # 디폴트 값
                  activation="relu"))
-model.add(Conv2D(16,(2,2),padding='valid', activation='relu'))
+model.add(Conv2D(8,(2,2),padding='valid', activation='relu'))
 model.add(Flatten())  # (N, )
 model.add(Dense(32, activation="relu"))
 model.add(Dense(32, activation="relu"))
