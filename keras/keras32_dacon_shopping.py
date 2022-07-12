@@ -114,12 +114,6 @@ model.fit(x_train, y_train, epochs=1005, batch_size=32,
                  callbacks=[earlyStopping],
                  verbose=1)
 
-model.fit(x_train, y_train, epochs=1005, batch_size=32,
-                 validation_split=0.2,
-                 callbacks=[earlyStopping],
-                 verbose=1)
-
-
 
 
 #4. 평가, 예측
@@ -131,6 +125,7 @@ def RMSE(y_test, y_predict) :
 rmse = RMSE(y_test, y_predict) 
 print("RMSE : ", rmse)
 
+바보 멍충아 
 
 
 y_summit = model.predict(test_set)          
