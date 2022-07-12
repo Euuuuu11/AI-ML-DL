@@ -14,7 +14,7 @@ import time
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import GridSearchCV
+
 #1. 데이터
 path = './_data/dacon_shopping/'
 train_set = pd.read_csv(path + 'train.csv', # + 명령어는 문자를 앞문자와 더해줌
@@ -32,6 +32,7 @@ train_set = train_set.fillna(0)
 test_set = test_set.fillna(0)
 # print(test_set)
 
+#데이터 년, 월, 일 구분
 train_set['Date'] = pd.to_datetime(train_set['Date'])
 train_set['year'] = train_set['Date'].dt.year 
 train_set['month'] = train_set['Date'].dt.month
@@ -46,6 +47,7 @@ test_set['day'] = test_set['Date'].dt.day
 test_set.drop(['Date', 'day', 'year'], inplace=True, axis=1)
 test_set['month'] = test_set['month']#.astype('category')
 
+# 큰 의미 없는 데이터 드랍
 train_set = train_set.drop(['Temperature'], axis=1)
 test_set = test_set.drop(['Temperature'],axis=1)
 train_set = train_set.drop(['Fuel_Price'], axis=1)
@@ -62,39 +64,56 @@ y = train_set['Weekly_Sales']
 # print(x.columns)
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-                                    train_size=0.7,random_state=64)
+                                    train_size=0.8,random_state=64)
    
+
+
 scaler = MinMaxScaler()
-# # scaler = StandardScaler()
-# # scaler = MaxAbsScaler()
-# # scaler = RobustScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+# scaler = RobustScaler()
 
 scaler.fit(x_train)
-# print(x_train)
+print(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 test_set = scaler.transform(test_set)
 
+
+
+
+
 #2. 모델구성
-model = RandomForestRegressor(n_estimators=128, max_depth=16, min_samples_leaf=6,
-                           min_samples_split=12, random_state=0)
+# model = Sequential()
+# model.add(Dense(256, input_dim=8, activation='relu')) 
+# model.add(Dropout(0.2))
+# model.add(Dense(128, activation='relu'))   
+# model.add(Dropout(0.2))
+# model.add(Dense(64, activation='relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(32, activation='relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(16, activation='relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(8, activation='relu'))
+# model.add(Dense(8, activation='relu'))               
+# model.add(Dense(1))    
+model = RandomForestRegressor(n_estimators=256, max_depth=14, min_samples_leaf=4,
+                           min_samples_split=10, random_state=0)
 model.fit(x_train, y_train)
 
 print(model.score(x_train, y_train))
 print(model.score(x_test, y_test))
-                                           
-#3. 컴파일, 훈련
-# model.compile(loss='mse', optimizer='adam', metrics=['mae'])
+                  
+                                                                        
+# #3. 컴파일, 훈련
+# model.compile(loss='mse', optimizer='adam',
+#               metrics=['mae'])   
                                       
-
-
 # earlyStopping = EarlyStopping(monitor='val_loss', patience=600, mode='auto', verbose=1, 
 #                               restore_best_weights=True)        
 
                   
-
-
-
 # model.fit(x_train, y_train, epochs=1005, batch_size=32,
 #                  validation_split=0.2,
 #                  callbacks=[earlyStopping],
@@ -103,7 +122,6 @@ print(model.score(x_test, y_test))
 
 
 #4. 평가, 예측
-# loss = model.evaluate(x_test, y_test)
 loss = model.score(x_test, y_test)
 y_predict = model.predict(x_test)
 
@@ -133,3 +151,5 @@ submission.to_csv('C:\study\_data\dacon_shopping\sample_submission.csv', index=T
 
 # RobustScaler
 # RMSE :  617641.3658200757
+
+
