@@ -12,8 +12,9 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 import time
 from sklearn.metrics import r2_score, mean_squared_error
-
-
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
 #1. 데이터
 path = './_data/dacon_shopping/'
 train_set = pd.read_csv(path + 'train.csv', # + 명령어는 문자를 앞문자와 더해줌
@@ -63,61 +64,47 @@ y = train_set['Weekly_Sales']
 x_train, x_test, y_train, y_test = train_test_split(x,y,
                                     train_size=0.7,random_state=64)
    
-
-
 scaler = MinMaxScaler()
-# scaler = StandardScaler()
-# scaler = MaxAbsScaler()
-# scaler = RobustScaler()
+# # scaler = StandardScaler()
+# # scaler = MaxAbsScaler()
+# # scaler = RobustScaler()
 
 scaler.fit(x_train)
-print(x_train)
+# print(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 test_set = scaler.transform(test_set)
 
-
-
-
-
 #2. 모델구성
-model = Sequential()
-model.add(Dense(256, input_dim=8, activation='relu')) 
-model.add(Dropout(0.2))
-model.add(Dense(128, activation='relu'))   
-model.add(Dropout(0.2))
-model.add(Dense(64, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(32, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(16, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(8, activation='relu'))               
-model.add(Dense(1))   
-                                                                        
+model = RandomForestRegressor(n_estimators=128, max_depth=16, min_samples_leaf=6,
+                           min_samples_split=12, random_state=0)
+model.fit(x_train, y_train)
+
+print(model.score(x_train, y_train))
+print(model.score(x_test, y_test))
+                                           
 #3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam',
-              metrics=['mae'])   
+# model.compile(loss='mse', optimizer='adam', metrics=['mae'])
                                       
 
 
-earlyStopping = EarlyStopping(monitor='val_loss', patience=600, mode='auto', verbose=1, 
-                              restore_best_weights=True)        
+# earlyStopping = EarlyStopping(monitor='val_loss', patience=600, mode='auto', verbose=1, 
+#                               restore_best_weights=True)        
 
                   
 
 
 
-model.fit(x_train, y_train, epochs=1005, batch_size=32,
-                 validation_split=0.2,
-                 callbacks=[earlyStopping],
-                 verbose=1)
+# model.fit(x_train, y_train, epochs=1005, batch_size=32,
+#                  validation_split=0.2,
+#                  callbacks=[earlyStopping],
+#                  verbose=1)
 
 
 
 #4. 평가, 예측
-loss = model.evaluate(x_test, y_test)
+# loss = model.evaluate(x_test, y_test)
+loss = model.score(x_test, y_test)
 y_predict = model.predict(x_test)
 
 def RMSE(y_test, y_predict) :  
