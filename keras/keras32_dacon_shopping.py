@@ -31,6 +31,7 @@ train_set = train_set.fillna(0)
 test_set = test_set.fillna(0)
 # print(test_set)
 
+#데이터 년, 월, 일 구분
 train_set['Date'] = pd.to_datetime(train_set['Date'])
 train_set['year'] = train_set['Date'].dt.year 
 train_set['month'] = train_set['Date'].dt.month
@@ -45,6 +46,7 @@ test_set['day'] = test_set['Date'].dt.day
 test_set.drop(['Date', 'day', 'year'], inplace=True, axis=1)
 test_set['month'] = test_set['month']#.astype('category')
 
+# 큰 의미 없는 데이터 드랍
 train_set = train_set.drop(['Temperature'], axis=1)
 test_set = test_set.drop(['Temperature'],axis=1)
 train_set = train_set.drop(['Fuel_Price'], axis=1)
@@ -95,26 +97,18 @@ model.add(Dropout(0.2))
 model.add(Dense(8, activation='relu'))
 model.add(Dense(8, activation='relu'))               
 model.add(Dense(1))   
-                                                                        
+                                           
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam',
               metrics=['mae'])   
                                       
-
-
 earlyStopping = EarlyStopping(monitor='val_loss', patience=600, mode='auto', verbose=1, 
                               restore_best_weights=True)        
-
-                  
-
-
 
 model.fit(x_train, y_train, epochs=1005, batch_size=32,
                  validation_split=0.2,
                  callbacks=[earlyStopping],
                  verbose=1)
-
-
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -124,8 +118,6 @@ def RMSE(y_test, y_predict) :
     return np. sqrt(mean_squared_error(y_test, y_predict)) 
 rmse = RMSE(y_test, y_predict) 
 print("RMSE : ", rmse)
-
-
 
 y_summit = model.predict(test_set)          
 
@@ -146,3 +138,5 @@ submission.to_csv('C:\study\_data\dacon_shopping\sample_submission.csv', index=T
 
 # RobustScaler
 # RMSE :  617641.3658200757
+
+# 519824.83852852817
