@@ -114,7 +114,7 @@ model.fit(x_train, y_train, epochs=1005, batch_size=32,
                  callbacks=[earlyStopping],
                  verbose=1)
 
-
+ㅌㅋㅌㅊㅁㄴㅁ
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
