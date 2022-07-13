@@ -63,7 +63,7 @@ y = train_set['Weekly_Sales']
 # print(x.columns)
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-                                    train_size=0.7,random_state=64)
+                                    train_size=0.99,random_state=64)
    
 
 

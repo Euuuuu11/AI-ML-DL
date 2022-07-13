@@ -71,7 +71,7 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 scaler = MinMaxScaler()
 # scaler = StandardScaler()
 # scaler = MaxAbsScaler()
-# scaler = RobustScaler()
+# scaler = RobustScaler() 
 
 scaler.fit(x_train)
 print(x_train)
