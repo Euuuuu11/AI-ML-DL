@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_breast_cancer
-from tensorflow.python.keras.models import Sequential,  load_model
-from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers import Dense, Dropout,Conv1D, Flatten
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.callbacks import EarlyStopping
 from sklearn.metrics import r2_score, accuracy_score
@@ -106,22 +106,17 @@ print(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
-print(x.shape,y.shape) # (891, 8) (891,)
-print(x_train.shape,x_test.shape) # ((712, 8) (179, 8))
-
-x_train = x_train.reshape(712, 2, 2, 2)
-x_test = x_test.reshape(179, 2, 2, 2)
-
+print(x_train.shape,x_test.shape)   #  (712, 8) (179, 8)
+x_train = x_train.reshape(712, 4, 2)
+x_test = x_test.reshape(179, 4, 2)
 
 #2. 모델구성
 model = Sequential()
-model.add(Conv2D(10, kernel_size=(2, 2), padding='same', input_shape=(2, 2, 2)))
+model.add(Conv1D(8, 2, input_shape=(4,2)))
 model.add(Flatten())
-model.add(Dense(64, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(1))
-
+model.add(Dense(32))
+model.add(Dense(16))
+model.add(Dense(1, activation='sigmoid'))
                                                                         
 #3. 컴파일, 훈련
 model.compile(loss='binary_crossentropy', optimizer='adam',
@@ -130,64 +125,72 @@ model.compile(loss='binary_crossentropy', optimizer='adam',
                                       
 from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
 import datetime
-# date= datetime.datetime.now()      # 2022-07-07 17:22:07.702644
-# date = date.strftime("%m%d_%H%M")  # 0707_1723
-# print(date)
+date= datetime.datetime.now()      # 2022-07-07 17:22:07.702644
+date = date.strftime("%m%d_%H%M")  # 0707_1723
+print(date)
 
-# filepath = './_ModelCheckpoint/k26_12/'
-# filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
+filepath = './_ModelCheckpoint/k26_12/'
+filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
+
+import time
+
 
 es = EarlyStopping(monitor='val_loss', patience=600, mode='auto', verbose=1, 
                               restore_best_weights=True)        
-# mcp = ModelCheckpoint(monitor='val_loss', mode='auto',verbose=1,
-#                       save_best_only=True,filepath= "".join([filepath,'k26_',date, '_', filename])) 
+mcp = ModelCheckpoint(monitor='val_loss', mode='auto',verbose=1,
+                      save_best_only=True,filepath= "".join([filepath,'k26_',date, '_', filename])) 
         
 
-
+start_time = time.time()
 model.fit(x_train, y_train, epochs=100, batch_size=100,
                  validation_split=0.2,
                  callbacks=[es],
                  verbose=1)
 
-
-
+end_time = time.time() - start_time
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
 y_predict = model.predict(x_test)
 
 print(y_predict)
 y_predict = y_predict.round(0)
-print(y_predict)
+# print(y_predict)
 
 
-y_summit = model.predict(test_set)
+# y_summit = model.predict(test_set)
 
-print(y_summit)
-print(y_summit.shape) # (418, 1)
-y_summit = y_summit.round()
-df = pd.DataFrame(y_summit)
-print(df)
-oh = OneHotEncoder(sparse=False) # sparse=true 는 매트릭스반환 False는 array 반환
-y_summit = oh.fit_transform(df)
-print(y_summit)
-y_summit = np.argmax(y_summit, axis= 1)
-submission_set = pd.read_csv(path + 'gender_submission.csv', # + 명령어는 문자를 앞문자와 더해줌
-                             index_col=0) # index_col=n n번째 컬럼을 인덱스로 인식
+# print(y_summit)
+# print(y_summit.shape) # (418, 1)
+# y_summit = y_summit.round()
+# df = pd.DataFrame(y_summit)
+# print(df)
+# oh = OneHotEncoder(sparse=False) # sparse=true 는 매트릭스반환 False는 array 반환
+# y_summit = oh.fit_transform(df)
+# print(y_summit)
+# y_summit = np.argmax(y_summit, axis= 1)
+# submission_set = pd.read_csv(path + 'gender_submission.csv', # + 명령어는 문자를 앞문자와 더해줌
+#                              index_col=0) # index_col=n n번째 컬럼을 인덱스로 인식
 
-print(submission_set)
+# print(submission_set)
 
-submission_set['Survived'] = y_summit
-print(submission_set)
+# submission_set['Survived'] = y_summit
+# print(submission_set)
 
 
-submission_set.to_csv(path + 'submission.csv', index = True)
+# submission_set.to_csv(path + 'submission.csv', index = True)
 
 
 acc= accuracy_score(y_test, y_predict)
 print('loss : ' , loss)
 print('acc스코어 : ', acc) 
+print('끝난시간 : ', end_time)
 model.summary()
 
 # dropout 적용 후 
 # loss :  0.446487694978714
 # acc스코어 :  0.8100558659217877
+
+# loss :  0.44854816794395447
+# acc스코어 :  0.7877094972067039
+# 끝난시간 :  6.9929914474487305
+

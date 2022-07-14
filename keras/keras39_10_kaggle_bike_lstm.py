@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from sklearn import metrics
 from tensorflow.python.keras.models import Sequential,  load_model
-from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout
+from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout,LSTM
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
 from tensorflow.keras.layers import LSTM, Dense
@@ -64,17 +64,18 @@ x_test = scaler.transform(x_test)
 print(x.shape,y.shape) # ((10886, 15) (10886,)
 print(x_train.shape,x_test.shape) # (8708, 15) (2178, 15)
 
-x_train = x_train.reshape(8708, 5, 3, 1)
-x_test = x_test.reshape(2178, 5, 3, 1)
+x_train = x_train.reshape(8708, 5, 3)
+x_test = x_test.reshape(2178, 5, 3)
 
 #2. 모델구성
 model = Sequential()
-model.add(Conv2D(10, kernel_size=(2, 2), padding='same', input_shape=(5, 3, 1)))
-model.add(Flatten())
-model.add(Dense(64, activation='relu'))
+model.add(LSTM(170, return_sequences=True, activation= 'relu' ,input_shape = (5,3)))    
+model.add(LSTM(90, return_sequences=False, activation = 'relu'))
+model.add(Dense(60, activation = 'relu'))
+model.add(Dense(20, activation = 'relu'))
 model.add(Dropout(0.2))
-model.add(Dense(32, activation='relu'))
 model.add(Dense(1))
+
 #3. 컴파일, 훈련
 model.compile(loss='mae', optimizer='adam', metrics=['mse'])
 
@@ -108,3 +109,6 @@ print('r2스코어 : ', r2)
 # dropout 적용 후 
 # loss :  70.77356719970703
 # r2스코어 :  0.5761524272062224
+
+# loss :  49.91150665283203
+# r2스코어 :  0.8232697707383032

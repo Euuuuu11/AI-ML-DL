@@ -3,8 +3,8 @@ from tabnanny import verbose
 from typing import Counter
 import numpy as np
 import pandas as pd
-from tensorflow.python.keras.models import Sequential,  load_model
-from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers import Dense, Dropout,Conv1D, Flatten
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.preprocessing import OneHotEncoder
@@ -232,19 +232,17 @@ print(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
-print(x.shape,y.shape) # (1460, 12) (1460,)
-print(x_train.shape,x_test.shape) # (1314, 12) (146, 12)
+print(x_train.shape,x_test.shape)   #  (1314, 12) (146, 12)
+x_train = x_train.reshape(1314, 4, 3)
+x_test = x_test.reshape(146, 4, 3)
 
-x_train = x_train.reshape(1314, 4, 3, 1)
-x_test = x_test.reshape(146, 4, 3, 1)
 
 #2. 모델구성
 model = Sequential()
-model.add(Conv2D(10, kernel_size=(2, 2), padding='same', input_shape=(4, 3, 1)))
+model.add(Conv1D(64, 2, input_shape=(4,3)))
 model.add(Flatten())
-model.add(Dense(64, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(32, activation='relu'))
+model.add(Dense(32))
+model.add(Dense(16))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
@@ -252,22 +250,26 @@ model.compile(loss='mae', optimizer='adam', metrics=['mse'])
 
 from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
 import datetime
-# date= datetime.datetime.now()      # 2022-07-07 17:22:07.702644
-# date = date.strftime("%m%d_%H%M")  # 0707_1723
-# print(date)
+date= datetime.datetime.now()      # 2022-07-07 17:22:07.702644
+date = date.strftime("%m%d_%H%M")  # 0707_1723
+print(date)
 
-# filepath = './_ModelCheckpoint/k26_11/'
-# filename = '{epoch:04d}-{loss:.4f}.hdf5'
+filepath = './_ModelCheckpoint/k26_11/'
+filename = '{epoch:04d}-{loss:.4f}.hdf5'
+
+import time
+
 
 from tensorflow.python.keras.callbacks import EarlyStopping
 es = EarlyStopping(monitor='loss', patience=100, mode='min', 
               verbose=1, restore_best_weights=True)
-# mcp = ModelCheckpoint(monitor='loss', mode='auto',verbose=1,
-#                       save_best_only=True,
-#                       filepath= "".join([filepath,'k26_',date, '_', filename])) 
-
+mcp = ModelCheckpoint(monitor='loss', mode='auto',verbose=1,
+                      save_best_only=True,
+                      filepath= "".join([filepath,'k26_',date, '_', filename])) 
+start_time = time.time()
 model.fit(x_train, y_train, epochs=100, batch_size=10, verbose=1, callbacks=[es])
 
+end_time = time.time() - start_time
 #4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print('loss : ', loss)
@@ -276,9 +278,13 @@ y_predict = model.predict(x_test)
 from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
 print('r2스코어 : ', r2)
-
+print('끝난시간 : ', end_time)
 
 
 # dropout 적용 후 
 # loss :  17775.279296875
 # r2스코어 :  0.7969202193966052
+
+# loss :  20414.38671875
+# r2스코어 :  0.7475376316400382
+# 끝난시간 :  39.39179348945618

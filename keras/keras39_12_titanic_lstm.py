@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_breast_cancer
 from tensorflow.python.keras.models import Sequential,  load_model
-from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout
+from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout,LSTM
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.callbacks import EarlyStopping
 from sklearn.metrics import r2_score, accuracy_score
@@ -109,14 +109,14 @@ x_test = scaler.transform(x_test)
 print(x.shape,y.shape) # (891, 8) (891,)
 print(x_train.shape,x_test.shape) # ((712, 8) (179, 8))
 
-x_train = x_train.reshape(712, 2, 2, 2)
-x_test = x_test.reshape(179, 2, 2, 2)
+x_train = x_train.reshape(712, 4, 2)
+x_test = x_test.reshape(179, 4, 2)
 
 
 #2. 모델구성
 model = Sequential()
-model.add(Conv2D(10, kernel_size=(2, 2), padding='same', input_shape=(2, 2, 2)))
-model.add(Flatten())
+model.add(LSTM(170, return_sequences=True, activation= 'relu' ,input_shape = (4,2)))    
+model.add(LSTM(90, return_sequences=False, activation = 'relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(32, activation='relu'))
@@ -160,27 +160,27 @@ y_predict = y_predict.round(0)
 print(y_predict)
 
 
-y_summit = model.predict(test_set)
+# y_summit = model.predict(test_set)
 
-print(y_summit)
-print(y_summit.shape) # (418, 1)
-y_summit = y_summit.round()
-df = pd.DataFrame(y_summit)
-print(df)
-oh = OneHotEncoder(sparse=False) # sparse=true 는 매트릭스반환 False는 array 반환
-y_summit = oh.fit_transform(df)
-print(y_summit)
-y_summit = np.argmax(y_summit, axis= 1)
-submission_set = pd.read_csv(path + 'gender_submission.csv', # + 명령어는 문자를 앞문자와 더해줌
-                             index_col=0) # index_col=n n번째 컬럼을 인덱스로 인식
+# print(y_summit)
+# print(y_summit.shape) # (418, 1)
+# y_summit = y_summit.round()
+# df = pd.DataFrame(y_summit)
+# print(df)
+# oh = OneHotEncoder(sparse=False) # sparse=true 는 매트릭스반환 False는 array 반환
+# y_summit = oh.fit_transform(df)
+# print(y_summit)
+# y_summit = np.argmax(y_summit, axis= 1)
+# submission_set = pd.read_csv(path + 'gender_submission.csv', # + 명령어는 문자를 앞문자와 더해줌
+#                              index_col=0) # index_col=n n번째 컬럼을 인덱스로 인식
 
-print(submission_set)
+# print(submission_set)
 
-submission_set['Survived'] = y_summit
-print(submission_set)
+# submission_set['Survived'] = y_summit
+# print(submission_set)
 
 
-submission_set.to_csv(path + 'submission.csv', index = True)
+# submission_set.to_csv(path + 'submission.csv', index = True)
 
 
 acc= accuracy_score(y_test, y_predict)
@@ -191,3 +191,6 @@ model.summary()
 # dropout 적용 후 
 # loss :  0.446487694978714
 # acc스코어 :  0.8100558659217877
+
+# loss :  0.43836480379104614
+# acc스코어 :  0.8044692737430168

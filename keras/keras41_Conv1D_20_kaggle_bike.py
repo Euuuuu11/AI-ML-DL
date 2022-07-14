@@ -3,11 +3,11 @@
 import numpy as np
 import pandas as pd
 from sklearn import metrics
-from tensorflow.python.keras.models import Sequential,  load_model
-from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
-from tensorflow.keras.layers import LSTM, Dense
+from tensorflow.keras.layers import LSTM, Dense,Conv1D, Flatten
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 
 #1. 데이터
@@ -61,40 +61,43 @@ print(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
-print(x.shape,y.shape) # ((10886, 15) (10886,)
-print(x_train.shape,x_test.shape) # (8708, 15) (2178, 15)
+print(x_train.shape,x_test.shape)   #  (8708, 15) (2178, 15)
+x_train = x_train.reshape(8708, 5, 3)
+x_test = x_test.reshape(2178, 5, 3)
 
-x_train = x_train.reshape(8708, 5, 3, 1)
-x_test = x_test.reshape(2178, 5, 3, 1)
 
 #2. 모델구성
 model = Sequential()
-model.add(Conv2D(10, kernel_size=(2, 2), padding='same', input_shape=(5, 3, 1)))
+model.add(Conv1D(64, 2, input_shape=(5,3)))
 model.add(Flatten())
-model.add(Dense(64, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(32, activation='relu'))
+model.add(Dense(32))
+model.add(Dense(16))
 model.add(Dense(1))
+
 #3. 컴파일, 훈련
 model.compile(loss='mae', optimizer='adam', metrics=['mse'])
 
 from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
 import datetime
-# date= datetime.datetime.now()      # 2022-07-07 17:22:07.702644
-# date = date.strftime("%m%d_%H%M")  # 0707_1723
-# print(date)
+date= datetime.datetime.now()      # 2022-07-07 17:22:07.702644
+date = date.strftime("%m%d_%H%M")  # 0707_1723
+print(date)
 
-# filepath = './_ModelCheckpoint/k26_10/'
-# filename = '{epoch:04d}-{loss:.4f}.hdf5'
+filepath = './_ModelCheckpoint/k26_10/'
+filename = '{epoch:04d}-{loss:.4f}.hdf5'
+
+import time
+
 
 from tensorflow.python.keras.callbacks import EarlyStopping
 es = EarlyStopping(monitor='loss', patience=100, mode='min', 
               verbose=1, restore_best_weights=True) 
-# mcp = ModelCheckpoint(monitor='loss', mode='auto',verbose=1,
-#                       save_best_only=True,filepath= "".join([filepath,'k26_',date, '_', filename]))
-
+mcp = ModelCheckpoint(monitor='loss', mode='auto',verbose=1,
+                      save_best_only=True,filepath= "".join([filepath,'k26_',date, '_', filename]))
+start_time = time.time()
 model.fit(x_train, y_train, epochs=100, batch_size=100, verbose=1, callbacks=[es])
 
+end_time = time.time() - start_time
 #4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print('loss : ', loss)
@@ -104,7 +107,12 @@ y_predict = model.predict(x_test)
 from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
 print('r2스코어 : ', r2)
+print('끝난시간 : ', end_time)
 
 # dropout 적용 후 
 # loss :  70.77356719970703
 # r2스코어 :  0.5761524272062224
+
+# loss :  106.15758514404297
+# r2스코어 :  0.25699341226015315
+# 끝난시간 :  29.694669008255005

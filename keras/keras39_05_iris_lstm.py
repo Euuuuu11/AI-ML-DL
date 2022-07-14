@@ -5,7 +5,7 @@ from pyrsistent import m
 from sklearn.datasets import load_iris
 from sklearn.metrics import accuracy_score
 from tensorflow.python.keras.models import Sequential,  load_model
-from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout
+from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout,LSTM
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
@@ -50,18 +50,18 @@ x_test = scaler.transform(x_test)
 
 # print(y_test)
 # print(y_train)
-x_train = scaler.fit_transform(x_train).reshape(120, 2, 2, 1)
-x_test = scaler.fit_transform(x_test).reshape(30, 2, 2, 1)
+x_train = scaler.fit_transform(x_train).reshape(120, 2, 2)
+x_test = scaler.fit_transform(x_test).reshape(30, 2, 2)
 
 #2. 모델구성
 model = Sequential()
-model.add(Conv2D(10, kernel_size=(2, 2), padding='same', input_shape=(2, 2, 1)))
-model.add(Flatten())
-model.add(Dense(64, activation='relu'))
+model.add(LSTM(170, return_sequences=True, activation= 'relu' ,input_shape = (2,2)))    
+model.add(LSTM(90, return_sequences=False, activation = 'relu'))
+model.add(Dense(60, activation = 'relu'))
+model.add(Dense(20, activation = 'relu'))
 model.add(Dropout(0.2))
-model.add(Dense(32, activation='relu'))
 model.add(Dense(3))
-
+model.summary()
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam',
               metrics=['accuracy']) # 다중분류에는 loss = 'categorical_crossentropy'만 사용 
@@ -107,3 +107,6 @@ print('acc스코어 : ', acc)
 # dropout 적용 후 
 # loss :  0.9333333373069763
 # acc스코어 :  0.9333333333333333
+
+# loss :  0.5176361799240112
+# acc스코어 :  0.6333333333333333

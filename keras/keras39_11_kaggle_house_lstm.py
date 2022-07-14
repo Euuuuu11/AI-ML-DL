@@ -4,7 +4,7 @@ from typing import Counter
 import numpy as np
 import pandas as pd
 from tensorflow.python.keras.models import Sequential,  load_model
-from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout
+from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout,LSTM
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.preprocessing import OneHotEncoder
@@ -235,13 +235,13 @@ x_test = scaler.transform(x_test)
 print(x.shape,y.shape) # (1460, 12) (1460,)
 print(x_train.shape,x_test.shape) # (1314, 12) (146, 12)
 
-x_train = x_train.reshape(1314, 4, 3, 1)
-x_test = x_test.reshape(146, 4, 3, 1)
+x_train = x_train.reshape(1314, 4, 3)
+x_test = x_test.reshape(146, 4, 3)
 
 #2. 모델구성
 model = Sequential()
-model.add(Conv2D(10, kernel_size=(2, 2), padding='same', input_shape=(4, 3, 1)))
-model.add(Flatten())
+model.add(LSTM(170, return_sequences=True, activation= 'relu' ,input_shape = (4,3)))    
+model.add(LSTM(90, return_sequences=False, activation = 'relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(32, activation='relu'))
@@ -282,3 +282,6 @@ print('r2스코어 : ', r2)
 # dropout 적용 후 
 # loss :  17775.279296875
 # r2스코어 :  0.7969202193966052
+
+# loss :  28300.349609375
+# r2스코어 :  0.591704236167754
