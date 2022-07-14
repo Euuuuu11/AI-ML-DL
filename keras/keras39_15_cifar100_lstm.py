@@ -57,7 +57,7 @@ es = EarlyStopping(monitor='val_loss', patience=60, mode='auto', verbose=1,
         
 
 
-model.fit(x_train, y_train, epochs=40, batch_size=512,
+model.fit(x_train, y_train, epochs=60, batch_size=512,
                  validation_split=0.3,
                  callbacks=[es],
                  verbose=1)

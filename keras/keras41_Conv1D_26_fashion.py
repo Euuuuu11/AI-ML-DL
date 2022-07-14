@@ -62,7 +62,7 @@ mcp = ModelCheckpoint(monitor='val_loss', mode='auto',verbose=1,
 
 import time
 start_time = time.time()
-model.fit(x_train, y_train, epochs=20, batch_size=100,
+model.fit(x_train, y_train, epochs=30, batch_size=100,
                  validation_split=0.2,
                  callbacks=[es,mcp],
                  verbose=1)
