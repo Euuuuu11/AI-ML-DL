@@ -37,7 +37,7 @@ dense4 = Dense(60)(dense3)
 dense5 = Dense(40,activation='relu')(dense4) # 'relu' 히든 레이어에서만 사용 가능(음수는 없애고, linear와 동일)
 dense6 = Dense(10,activation='sigmoid')(dense5)
 output1 = Dense(1,activation="sigmoid")(dense6) # 이진분류 마지막은 무조건 'sigmoid'(0 ~ 1까지), loss='binary_crossentropy'
-model = Model(inputs=input1, outputs=output1)
+c
 
 #3. 컴파일, 훈련
 model.compile(loss='binary_crossentropy', optimizer='adam',
