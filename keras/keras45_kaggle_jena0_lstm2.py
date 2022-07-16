@@ -96,19 +96,12 @@ date = datetime.datetime.now()
 date = date.strftime("%m%d_%H%M") # 0707_1723
 print(date)
 
-save_filepath = './_ModelCheckPoint/' + current_name + '/'
-load_filepath = './_ModelCheckPoint/' + current_name + '/'
 
-# model = load_model(load_filepath + '0708_1753_0011-0.0731.hdf5')
-filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
-mcp = ModelCheckpoint(monitor='val_loss', mode='auto', verbose=1, save_best_only=True, 
-                      filepath= "".join([save_filepath, date, '_', filename])
-                      )
 
 import time
 
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=1, 
+hist = model.fit(x_train, y_train, epochs=3, 
                  batch_size=600, validation_split=0.2, 
                  callbacks=[earlyStopping], 
                  verbose=1) 
@@ -119,3 +112,5 @@ end_time = time.time() - start_time
 # 4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
+
+# loss :  8.472689660266042e-05
