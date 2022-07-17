@@ -1,12 +1,32 @@
-import pandas as pd
 import numpy as np
-from  tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense,Conv1D, Flatten, MaxPooling2D,LSTM
+import pandas as pd
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers import Dense, LSTM, Dropout, MaxPooling1D, Conv1D, Flatten
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
+import math
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
 
-path = './_data\kaggle_jena/'
-df_weather=pd.read_csv(path + 'jena_climate_2009_2016.csv')
-df_weather.describe()   # 다양한 통계량을 요약해준다.
-print(df_weather.shape) # (420551, 15)
+path = './_data/kaggle_jena/'
+df_weather=pd.read_csv(path + 'kaggle_jena.csv', index_col=0)
+df_weather.describe()
+
+print(df_weather.columns)
+
+#날짜 datetime 포맷으로 변환
+# pd.to_datetime(df_weather['Date Time'], format='%Y%m%d')
+# # 0      2020-01-07
+# # 1      2020-01-06
+# # 2      2020-01-03
+# # 3      2020-01-02
+# # 4      2019-12-30
+
+# df_weather['일자'] = pd.to_datetime(df_weather['Date Time'], format='%Y%m%d')
+# df_weather['연도'] =df_weather['Date Time'].dt.year
+# df_weather['월'] =df_weather['Date Time'].dt.month
+# df_weather['일'] =df_weather['Date Time'].dt.day
+
 
 
 #Normalization 정규화
@@ -24,6 +44,7 @@ df_scaled = pd.DataFrame(df_scaled)
 df_scaled.columns = scale_cols
 
 print(df_scaled)
+
 
 
 #학습을 시킬 데이터 셋 생성
@@ -66,7 +87,7 @@ x_train, x_test, y_train, y_test = train_test_split(train_feature, train_label, 
 # test_feature, test_label = make_dataset(test_feature, test_label, 20)
 # print(test_feature.shape, test_label.shape)
 
-
+# ===>안 되는데 왜 안 되는지 모르겠음
 
 
 
@@ -74,11 +95,15 @@ x_train, x_test, y_train, y_test = train_test_split(train_feature, train_label, 
 
 #2.모델 구성
 model = Sequential()
-model.add(LSTM(16, 
-               input_shape=(train_feature.shape[1], train_feature.shape[2]), 
-               activation='relu', 
-               return_sequences=False)
-          )
+model.add(Conv1D(filters = 64, kernel_size=3, 
+                 padding='same',
+                 input_shape=(train_feature.shape[1], train_feature.shape[2])))
+model.add(MaxPooling1D())
+model.add(LSTM(16))
+model.add(Dropout(0.2))
+model.add(Dense(16, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(50, activation='relu'))
 model.add(Dense(1))
 
 
@@ -96,14 +121,21 @@ date = datetime.datetime.now()
 date = date.strftime("%m%d_%H%M") # 0707_1723
 print(date)
 
+save_filepath = './_ModelCheckPoint/' + current_name + '/'
+load_filepath = './_ModelCheckPoint/' + current_name + '/'
 
+# model = load_model(load_filepath + '0708_1753_0011-0.0731.hdf5')
+filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
+mcp = ModelCheckpoint(monitor='val_loss', mode='auto', verbose=1, save_best_only=True, 
+                      filepath= "".join([save_filepath, date, '_', filename])
+                      )
 
 import time
 
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=3, 
-                 batch_size=600, validation_split=0.2, 
-                 callbacks=[earlyStopping], 
+hist = model.fit(x_train, y_train, epochs=1, 
+                 batch_size=5, validation_split=0.2, 
+                 callbacks=[earlyStopping, mcp], 
                  verbose=1) 
 
 end_time = time.time() - start_time
@@ -113,4 +145,4 @@ end_time = time.time() - start_time
 loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
 
-# loss :  8.472689660266042e-05
+print('걸린 시간 : ', end_time)
