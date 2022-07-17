@@ -5,7 +5,7 @@ from tensorflow.python.keras.layers import Dense,Conv1D, Flatten, MaxPooling2D,L
 
 path = './_data\kaggle_jena/'
 df_weather=pd.read_csv(path + 'jena_climate_2009_2016.csv')
-df_weather.describe()
+df_weather.describe()   # 다양한 통계량을 요약해준다.
 print(df_weather.shape) # (420551, 15)
 
 
