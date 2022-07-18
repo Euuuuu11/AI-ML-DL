@@ -10,14 +10,15 @@ df.describe()   # 다양한 통계량을 요약해준다.
 # print(df.shape) # (420551, 15)
 # df.info()
 
-#데이터 년, 월, 일 구분
-# df['Date Time'] = pd.to_datetime(df['Date Time'])
-# df['year'] = df['Date Time'].dt.strftime('%Y')
-# df['month'] = df['Date Time'].dt.strftime('%m')
-# df['day'] = df['Date Time'].dt.strftime('%d')
-# df['hour'] = df['Date Time'].dt.strftime('%h')
-# df['minute'] = df['Date Time'].dt.strftime('%M')
-# df = df.drop(['Date Time'],axis=1)
+# 데이터 년, 월, 일 구분
+df['Date Time'] = pd.to_datetime(df['Date Time'])
+df['year'] = df['Date Time'].dt.strftime('%Y')
+df['month'] = df['Date Time'].dt.strftime('%m')
+df['day'] = df['Date Time'].dt.strftime('%d')
+df['hour'] = df['Date Time'].dt.strftime('%h')
+df['minute'] = df['Date Time'].dt.strftime('%M')
+df = df.drop(['Date Time'],axis=1)
+df = df.astype('float64')
 df.info()
 # print(df.shape)   # (420551, 19)
 
