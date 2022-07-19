@@ -20,12 +20,12 @@ bbb = split_x(a, size)
 ccc = split_x(x_predict, size2) # ccc라는 변수를 하나 더 만들어줘서 split_x 해준다.
 
 # print(bbb)
-# print(bbb.shape)    
+# print(bbb.shape, ccc.shape)   # (96, 5) (7, 4)  
 
 x = bbb[:, :-1] #.reshape(96,4,1)
 y = bbb[:, -1]
 print(x,y)
-print(x.shape, y.shape)
+print(x.shape, y.shape) # (96, 4) (96,)
 print(ccc.shape)    # (7, 4)
 
 #2. 모델구성    
