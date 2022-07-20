@@ -10,6 +10,9 @@ x_train = np.load('d:/study_data/_save/_npy/keras47_4_train_x.npy')
 y_train = np.load('d:/study_data/_save/_npy/keras47_4_train_y.npy')
 x_test = np.load('d:/study_data/_save/_npy/keras47_4_test_x.npy')
 y_test = np.load('d:/study_data/_save/_npy/keras47_4_test_y.npy')
+test_set = np.load('d:/study_data/_save/_npy/keras47_4_test_set.npy')
+
+print(test_set.shape)
 
 #2. 모델 구성
 from tensorflow.python.keras.models import Sequential
@@ -32,12 +35,25 @@ hist = model.fit(x_train, y_train, epochs=30,validation_split=0.2)
 #                                           # 전체데이터/batch = 160/5 = 32
 #                     validation_data=xy_test,
 #                     validation_steps=4)
-accuracy = hist.history['accuracy']
-val_accuracy = hist.history['val_accuracy']
-loss = hist.history['loss']
-val_loss = hist.history['val_loss']
+# accuracy = hist.history['accuracy']
+# val_accuracy = hist.history['val_accuracy']
+# loss = hist.history['loss']
+# val_loss = hist.history['val_loss']
 
-print('loss :', loss[-1])
-print('val_loss :', val_loss[-1])
-print('accuracy:', accuracy[-1])
-print('val_accuracy :', val_accuracy[-1])
+# print('loss :', loss[-1])
+# print('val_loss :', val_loss[-1])
+# print('accuracy:', accuracy[-1])
+# print('val_accuracy :', val_accuracy[-1])
+
+#4. 평가, 예측
+# from tensorflow.keras.utils import to_categorical
+loss = model.evaluate(x_test,y_test)
+y_predict = model.predict(test_set)
+print(y_predict)
+y_predict = np.argmax(y_predict, axis=1)
+# y_predict = to_categorical(y_predict)
+
+print('loss : ', loss)
+print('나의 성별은 : ', y_predict)
+
+# 나의 성별은 :  [0. 1.]

@@ -22,26 +22,37 @@ train_datagen = ImageDataGenerator(
 test_datagen = ImageDataGenerator(  # test 데이터는 증폭할 필요가 없다.
     rescale=1./255
 )
-xy_data = train_datagen.flow_from_directory(   # directory = 폴더
+xy_data = test_datagen.flow_from_directory(   # directory = 폴더
     'D:/study_data/_data/men_women/',
     target_size=(150, 150), # 크기 맞추기
-    batch_size=2316,
+    batch_size=3309,
     class_mode='categorical',
     shuffle=True,
     )
+test_set = test_datagen.flow_from_directory(   # directory = 폴더
+    'D:/study_data/_data/image/test_set/',
+    target_size=(150, 150), # 크기 맞추기
+    batch_size=1,
+    class_mode='categorical',
+    shuffle=True,
+    )
+
 x = xy_data[0][0]
 y = xy_data[0][1]
+test_set = test_set[0][0]
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7, random_state=66)
 
-print((x_train.shape),(y_train.shape))  # (2316, 150, 150, 3) (2316, 2)
+# print((x_train.shape),(y_train.shape))  # (2316, 150, 150, 3) (2316, 2)
 # # 현재 5,200,200,1 짜리 데이터가 32덩어리
 
 np.save('d:/study_data/_save/_npy/keras47_4_train_x.npy', arr=x_train)
 np.save('d:/study_data/_save/_npy/keras47_4_train_y.npy', arr=y_train)
 np.save('d:/study_data/_save/_npy/keras47_4_test_x.npy', arr=x_test)
 np.save('d:/study_data/_save/_npy/keras47_4_test_y.npy', arr=y_test)
+np.save('d:/study_data/_save/_npy/keras47_4_test_set.npy', arr=test_set)
+
 
 #2. 모델 구성
 from tensorflow.python.keras.models import Sequential
@@ -74,5 +85,5 @@ print('val_loss :', val_loss[-1])
 print('accuracy:', accuracy[-1])
 print('val_accuracy :', val_accuracy[-1])
 
-# # loss : 0.05463876202702522
-# accuracy: 0.9807098507881165
+# loss :  0.0193322766572237
+# ccuracy: 0.9938271641731262
