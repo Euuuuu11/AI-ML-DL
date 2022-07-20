@@ -1,6 +1,6 @@
 from more_itertools import zip_equal
 import pandas as pd
-from tensorflow.python.keras.models import Sequential, Model, load_model
+from tensorflow.python.keras.models import Sequential, Model
 from tensorflow.python.keras.layers import Dense, LSTM, Dropout, MaxPooling1D, Conv1D, Flatten, Input
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
@@ -10,6 +10,7 @@ from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 from tensorflow.python.keras.callbacks import EarlyStopping
 import time
+from keras.preprocessing.image import ImageDataGenerator
 
 path = './_data/test_amore_0718/'
 df=pd.read_csv(path + '아모레220718.csv',thousands=',',encoding='cp949')
@@ -129,63 +130,64 @@ df_scaled = pd.DataFrame(df_scaled)
 df_scaled.columns = scale_cols
 x1_train, x1_test, x2_train, x2_test, y1_train, y1_test = train_test_split(x1, x2, y1, test_size=0.2    , shuffle=False)
 
-# # 2. 모델구성
-# # 2-1. 모델1
-# input1 = Input(shape=(7, 8))
-# dense1 = Conv1D(64, 2, activation='relu', name='d1')(input1)
-# dense2 = LSTM(128, activation='relu', name='d2')(dense1)
-# dense3 = Dense(64, activation='relu', name='d3')(dense2)
-# output1 = Dense(32, activation='relu', name='out_d1')(dense3)
+# 2. 모델구성
+# 2-1. 모델1
+input1 = Input(shape=(7, 8))
+dense1 = Conv1D(64, 2, activation='relu', name='d1')(input1)
+dense2 = LSTM(128, activation='tanh', name='d2')(dense1)
+dense3 = Dense(64, activation='relu', name='d3')(dense2)
+output1 = Dense(32, activation='relu', name='out_d1')(dense3)
 
-# # 2-2. 모델2
-# input2 = Input(shape=(7, 8))
-# dense11 = Conv1D(64, 2, activation='relu', name='d11')(input2)
-# dense12 = LSTM(128, activation='swish', name='d12')(dense11)
-# dense13 = Dense(64, activation='relu', name='d13')(dense12)
-# dense14 = Dense(32, activation='relu', name='d14')(dense13)
-# output2 = Dense(16, activation='relu', name='out_d2')(dense14)
+# 2-2. 모델2
+input2 = Input(shape=(7, 8))
+dense11 = Conv1D(64, 2, activation='relu', name='d11')(input2)
+dense12 = LSTM(128, activation='tanh', name='d12')(dense11)
+dense13 = Dense(64, activation='relu', name='d13')(dense12)
+dense14 = Dense(32, activation='relu', name='d14')(dense13)
+output2 = Dense(16, activation='relu', name='out_d2')(dense14)
 
-# from tensorflow.python.keras.layers import concatenate
-# merge1 = concatenate([output1, output2], name='m1')
-# merge2 = Dense(100, activation='relu', name='mg2')(merge1)
-# merge3 = Dense(100, name='mg3')(merge2)
-# last_output = Dense(1, name='last')(merge3)
+from tensorflow.python.keras.layers import concatenate
+merge1 = concatenate([output1, output2], name='m1')
+merge2 = Dense(100, activation='relu', name='mg2')(merge1)
+merge3 = Dense(100, name='mg3')(merge2)
+last_output = Dense(1, name='last')(merge3)
 
-# model = Model(inputs=[input1, input2], outputs=[last_output])
-# import datetime
-# date = datetime.datetime.now()
-# print(date)
+model = Model(inputs=[input1, input2], outputs=[last_output])
+import datetime
+date = datetime.datetime.now()
+print(date)
 
-# date = date.strftime("%m%d_%H%M") # 0707_1723
-# print(date)
+date = date.strftime("%m%d_%H%M") # 0707_1723
+print(date)
  
-#  # 3. 컴파일, 훈련
-# filepath = './_test/'
-# filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
+ # 3. 컴파일, 훈련
+filepath = './_test/'
+filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
 
-# model.compile(loss='mae', optimizer='Adam')
-# start_time = time.time()
-# from keras.callbacks import ModelCheckpoint,EarlyStopping
-# es = EarlyStopping(monitor='val_loss', patience=500, mode='min', 
-#                               verbose=1,restore_best_weights=True)
-# mcp = ModelCheckpoint(monitor='val_loss',mode='auto',verbose=1,
-#                       save_best_only=True, 
-#                       filepath="".join([filepath,'k46_', date, '_', filename])
-#                     )
-# model.fit([x1_train,x2_train], y1_train, 
-#           validation_split=0.1, 
-#           epochs=51,batch_size=32
-#           ,callbacks=[es,mcp])
+model.compile(loss='mae', optimizer='Adam')
+start_time = time.time()
+from keras.callbacks import ModelCheckpoint,EarlyStopping
+es = EarlyStopping(monitor='val_loss', patience=500, mode='min', 
+                              verbose=1,restore_best_weights=True)
+mcp = ModelCheckpoint(monitor='val_loss',mode='auto',verbose=1,
+                      save_best_only=True, 
+                      filepath="".join([filepath,'k46_', date, '_', filename])
+                    )
+model.fit([x1_train,x2_train], y1_train, 
+          validation_split=0.1, 
+          epochs=15,batch_size=32
+          ,callbacks=[es,mcp])
 
-# end_time = time.time()
-model = load_model('./_test/k46_0719_1819_0094-3851.9736.hdf5')
+end_time = time.time()
+
 # 4. 평가, 예측
 loss = model.evaluate([x1_test, x2_test], y1_test)
 predict = model.predict([x1_test, x2_test])
 print('loss: ', loss)
 print('7/20 종가 : ', predict[-1:])
-# print('걸린 시간: ', end_time-start_time)
+print('걸린 시간: ', end_time-start_time)
 
-
-
-# 7/20 종가 :  [[133871.28]]
+# 7/20 종가 :  [[135684.06]]
+# 7/20 종가 :  [[135610.6]]
+# 7/20 종가 :  [[133787.95]]
+# 7/20 종가 :  [[285145.2]]
