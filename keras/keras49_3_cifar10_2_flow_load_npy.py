@@ -47,5 +47,14 @@ print('val_loss :', val_loss[-1])
 print('accuracy:', accuracy[-1])
 print('val_accuracy :', val_accuracy[-1])
 
+
+
+
+
+
+# # loss :  1.836954116821289
+# # acc스코어 :  0.3793
+
+
 # loss : 1.6325557231903076
 # accuracy: 0.44272592663764954

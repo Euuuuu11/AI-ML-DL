@@ -17,8 +17,8 @@ from tensorflow.python.keras.layers import Dense, Conv2D, Flatten
 model = Sequential()
 model.add(Conv2D(128, (2,2), input_shape=(150,150,3), activation='relu'))
 model.add(Conv2D(64, (2,2), activation='relu'))
-model.add(Flatten())
-model.add(Dense(32, activation='relu'))
+model.add(Flatten()) 
+model.add(Dense(32, activation='relu')) 
 model.add(Dense(16, activation='relu'))
 model.add(Dense(8, activation='relu'))
 model.add(Dense(2, activation='softmax'))
@@ -35,9 +35,9 @@ hist = model.fit(x_train, y_train, epochs=30,validation_split=0.2)
 # val_accuracy = hist.history['val_accuracy']
 # loss = hist.history['loss']
 # val_loss = hist.history['val_loss']
-
-# print('loss :', loss[-1])
-# print('val_loss :', val_loss[-1])
+ 
+# print('loss :', loss[-1]) 
+# print('val_loss :', val_loss[-1])       
 # print('accuracy:', accuracy[-1])
 # print('val_accuracy :', val_accuracy[-1])
 
@@ -56,4 +56,4 @@ print('나의 성별은 : ', y_predict)
 
 # [[9.9999988e-01 1.2235688e-07]]
 # loss :  [7.958006858825684, 0.6304128766059875]
-# 나의 성별은 :  [0]
+# 나의 성별은 :  [0]                                                                                                        
