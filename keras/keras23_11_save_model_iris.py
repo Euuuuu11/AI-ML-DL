@@ -1,4 +1,3 @@
-from tkinter.tix import Y_REGION
 import numpy as np
 from pandas import Categorical
 from sklearn.datasets import load_iris

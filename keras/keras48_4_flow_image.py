@@ -1,4 +1,3 @@
-from re import X
 from tensorflow.keras.datasets import fashion_mnist
 from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
