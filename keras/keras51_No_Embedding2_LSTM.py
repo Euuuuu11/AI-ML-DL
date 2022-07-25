@@ -1,4 +1,3 @@
-from telnetlib import SE
 from keras.preprocessing.text import Tokenizer
 import numpy as np
 

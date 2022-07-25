@@ -7,7 +7,6 @@
 #7. epoch 100번 이상
 #8. loss지표는 mse, mae
 
-from sympy import randMatrix
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 import numpy as np  
