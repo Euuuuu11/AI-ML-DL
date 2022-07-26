@@ -22,14 +22,14 @@ print(datasets.DESCR)
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(40, input_dim=8))
-model.add(Dense(45))
-model.add(Dense(50))
-model.add(Dense(55))
-model.add(Dense(60))
-model.add(Dense(65))
-model.add(Dense(70))
-model.add(Dense(75))
+model.add(Dense(32, input_dim=8))
+model.add(Dense(32))
+model.add(Dense(64))
+model.add(Dense(16))
+model.add(Dense(8))
+model.add(Dense(8))
+model.add(Dense(16))
+model.add(Dense(8))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련

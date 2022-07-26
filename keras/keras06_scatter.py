@@ -13,10 +13,10 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(5, input_dim=1))
-model.add(Dense(4))
-model.add(Dense(4))
-model.add(Dense(4))
+model.add(Dense(12, input_dim=1))
+model.add(Dense(6))
+model.add(Dense(6))
+model.add(Dense(12))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련

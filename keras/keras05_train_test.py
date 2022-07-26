@@ -12,7 +12,7 @@ y_test = np.array([8,9,10])
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(10, input_dim=1))
+model.add(Dense(12, input_dim=1))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
