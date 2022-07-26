@@ -9,12 +9,12 @@ from tensorflow.keras.layers import Dense
 
 model = Sequential()
 model.add(Dense(4, input_dim=1))
-model.add(Dense(10))
-model.add(Dense(100))
-model.add(Dense(10))
-model.add(Dense(200))
-model.add(Dense(10))
-model.add(Dense(300))
+model.add(Dense(16))
+model.add(Dense(32))
+model.add(Dense(32))
+model.add(Dense(16))
+model.add(Dense(64))
+model.add(Dense(16))
 model.add(Dense(1))
 
 

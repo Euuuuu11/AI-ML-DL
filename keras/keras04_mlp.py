@@ -18,9 +18,9 @@ print(x.shape)    #10, 2)
 #2. 모델구성
 model = Sequential()
 model.add(Dense(5,input_dim=2))
-model.add(Dense(1))
-model.add(Dense(10))
-model.add(Dense(6))
+model.add(Dense(32))
+model.add(Dense(16))
+model.add(Dense(8))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련

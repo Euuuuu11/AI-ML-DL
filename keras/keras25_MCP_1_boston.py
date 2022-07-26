@@ -32,7 +32,7 @@ x_test = scaler.transform(x_test)
 # 2. 모델구성
 model = Sequential()
 model.add(Dense(64, input_dim=13))
-model.add(Dense(32,activation="relu"))
+model.add(Dense(16,activation="relu"))
 model.add(Dense(16,activation="relu"))
 model.add(Dense(1))
 model.summary()
