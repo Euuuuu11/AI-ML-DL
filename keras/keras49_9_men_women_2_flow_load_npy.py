@@ -9,7 +9,7 @@ y_test = np.load('d:/study_data/_save/_npy/keras49_9_test_y.npy')
 test_set = np.load('d:/study_data/_save/_npy/keras49_9_test_set.npy')
 
 print(test_set.shape)
-
+    
 #2. 모델 구성
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense, Conv2D, Flatten
