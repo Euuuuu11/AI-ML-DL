@@ -16,8 +16,8 @@ x_test, x_val, y_test, y_bal =  train_test_split(
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(5, input_dim=1))
-model.add(Dense(3))
+model.add(Dense(12, input_dim=1))
+model.add(Dense(6))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
