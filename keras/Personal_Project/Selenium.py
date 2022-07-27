@@ -14,14 +14,12 @@ def createFolder(directory):
     except OSError:
         print ('Error: Creating directory. ' +  directory)
 
-
-keyword='영화 투사부일체'
+keyword='영화 공작'
 createFolder('d:/project/'+keyword)
 
 chromedriver = 'C://chromedriver.exe'
 driver = webdriver.Chrome(chromedriver)
 driver.implicitly_wait(3)
-
 
 # =============================================================================
 # 구글 이미지 검색 접속 및 검색어 입력
@@ -34,7 +32,6 @@ Keyword=driver.find_element(By.XPATH,'//*[@id="sbtc"]/div/div[2]/input')
 Keyword.send_keys(keyword)
 
 driver.find_element(By.XPATH,'//*[@id="sbtc"]/button').click()
-
 
 # =============================================================================
 # 스크롤
@@ -53,7 +50,6 @@ try:
 except:
     pass
 
-
 # =============================================================================
 # 이미지 개수
 # =============================================================================
@@ -65,7 +61,6 @@ for image in images:
 
 print(keyword+' 찾은 이미지 개수:',len(links))
 time.sleep(2)
-
 
 # =============================================================================
 # 이미지 다운로드
