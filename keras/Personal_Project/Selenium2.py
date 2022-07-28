@@ -48,7 +48,7 @@ def crawling_img(name):
 
     imgs = driver.find_elements(By.CSS_SELECTOR,".rg_i.Q4LuWd")
     dir = "D:/project/movie"+ "/" + name
-    #끝까지 다내려서 개느림
+    #끝까지 다 내려서 느림
     
     createDirectory(dir) #폴더 생성해준다
     count = 1
@@ -63,9 +63,9 @@ def crawling_img(name):
             if count >= 120: #이미지 장수 선택 
                 break
         except:
-            print("..") #경로못찾으면 패~쓰~~~~~
+            print("..") #경로못찾으면 패스
     driver.close()
-movie = ["영화 괴물 포스터"]
+movie = ["영화 추격자 장면"]
 
 for movie in movie:
     crawling_img(movie)
