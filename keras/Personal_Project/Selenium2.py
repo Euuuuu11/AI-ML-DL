@@ -48,8 +48,8 @@ def crawling_img(name):
 
     imgs = driver.find_elements(By.CSS_SELECTOR,".rg_i.Q4LuWd")
     dir = "D:/project/movie"+ "/" + name
-    #끝까지 다 내려서 느림
     
+    #끝까지 다 내려서 느림
     createDirectory(dir) #폴더 생성해준다
     count = 1
     for img in imgs:
@@ -65,7 +65,7 @@ def crawling_img(name):
         except:
             print("..") #경로못찾으면 패스
     driver.close()
-movie = ["영화 추격자 장면"]
+movie = ["영화 가문의 위기(가문의 영광2) 장면사진"]
 
 for movie in movie:
     crawling_img(movie)
