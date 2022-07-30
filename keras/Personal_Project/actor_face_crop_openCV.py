@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 
-path_dir = "d:/project/movie/2_test"
+path_dir = "d:/project/movie/Haeundae"
 file_list = os.listdir(path_dir)
 
 print(file_list)
@@ -44,10 +44,10 @@ def Cutting_face_save(image, name):
         # cv2.destroyAllWindows()
 
         # 이미지 저장하기
-        cv2.imwrite(f"d:/project/movie/2_test/{name}.jpg", resize)
+        cv2.imwrite(f"d:/project/movie/Haeundae/{name}.jpg", resize)
         
 for name in file_name_list:
-    img = cv2.imread("d:/project/movie/2_test/"+name+".jpg")
+    img = cv2.imread("d:/project/movie/Haeundae"+name+".jpg")
     Cutting_face_save(img, name)
        
    

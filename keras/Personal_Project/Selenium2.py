@@ -65,7 +65,7 @@ def crawling_img(name):
         except:
             print("..") #경로못찾으면 패스
     driver.close()
-movie = ["영화 가문의 위기(가문의 영광2) 장면사진"]
+movie = ["한은정"]
 
 for movie in movie:
     crawling_img(movie)
