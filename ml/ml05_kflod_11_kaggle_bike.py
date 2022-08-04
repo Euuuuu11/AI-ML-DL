@@ -2,13 +2,11 @@
 
 import numpy as np
 import pandas as pd
-from sklearn import metrics
-from tensorflow.python.keras.models import Sequential,  load_model
-from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout,LSTM
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
-from tensorflow.keras.layers import LSTM, Dense
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
+from sklearn.model_selection import cross_val_predict, train_test_split
+from sklearn.model_selection import KFold, cross_val_score
+from sklearn.metrics import r2_score
 
 #1. 데이터
 
@@ -51,6 +49,9 @@ y = train_set['count']
 x_train, x_test, y_train, y_test = train_test_split(x,y,
              train_size=0.8, shuffle=True, random_state=777)
 
+n_splits = 5
+kfold = KFold(n_splits=n_splits, shuffle=True, random_state=66)
+
 # scaler = MinMaxScaler()
 # scaler = StandardScaler()
 # scaler = MaxAbsScaler()
@@ -64,26 +65,31 @@ x_test = scaler.transform(x_test)
 print(x.shape,y.shape) # ((10886, 15) (10886,)
 print(x_train.shape,x_test.shape) # (8708, 15) (2178, 15)
 
+
+
 #2. 모델구성
-from sklearn.svm import LinearSVR
-model = LinearSVR()
+from sklearn.svm import LinearSVR, SVR
+from sklearn.linear_model import Perceptron
+from sklearn.linear_model import LogisticRegression, LinearRegression # LinearRegression 회귀 
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 
-#3. 컴파일, 훈련
-model.fit(x_train, y_train)
+model = RandomForestRegressor()
 
-#4. 평가, 예측
-loss = model.score(x_test,y_test)
-print('loss : ', loss)
-y_predict = model.predict(x_test)
+#3.4. 컴파일, 훈련, 평가, 예측
+# scores = cross_val_score(model, x, y, cv=kfold)
+scores = cross_val_score(model, x_train, y_train, cv=5)         # 둘다 가능
+ 
+print('R2 : ', scores, '\n cross_val_score : ', round(np.mean(scores), 4))
 
-from sklearn.metrics import r2_score
-r2 = r2_score(y_test, y_predict)
-print('r2스코어 : ', r2)
+y_predict = cross_val_predict(model, x_test, y_test, cv=kfold)
+print(y_predict)
 
 
-# dropout 적용 후 
-# loss :  70.77356719970703
-# r2스코어 :  0.5761524272062224
+print(y_test)
+R2 = r2_score(y_test, y_predict)
+print('cross_val_predict R2 : ', R2)
 
-# loss :  49.91150665283203
-# r2스코어 :  0.8232697707383032
+
+# cross_val_predict R2 :  0.8200144547188092

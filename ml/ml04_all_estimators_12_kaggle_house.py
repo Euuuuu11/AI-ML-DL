@@ -9,6 +9,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
+from sklearn.utils import all_estimators
+from sklearn.metrics import accuracy_score, r2_score
+import warnings
+warnings.filterwarnings('ignore')
 
 #1. 데이터
 path = './_data/kaggle_house/'
@@ -236,27 +240,79 @@ print(x.shape,y.shape) # (1460, 12) (1460,)
 print(x_train.shape,x_test.shape) # (1314, 12) (146, 12)
 
 #2. 모델구성
-from sklearn.svm import LinearSVR
-model = LinearSVR()
+# allAlogrithms = all_estimators(type_filter='classifier')
+allAlogrithms = all_estimators(type_filter='regressor')
 
-#3. 컴파일, 훈련
-model.fit(x_train, y_train)
+# [('AdaBoostClassifier', <class 'sklearn.ensemble._weight_boosting.AdaBoostClassifier'>
 
+print('allAlogrithms : ', allAlogrithms)    # 딕셔너리들이 list 형태로 묶여져있다.
+print('모델의 개수 : ', len(allAlogrithms))  # 모델의 개수 :  41
 
-#4. 평가, 예측
-loss = model.score(x_test,y_test)
-print('loss : ', loss)
-y_predict = model.predict(x_test)
+# [예외처리] 에러가 떳을 때 무시하고, 넘어가겠다. 
+for (name, algorithm) in allAlogrithms:
+    try :
+        model = algorithm()
+        model.fit(x_train, y_train)
+        
+        y_predict = model.predict(x_test)
+        r2 = r2_score(y_test, y_predict)
+        print(name, '의 정답률 : ', r2)
+    except :
+        # continue    
+        print(name, '은 안나온 놈!!')    
 
-from sklearn.metrics import r2_score
-r2 = r2_score(y_test, y_predict)
-print('r2스코어 : ', r2)
-
-
-
-# dropout 적용 후 
-# loss :  17775.279296875
-# r2스코어 :  0.7969202193966052
-
-# loss :  28300.349609375
-# r2스코어 :  0.591704236167754
+# 모델의 개수 :  54
+# ARDRegression 의 정답률 :  0.7606056151886531
+# AdaBoostRegressor 의 정답률 :  0.7654694713057122
+# BaggingRegressor 의 정답률 :  0.8096257076272825
+# BayesianRidge 의 정답률 :  0.787218071487878
+# CCA 의 정답률 :  -0.7249695604362136
+# DecisionTreeRegressor 의 정답률 :  0.7467978810758757
+# DummyRegressor 의 정답률 :  -0.10557558339849282
+# ElasticNet 의 정답률 :  0.42102044280314044
+# ElasticNetCV 의 정답률 :  -0.07438789760309428
+# ExtraTreeRegressor 의 정답률 :  0.6896900644344245
+# ExtraTreesRegressor 의 정답률 :  0.8175766451970227
+# GammaRegressor 의 정답률 :  0.29925143087280137
+# GaussianProcessRegressor 의 정답률 :  -3557.484710633464
+# GradientBoostingRegressor 의 정답률 :  0.8198831190203903
+# HistGradientBoostingRegressor 의 정답률 :  0.8315542451596984
+# HuberRegressor 의 정답률 :  0.8071066783737371
+# IsotonicRegression 은 안나온 놈!!
+# KNeighborsRegressor 의 정답률 :  0.7306817044578291
+# KernelRidge 의 정답률 :  0.7745727768735221
+# Lars 의 정답률 :  0.7877801516547251
+# LarsCV 의 정답률 :  0.791360500572255
+# Lasso 의 정답률 :  0.7878315912263618
+# LassoCV 의 정답률 :  0.7918321211383781
+# LassoLars 의 정답률 :  0.788472315285025
+# LassoLarsCV 의 정답률 :  0.791360500572255
+# LassoLarsIC 의 정답률 :  0.7987015851659566
+# LinearRegression 의 정답률 :  0.7877801516547254
+# LinearSVR 의 정답률 :  -8.282493732404703
+# MLPRegressor 의 정답률 :  -8.707503964909302
+# MultiOutputRegressor 은 안나온 놈!!
+# MultiTaskElasticNet 은 안나온 놈!!
+# MultiTaskElasticNetCV 은 안나온 놈!!
+# MultiTaskLasso 은 안나온 놈!!
+# MultiTaskLassoCV 은 안나온 놈!!
+# NuSVR 의 정답률 :  -0.020212702771164937
+# OrthogonalMatchingPursuit 의 정답률 :  0.5470954279895497
+# OrthogonalMatchingPursuitCV 의 정답률 :  0.7685199074927538
+# PLSCanonical 의 정답률 :  -4.717308504108848
+# PLSRegression 의 정답률 :  0.7928207328690061
+# PassiveAggressiveRegressor 의 정답률 :  0.7270566055133892
+# PoissonRegressor 의 정답률 :  0.8166403499529131
+# RANSACRegressor 의 정답률 :  0.7797369171426796
+# RadiusNeighborsRegressor 의 정답률 :  0.5503971387618959
+# RandomForestRegressor 의 정답률 :  0.8296900050314509
+# RegressorChain 은 안나온 놈!!
+# Ridge 의 정답률 :  0.7834828641044441
+# RidgeCV 의 정답률 :  0.7834828641045362
+# SGDRegressor 의 정답률 :  0.7618136443437653
+# SVR 의 정답률 :  0.004637670084386758
+# StackingRegressor 은 안나온 놈!!
+# TheilSenRegressor 의 정답률 :  0.8113582074623762
+# TransformedTargetRegressor 의 정답률 :  0.7877801516547254
+# TweedieRegressor 의 정답률 :  0.2699408109234235
+# VotingRegressor 은 안나온 놈!!        

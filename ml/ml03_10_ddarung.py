@@ -40,47 +40,45 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 scaler = RobustScaler()
 
 scaler.fit(x_train)
-print(x_train)
+
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
-print(x.shape,y.shape) # (1328, 9) (1328,)
-print(x_train.shape,x_test.shape)
+
 
 
 #2. 모델구성
-from sklearn.svm import LinearSVR
-model = LinearSVR()
+from sklearn.svm import LinearSVR, SVR
+from sklearn.linear_model import Perceptron
+from sklearn.linear_model import LogisticRegression, LinearRegression # LinearRegression 회귀 
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+model = RandomForestRegressor()
 
 
 #3. 컴파일, 훈련
 model.fit(x_train, y_train)
 
-from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
-import datetime
-# date= datetime.datetime.now()      # 2022-07-07 17:22:07.702644
-# date = date.strftime("%m%d_%H%M")  # 0707_1723
-# print(date)
-
-# filepath = './_ModelCheckpoint/k26_9/'
-# filename = '{epoch:04d}-{loss:.4f}.hdf5'
-
-model.fit(x_train, y_train, epochs=100, batch_size=10, verbose=1)
 
 
 #4. 평가, 예측
 result = model.score(x_test, y_test) # evaluate 대신 score 사용
 print('결과 :', result)
 
-y_predict = model.predict(x_test)
+# LinearSVR
+# 결과 : 0.5109276183781397
 
-from sklearn.metrics import r2_score
-r2 = r2_score(y_test, y_predict)
-print('r2스코어 : ', r2)
+# SVR
+# 결과 : 0.4153046602834609
 
+# LinearRegression
+# 결과 : 0.5879603377840328
 
-# dropout 적용 후 
-# loss :  28.843862533569336
-# r2스코어 :  0.6956438021524509
+# KNeighborsRegressor
+# 결과 : 0.638962207620777
 
-# loss :  33.54220962524414
-# r2스코어 :  0.655130804113361
+# DecisionTreeRegressor
+# 결과 : 0.48593090572171027
+
+# RandomForestRegressor
+# 결과 : 0.7488049910765501

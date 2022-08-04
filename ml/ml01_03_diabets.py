@@ -4,7 +4,7 @@ from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 # from tensorflow.python.keras.models import Sequential
 # from tensorflow.python.keras.layers import Dense
-from sklearn.svm import LinearSVC # 레거시한 리니어 모델 사용
+from sklearn.svm import LinearSVR # 레거시한 리니어 모델 사용
 
 import tensorflow as tf
 tf.random.set_seed(66)

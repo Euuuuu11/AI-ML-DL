@@ -7,6 +7,10 @@ from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, M
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
+from sklearn.model_selection import cross_val_predict, train_test_split
+from sklearn.model_selection import KFold, cross_val_score
+from sklearn.metrics import r2_score
+
 
 #1. 데이터
 path = './_data/ddarung/'
@@ -34,53 +38,44 @@ y = train_set['count']
 x_train, x_test, y_train, y_test = train_test_split(x,y,
              train_size=0.75, shuffle=True, random_state=85)
 
+n_splits = 5
+kfold = KFold(n_splits=n_splits, shuffle=True, random_state=66)
+
 # scaler = MinMaxScaler()
 # scaler = StandardScaler()
 # scaler = MaxAbsScaler()
 scaler = RobustScaler()
 
 scaler.fit(x_train)
-print(x_train)
+
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
-print(x.shape,y.shape) # (1328, 9) (1328,)
-print(x_train.shape,x_test.shape)
+
 
 
 #2. 모델구성
-from sklearn.svm import LinearSVR
-model = LinearSVR()
+from sklearn.svm import LinearSVR, SVR
+from sklearn.linear_model import Perceptron
+from sklearn.linear_model import LogisticRegression, LinearRegression # LinearRegression 회귀 
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+
+model = RandomForestRegressor()
 
 
-#3. 컴파일, 훈련
-model.fit(x_train, y_train)
+#3.4. 컴파일, 훈련, 평가, 예측
+# scores = cross_val_score(model, x, y, cv=kfold)
+scores = cross_val_score(model, x_train, y_train, cv=5)         # 둘다 가능
+ 
+print('R2 : ', scores, '\n cross_val_score : ', round(np.mean(scores), 4))
 
-from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
-import datetime
-# date= datetime.datetime.now()      # 2022-07-07 17:22:07.702644
-# date = date.strftime("%m%d_%H%M")  # 0707_1723
-# print(date)
-
-# filepath = './_ModelCheckpoint/k26_9/'
-# filename = '{epoch:04d}-{loss:.4f}.hdf5'
-
-model.fit(x_train, y_train, epochs=100, batch_size=10, verbose=1)
+y_predict = cross_val_predict(model, x_test, y_test, cv=kfold)
+print(y_predict)
 
 
-#4. 평가, 예측
-result = model.score(x_test, y_test) # evaluate 대신 score 사용
-print('결과 :', result)
+print(y_test)
+R2 = r2_score(y_test, y_predict)
+print('cross_val_predict R2 : ', R2)
 
-y_predict = model.predict(x_test)
-
-from sklearn.metrics import r2_score
-r2 = r2_score(y_test, y_predict)
-print('r2스코어 : ', r2)
-
-
-# dropout 적용 후 
-# loss :  28.843862533569336
-# r2스코어 :  0.6956438021524509
-
-# loss :  33.54220962524414
-# r2스코어 :  0.655130804113361
+# cross_val_predict R2 :  0.6877423264222111

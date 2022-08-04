@@ -235,28 +235,43 @@ x_test = scaler.transform(x_test)
 print(x.shape,y.shape) # (1460, 12) (1460,)
 print(x_train.shape,x_test.shape) # (1314, 12) (146, 12)
 
+
 #2. 모델구성
-from sklearn.svm import LinearSVR
-model = LinearSVR()
+from sklearn.svm import LinearSVR, SVR
+from sklearn.linear_model import Perceptron
+from sklearn.linear_model import LogisticRegression, LinearRegression # LinearRegression 회귀 
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+model = RandomForestRegressor()
 
 #3. 컴파일, 훈련
 model.fit(x_train, y_train)
 
 
 #4. 평가, 예측
-loss = model.score(x_test,y_test)
-print('loss : ', loss)
+result = model.score(x_test, y_test) # evaluate 대신 score 사용
+print('결과 :', result)
 y_predict = model.predict(x_test)
 
 from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
 print('r2스코어 : ', r2)
 
+# LinearSVR
+# 결과 : -8.282493732404703
 
+# SVR
+# 결과 : 0.004637670084386758
 
-# dropout 적용 후 
-# loss :  17775.279296875
-# r2스코어 :  0.7969202193966052
+# LinearRegression
+# 결과 : 0.7877801516547254
 
-# loss :  28300.349609375
-# r2스코어 :  0.591704236167754
+# KNeighborsRegressor
+# 결과 : 0.7306817044578291
+
+# DecisionTreeRegressor
+# 결과 : 0.7138905722531786
+
+# RandomForestRegressor
+# 결과 : 0.8336840484714544

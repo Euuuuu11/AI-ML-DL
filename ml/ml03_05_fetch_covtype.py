@@ -15,19 +15,23 @@ tf.random.set_seed(66)
 datasets = fetch_covtype()
 x = datasets.data
 y = datasets.target
-print(x.shape, y.shape) # (581012, 54) (581012,)
-print(np.unique(y, return_counts=True)) 
-
 
 x_train, x_test, y_train, y_test = train_test_split(x, y,
         train_size=0.8, shuffle=True, random_state=68)
 
 #2. 모델구성
-model = LinearSVC()
+from sklearn.svm import LinearSVC, SVC
+from sklearn.linear_model import Perceptron, LogisticRegression # LogisticRegression 분류 모델 사용
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier # 가지치기 형식으로 결과값 도출, 분류형식
+from sklearn.ensemble import RandomForestClassifier
+model = SVC()
 
 
 #3. 컴파일, 훈련
 model.fit(x_train, y_train)
+
+
 
 #4. 평가, 예측
 result = model.score(x_test, y_test) # evaluate 대신 score 사용
@@ -36,3 +40,13 @@ print('결과 acc :', result)
 # LinearSVC 결과
 # 결과 acc : 0.5310534151441874
 
+# SVC
+
+
+# KNeighborsClassifier
+
+
+# DecisionTreeClassifier
+ 
+
+# RandomForestClassifier
