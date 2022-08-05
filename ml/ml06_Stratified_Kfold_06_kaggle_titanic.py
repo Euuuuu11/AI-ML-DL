@@ -1,8 +1,6 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
-# from tensorflow.python.keras.models import Sequential
-# from tensorflow.python.keras.layers import Dense
 from tensorflow.python.keras.callbacks import EarlyStopping
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import LabelEncoder
@@ -11,7 +9,7 @@ from sklearn.model_selection import cross_val_predict, train_test_split
 from sklearn.model_selection import KFold, cross_val_score, StratifiedKFold
 from sklearn.metrics import accuracy_score
 from tqdm import tqdm_notebook
- # 레거시한 리니어 모델 사용
+# 레거시한 리니어 모델 사용
 
 
 #1. 데이터
