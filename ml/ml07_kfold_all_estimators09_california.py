@@ -7,6 +7,7 @@ from sklearn.utils import all_estimators
 from sklearn.metrics import accuracy_score, r2_score
 import warnings
 warnings.filterwarnings('ignore')
+from sklearn.model_selection import KFold, cross_val_score
 
 datasets = fetch_california_housing()
 x = datasets.data
