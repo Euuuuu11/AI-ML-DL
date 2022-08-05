@@ -46,6 +46,7 @@ for (name, algorithm) in allAlogrithms:
     except :
         # continue    
         print(name, '은 안나온 놈!!')  
-      
 
 
+
+                                               
