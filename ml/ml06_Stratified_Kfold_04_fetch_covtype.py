@@ -30,7 +30,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier # 가지치기 형식으로 결과값 도출, 분류형식
 from sklearn.ensemble import RandomForestClassifier
 
-model = SVC()
+model = RandomForestClassifier()
+
 import time
 #3.4. 컴파일, 훈련, 평가, 예측
 # scores = cross_val_score(model, x, y, cv=kfold)
