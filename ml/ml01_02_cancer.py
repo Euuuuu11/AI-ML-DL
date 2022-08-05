@@ -1,6 +1,6 @@
 from unittest import result
 import numpy as np
-from sklearn.datasets import load_iris
+from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
 # from tensorflow.python.keras.models import Sequential
 # from tensorflow.python.keras.layers import Dense
@@ -11,7 +11,7 @@ tf.random.set_seed(66)
 # 웨이트의 난수
 
 #1. 데이터
-datasets = load_iris()
+datasets = load_breast_cancer()
 print(datasets.DESCR)
 print(datasets.feature_names)
 x = datasets['data']

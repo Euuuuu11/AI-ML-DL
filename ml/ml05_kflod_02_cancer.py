@@ -1,6 +1,6 @@
 from unittest import result
 import numpy as np
-from sklearn.datasets import load_iris
+from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import cross_val_predict, train_test_split
 from sklearn.model_selection import KFold, cross_val_score
 from sklearn.metrics import accuracy_score
@@ -11,7 +11,7 @@ import tensorflow as tf
 
 
 #1. 데이터
-datasets = load_iris()
+datasets = load_breast_cancer()
 print(datasets.DESCR)
 print(datasets.feature_names)
 x = datasets['data']

@@ -1,4 +1,8 @@
-# 캐글 바이크
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold, cross_val_score, GridSearchCV, StratifiedKFold
+from sklearn.metrics import accuracy_score, r2_score
 from tabnanny import verbose
 from typing import Counter
 import numpy as np
@@ -225,146 +229,67 @@ test_set.drop(['MSZoning', 'Neighborhood' , 'Condition2', 'MasVnrType', 'ExterQu
 x = train_set.drop(['SalePrice'], axis=1)
 y = train_set['SalePrice']
 
-# print(x.shape)  # (1460, 12)
-# print(y.shape)  # (1460,  )
 
-x_train, x_test, y_train, y_test = train_test_split(x,y,
-             train_size=0.9, shuffle=True, random_state=777)
+x_train, x_test, y_train, y_test = train_test_split(x, y,
+        train_size=0.8, shuffle=True, random_state=666)
 
 n_splits = 5
-kfold = KFold(n_splits=n_splits, shuffle=True, random_state=66)
+kfold = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=66)
 
-scaler = MinMaxScaler()
-
-scaler.fit(x_train)
-print(x_train)
-x_train = scaler.transform(x_train)
-x_test = scaler.transform(x_test)
-
-# print(x.shape,y.shape) # (1460, 12) (1460,)
-# print(x_train.shape,x_test.shape) # (1314, 12) (146, 12)
+parameters = [
+    {'n_estimators' : [100,200,300,400,500], 'max_depth' : [6,10,12,14,16]},                      
+    {'max_depth' : [6, 8, 10, 12, 14], 'min_samples_leaf' : [3, 5, 7, 10, 12]},         
+    {'min_samples_leaf' : [3, 5, 7, 10, 12], 'min_samples_split' : [2, 3, 5, 10, 12]},  
+    {'min_samples_split' : [2, 3, 5, 10, 12]},                                     
+    {'n_jobs' : [-1, 2, 4, 6],'min_samples_split' : [2, 3, 5, 10, 12]}             
+]
 
 
-
+    
 #2. 모델구성
-# allAlogrithms = all_estimators(type_filter='classifier')
-allAlogrithms = all_estimators(type_filter='regressor')
+from sklearn.svm import LinearSVC, SVC
+from sklearn.linear_model import Perceptron, LogisticRegression # LogisticRegression 분류 모델 사용
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier # 가지치기 형식으로 결과값 도출, 분류형식
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor # DecisionTreeClassifier가 ensemble 엮여있는게 random으로 
 
-# [('AdaBoostClassifier', <class 'sklearn.ensemble._weight_boosting.AdaBoostClassifier'>
+# model = SVC(C=1, kernel='linear', degree=3)
+model = GridSearchCV(RandomForestRegressor(),parameters, cv=kfold, verbose=1,             # 42 * 5 = 210
+                     refit=True, n_jobs=-1)                             # n_jobs는 cpu 사용 갯수
+                                                                        # refit=True 최적의 값을 찾아서 저장 후 모델 학습
+                                                                    
+#3. 컴파일, 훈련
+import time
+start = time.time()
+model.fit(x_train, y_train)
+end = time.time()
 
-print('allAlogrithms : ', allAlogrithms)    # 딕셔너리들이 list 형태로 묶여져있다.
-print('모델의 개수 : ', len(allAlogrithms))  # 모델의 개수 :  41
+print("최적의 매개변수 : ", model.best_estimator_)  # 가장 좋은 추정치
+# 최적의 매개변수 :  SVC(C=100, gamma=0.001)
+print("최적의 파라미터 : ", model.best_params_)
+# 최적의 파라미터 :  {'C': 100, 'gamma': 0.001, 'kernel': 'rbf'}
 
-# [예외처리] 에러가 떳을 때 무시하고, 넘어가겠다. 
-for (name, algorithm) in allAlogrithms:
-    try :
-        model = algorithm()
-        model.fit(x_train, y_train)
-        
-        scores = cross_val_score(model, x_test, y_test, cv=5)  
-        print(name , scores, '\n cross_val_score : ', round(np.mean(scores), 4))
-    except :
-        # continue    
-        print(name, '은 안나온 놈!!')    
+print("best_score_ : ", model.best_score_)        # 정확도
+# best_score_ :  0.9666666666666668
+print("model.score : ", model.score(x_test, y_test))
+# model.score :  0.9666666666666667
 
-# 모델의 개수 :  54
-# ARDRegression [-0.00052472 -0.00174569 -0.29626664 -0.06950134 -0.04377093] 
-#  cross_val_score :  -0.0824
-# AdaBoostRegressor [0.67752154 0.74844881 0.79447019 0.70525348 0.82315842] 
-#  cross_val_score :  0.7498
-# BaggingRegressor [0.67130615 0.71016201 0.75925381 0.75366259 0.86829193] 
-#  cross_val_score :  0.7525
-# BayesianRidge [-5.24711928e-04  7.23912069e-01 -2.96266629e-01  7.53259406e-01
-#  -4.37709258e-02]
-#  cross_val_score :  0.2273
-# CCA [-0.63972528  0.42842067 -0.51468559  0.41304422 -0.05151049] 
-#  cross_val_score :  -0.0729
-# DecisionTreeRegressor [0.38013684 0.53577134 0.72649425 0.53176183 0.64569117] 
-#  cross_val_score :  0.564
-# DummyRegressor [-0.00052474 -0.00174571 -0.29626666 -0.06950135 -0.04377095]
-#  cross_val_score :  -0.0824
-# ElasticNet [0.39889435 0.27348995 0.23714374 0.28298281 0.41007767] 
-#  cross_val_score :  0.3205
-# ElasticNetCV [ 0.03456155  0.02408353 -0.25362109 -0.04217638 -0.00251994] 
-#  cross_val_score :  -0.0479
-# ExtraTreeRegressor [0.45811385 0.6286691  0.39095888 0.40710277 0.77490613]
-#  cross_val_score :  0.532
-# ExtraTreesRegressor [0.72972277 0.64457491 0.81393704 0.70692709 0.86414296] 
-#  cross_val_score :  0.7519
-# GammaRegressor [0.27425161 0.20181295 0.05632234 0.15900371 0.24453666] 
-#  cross_val_score :  0.1872
-# GaussianProcessRegressor [-284.24080806 -160.71998114 -401.63565712 -269.74043217 -242.78304828] 
-#  cross_val_score :  -271.824
-# GradientBoostingRegressor [0.72261107 0.7547233  0.76576623 0.74635153 0.84196168] 
-#  cross_val_score :  0.7663
-# HistGradientBoostingRegressor [0.65743551 0.63960769 0.76378713 0.64939276 0.85522542] 
-#  cross_val_score :  0.7131
-# HuberRegressor [0.64052044 0.62975267 0.74969197 0.61857355 0.84126112] 
-#  cross_val_score :  0.696
-# IsotonicRegression 은 안나온 놈!!
-# KNeighborsRegressor [0.52543426 0.53341202 0.70243433 0.63637712 0.78166606] 
-#  cross_val_score :  0.6359
-# KernelRidge [0.71432384 0.68615158 0.72135003 0.69867522 0.89546905] 
-#  cross_val_score :  0.7432
-# Lars [0.78227998 0.63282201 0.7440322  0.76755903 0.90300181] 
-#  cross_val_score :  0.7659
-# LarsCV [0.78354028 0.68297516 0.76307307 0.76349945 0.91318362] 
-#  cross_val_score :  0.7813
-# Lasso [0.78227301 0.71792224 0.74418118 0.76748242 0.90308541]
-#  cross_val_score :  0.783
-# LassoCV [0.76655198 0.72156449 0.76415248 0.75694413 0.91159662] 
-#  cross_val_score :  0.7842
-# LassoLars [0.78227322 0.71794157 0.7445371  0.76751405 0.90312347]
-#  cross_val_score :  0.7831
-# LassoLarsCV [0.78354028 0.72021847 0.78381233 0.76349945 0.91318362] 
-#  cross_val_score :  0.7929
-# LassoLarsIC [0.75823317 0.71079527 0.77950582 0.74870988 0.91179557]
-#  cross_val_score :  0.7818
-# LinearRegression [0.78227998 0.71780958 0.7440322  0.76755903 0.90300181] 
-#  cross_val_score :  0.7829
-# LinearSVR [-13.09448683  -5.24979778 -11.26592089 -10.42298826 -10.6418173 ]
-#  cross_val_score :  -10.135
-# MLPRegressor [-13.16440609  -5.27961142 -11.33586164 -10.4783135  -10.70032573] 
-#  cross_val_score :  -10.1917
-# MultiOutputRegressor 은 안나온 놈!!
-# MultiTaskElasticNet 은 안나온 놈!!
-# MultiTaskElasticNetCV 은 안나온 놈!!
-# MultiTaskLasso 은 안나온 놈!!
-# MultiTaskLassoCV 은 안나온 놈!!
-# NuSVR [-0.00449514 -0.00100234 -0.14695238 -0.12476692 -0.09812618] 
-#  cross_val_score :  -0.0751
-# OrthogonalMatchingPursuit [0.49914641 0.59937387 0.46815955 0.58010972 0.8266312 ]
-#  cross_val_score :  0.5947
-# OrthogonalMatchingPursuitCV [0.74966417 0.68671289 0.73444288 0.7568224  0.91002468] 
-#  cross_val_score :  0.7675
-# PLSCanonical [-3.64994517 -0.58768975 -2.78175554 -1.12228169 -2.2077136 ]
-#  cross_val_score :  -2.0699
-# PLSRegression [0.78724063 0.73908323 0.76042279 0.78160239 0.91052918] 
-#  cross_val_score :  0.7958
-# PassiveAggressiveRegressor [0.51084134 0.47945764 0.70068952 0.49538414 0.68118433] 
-#  cross_val_score :  0.5735
-# PoissonRegressor [0.78980645 0.78641579 0.77791718 0.77231993 0.90288836] 
-#  cross_val_score :  0.8059
-# RANSACRegressor [0.69420087 0.73435671 0.46173347 0.80656283 0.92276127] 
-#  cross_val_score :  0.7239
-# RadiusNeighborsRegressor [0.47596403 0.40624358 0.53616497 0.44048509 0.62425402] 
-#  cross_val_score :  0.4966
-# RandomForestRegressor [0.75245991 0.70994757 0.82267433 0.75305953 0.86640621] 
-#  cross_val_score :  0.7809
-# RegressorChain 은 안나온 놈!!
-# Ridge [0.71433395 0.68626994 0.72054268 0.68524356 0.89321181]
-#  cross_val_score :  0.7399
-# RidgeCV [0.77222638 0.72529913 0.73345945 0.75296519 0.9081626 ] 
-#  cross_val_score :  0.7784
-# SGDRegressor [0.70698171 0.69714987 0.68012375 0.68816158 0.89405124] 
-#  cross_val_score :  0.7333
-# SVR [-0.15848874 -0.00203344 -0.09871538 -0.21651209 -0.19010689] 
-#  cross_val_score :  -0.1332
-# StackingRegressor 은 안나온 놈!!
-# TheilSenRegressor [0.79486858 0.6967457  0.7957323  0.78221721 0.90883202] 
-#  cross_val_score :  0.7957
-# TransformedTargetRegressor [0.78227998 0.71780958 0.7440322  0.76755903 0.90300181]
-#  cross_val_score :  0.7829
-# TweedieRegressor [0.27195709 0.17476793 0.05233941 0.16219118 0.25119867] 
-#  cross_val_score :  0.1825
-# VotingRegressor 은 안나온 놈!!
+
+#4. 평가, 예측
+y_predict = model.predict(x_test)
+print("r2_score : ", r2_score(y_test, y_predict))
+# accuracy_score :  0.9666666666666667
+
+y_pred_best = model.best_estimator_.predict(x_test)
+print("최적 튠 R2 : ", r2_score(y_test,y_pred_best))
+# 최적 튠 ACC :  0.9666666666666667
+print("걸린시간 : ", round(end-start, 4))
+
+
+# 최적의 매개변수 :  RandomForestRegressor(n_jobs=4)
+# 최적의 파라미터 :  {'min_samples_split': 2, 'n_jobs': 4}
+# best_score_ :  0.8519857860936535
+# model.score :  0.8540689699259156
+# r2_score :  0.8540689699259156
+# 최적 튠 R2 :  0.8540689699259156
+# 걸린시간 :  32.5373

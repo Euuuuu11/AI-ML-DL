@@ -22,6 +22,9 @@ y = datasets.target
 x_train, x_test, y_train, y_test = train_test_split(x, y,
         train_size=0.8, shuffle=True, random_state=68)
 
+n_splits = 5
+kfold = KFold(n_splits=n_splits, shuffle=True, random_state=66)
+
 #2. 모델구성
 allAlogrithms = all_estimators(type_filter='classifier')
 # allAlogrithms = all_estimators(type_filter='regressor')
@@ -37,52 +40,85 @@ for (name, algorithm) in allAlogrithms:
         model = algorithm()
         model.fit(x_train, y_train)
         
-        y_predict = model.predict(x_test)
-        acc = accuracy_score(y_test, y_predict)
-        print(name, '의 정답률 : ', acc)
+        scores = cross_val_score(model, x_test, y_test, cv=5)  
+        print(name , scores, '\n cross_val_score : ', round(np.mean(scores), 4))
     except :
         # continue    
         print(name, '은 안나온 놈!!')  
 
 # 모델의 개수 :  41
-# AdaBoostClassifier 의 정답률 :  0.2638888888888889
-# BaggingClassifier 의 정답률 :  0.9222222222222223
-# BernoulliNB 의 정답률 :  0.8361111111111111
-# CalibratedClassifierCV 의 정답률 :  0.9611111111111111
-# CategoricalNB 은 안나온 놈!!
+# AdaBoostClassifier [0.20833333 0.23611111 0.23611111 0.30555556 0.19444444] 
+#  cross_val_score :  0.2361
+# BaggingClassifier [0.86111111 0.81944444 0.88888889 0.875      0.875     ] 
+#  cross_val_score :  0.8639
+# BernoulliNB [0.81944444 0.79166667 0.83333333 0.84722222 0.83333333] 
+#  cross_val_score :  0.825
+# CalibratedClassifierCV [0.97222222 0.94444444 0.93055556 0.88888889 0.94444444] 
+#  cross_val_score :  0.9361
+# CategoricalNB [  nan   nan   nan 0.875   nan] 
+#  cross_val_score :  nan
 # ClassifierChain 은 안나온 놈!!
-# ComplementNB 의 정답률 :  0.8277777777777777
-# DecisionTreeClassifier 의 정답률 :  0.8361111111111111
-# DummyClassifier 의 정답률 :  0.075
-# ExtraTreeClassifier 의 정답률 :  0.7916666666666666
-# ExtraTreesClassifier 의 정답률 :  0.9805555555555555
-# GaussianNB 의 정답률 :  0.8222222222222222
-# GaussianProcessClassifier 의 정답률 :  0.08055555555555556
-# GradientBoostingClassifier 의 정답률 :  0.975
-# HistGradientBoostingClassifier 의 정답률 :  0.9805555555555555
-# KNeighborsClassifier 의 정답률 :  0.9805555555555555
-# LabelPropagation 의 정답률 :  0.11944444444444445
-# LabelSpreading 의 정답률 :  0.11944444444444445
-# LinearDiscriminantAnalysis 의 정답률 :  0.95
-# LinearSVC 의 정답률 :  0.9444444444444444
-# LogisticRegression 의 정답률 :  0.9694444444444444
-# LogisticRegressionCV 의 정답률 :  0.9777777777777777
-# MLPClassifier 의 정답률 :  0.975
+# ComplementNB [0.75       0.76388889 0.77777778 0.77777778 0.81944444]
+#  cross_val_score :  0.7778
+# DecisionTreeClassifier [0.76388889 0.66666667 0.72222222 0.76388889 0.70833333] 
+#  cross_val_score :  0.725
+# DummyClassifier [0.125 0.125 0.125 0.125 0.125] 
+#  cross_val_score :  0.125
+# ExtraTreeClassifier [0.66666667 0.625      0.69444444 0.70833333 0.69444444]
+#  cross_val_score :  0.6778
+# ExtraTreesClassifier [0.97222222 0.94444444 0.94444444 0.95833333 0.98611111] 
+#  cross_val_score :  0.9611
+# GaussianNB [0.90277778 0.81944444 0.88888889 0.83333333 0.83333333] 
+#  cross_val_score :  0.8556
+# GaussianProcessClassifier [0.06944444 0.06944444 0.06944444 0.08333333 0.08333333] 
+#  cross_val_score :  0.075
+# GradientBoostingClassifier [0.91666667 0.77777778 0.88888889 0.93055556 0.90277778] 
+#  cross_val_score :  0.8833
+# HistGradientBoostingClassifier [0.94444444 0.875      0.95833333 0.90277778 0.93055556] 
+#  cross_val_score :  0.9222
+# KNeighborsClassifier [0.95833333 0.97222222 0.95833333 0.93055556 0.95833333] 
+#  cross_val_score :  0.9556
+# LabelPropagation [0.125      0.11111111 0.11111111 0.125      0.125     ] 
+#  cross_val_score :  0.1194
+# LabelSpreading [0.125      0.11111111 0.11111111 0.125      0.125     ] 
+#  cross_val_score :  0.1194
+# LinearDiscriminantAnalysis [0.93055556 0.91666667 0.875      0.93055556 0.93055556] 
+#  cross_val_score :  0.9167
+# LinearSVC [0.94444444 0.90277778 0.90277778 0.88888889 0.91666667] 
+#  cross_val_score :  0.9111
+# LogisticRegression [0.97222222 0.94444444 0.95833333 0.93055556 0.94444444] 
+#  cross_val_score :  0.95
+# LogisticRegressionCV [0.95833333 0.93055556 0.95833333 0.93055556 0.95833333] 
+#  cross_val_score :  0.9472
+# MLPClassifier [0.95833333 0.94444444 0.93055556 0.88888889 0.94444444] 
+#  cross_val_score :  0.9333
 # MultiOutputClassifier 은 안나온 놈!!
-# MultinomialNB 의 정답률 :  0.9
-# NearestCentroid 의 정답률 :  0.9055555555555556
-# NuSVC 의 정답률 :  0.9694444444444444
+# MultinomialNB [0.93055556 0.90277778 0.90277778 0.875      0.90277778]
+#  cross_val_score :  0.9028
+# NearestCentroid [0.91666667 0.88888889 0.90277778 0.875      0.93055556] 
+#  cross_val_score :  0.9028
+# NuSVC [0.95833333 0.94444444 0.94444444 0.95833333 0.97222222] 
+#  cross_val_score :  0.9556
 # OneVsOneClassifier 은 안나온 놈!!
 # OneVsRestClassifier 은 안나온 놈!!
 # OutputCodeClassifier 은 안나온 놈!!
-# PassiveAggressiveClassifier 의 정답률 :  0.9555555555555556
-# Perceptron 의 정답률 :  0.9472222222222222
-# QuadraticDiscriminantAnalysis 의 정답률 :  0.8833333333333333
-# RadiusNeighborsClassifier 은 안나온 놈!!
-# RandomForestClassifier 의 정답률 :  0.9722222222222222
-# RidgeClassifier 의 정답률 :  0.9361111111111111
-# RidgeClassifierCV 의 정답률 :  0.9361111111111111
-# SGDClassifier 의 정답률 :  0.9583333333333334
-# SVC 의 정답률 :  0.9888888888888889
+# PassiveAggressiveClassifier [0.97222222 0.93055556 0.93055556 0.93055556 0.93055556] 
+#  cross_val_score :  0.9389
+# Perceptron [0.93055556 0.90277778 0.86111111 0.90277778 0.91666667] 
+#  cross_val_score :  0.9028
+# QuadraticDiscriminantAnalysis [0.25       0.29166667 0.31944444 0.13888889 0.36111111] 
+#  cross_val_score :  0.2722
+# RadiusNeighborsClassifier [nan nan nan nan nan]
+#  cross_val_score :  nan
+# RandomForestClassifier [0.95833333 0.90277778 0.94444444 0.91666667 0.97222222] 
+#  cross_val_score :  0.9389
+# RidgeClassifier [0.90277778 0.88888889 0.84722222 0.875      0.88888889]
+#  cross_val_score :  0.8806
+# RidgeClassifierCV [0.90277778 0.88888889 0.84722222 0.875      0.90277778] 
+#  cross_val_score :  0.8833
+# SGDClassifier [0.95833333 0.86111111 0.91666667 0.91666667 0.93055556] 
+#  cross_val_score :  0.9167
+# SVC [0.98611111 0.97222222 0.95833333 0.97222222 0.97222222] 
+#  cross_val_score :  0.9722
 # StackingClassifier 은 안나온 놈!!
-# VotingClassifier 은 안나온 놈!!        
+# VotingClassifier 은 안나온 놈!!
