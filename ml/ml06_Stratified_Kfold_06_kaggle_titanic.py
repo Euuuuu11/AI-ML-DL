@@ -88,7 +88,7 @@ gender_submission = pd.read_csv(path + 'gender_submission.csv', #예측에서 �
 # print(pd.Series.value_counts()) 
 
 x_train, x_test, y_train, y_test = train_test_split(x,y, 
-                                                    train_size=0.9, shuffle=True, random_state=68)
+                                                    train_size=0.8, shuffle=True, random_state=68)
 
 n_splits = 5
 # kfold = KFold(n_splits=n_splits, shuffle=True, random_state=66)

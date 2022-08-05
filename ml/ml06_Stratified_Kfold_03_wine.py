@@ -17,7 +17,7 @@ x = datasets.data
 y = datasets.target
 
 x_train, x_test, y_train, y_test = train_test_split(x, y,
-        train_size=0.8, shuffle=True, random_state=68)
+        train_size=0.7, shuffle=True, random_state=68)
 
 n_splits = 5
 # kfold = KFold(n_splits=n_splits, shuffle=True, random_state=66)
