@@ -29,13 +29,13 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier # 가지치기 형식으로 결과값 도출, 분류형식
 from sklearn.ensemble import RandomForestClassifier
 
-model = SVC()
+model = RandomForestClassifier()
 import time
 #3.4. 컴파일, 훈련, 평가, 예측
 # scores = cross_val_score(model, x, y, cv=kfold)
 start_time = time.time()
 scores = cross_val_score(model, x_train, y_train, cv=5)         # 둘다 가능
- 
+
 print('ACC : ', scores, '\n cross_val_score : ', round(np.mean(scores), 4))
 
 y_predict = cross_val_predict(model, x_test, y_test, cv=kfold)
@@ -50,3 +50,5 @@ acc = accuracy_score(y_test, y_predict)
 print('cross_val_predict ACC : ', acc)
 
 print('끝난 시간 : ',end_time)
+
+#  cross_val_score :  0.9503

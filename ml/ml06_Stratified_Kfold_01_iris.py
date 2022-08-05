@@ -39,7 +39,7 @@ model = SVC()
 #3.4. 컴파일, 훈련, 평가, 예측
 # scores = cross_val_score(model, x, y, cv=kfold)
 scores = cross_val_score(model, x, y, cv=5)         # 둘다 가능
- 
+# cross_val_score에 Stratified 적용되어 결과값이 비슷하다
 print('ACC : ', scores, '\n cross_val_score : ', round(np.mean(scores), 4))
 
 

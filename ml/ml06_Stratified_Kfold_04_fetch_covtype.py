@@ -30,7 +30,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier # 가지치기 형식으로 결과값 도출, 분류형식
 from sklearn.ensemble import RandomForestClassifier
 
-model = RandomForestClassifier()
+model = RandomForestClassifier()        # 모델을 SVC에서 RandomForestClassifier 바꾸니 속도가 빨라졌다.
 
 import time
 #3.4. 컴파일, 훈련, 평가, 예측
@@ -52,3 +52,6 @@ acc = accuracy_score(y_test, y_predict)
 print('cross_val_predict ACC : ', acc)
 
 print('끝난 시간 : ',end_time)
+
+# cross_val_predict ACC :  0.9089954648330938
+# 끝난 시간 :  431.3595139980316
