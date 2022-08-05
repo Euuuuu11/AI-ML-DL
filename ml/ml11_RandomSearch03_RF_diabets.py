@@ -1,42 +1,16 @@
 import numpy as np
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_diabetes
+from sklearn.model_selection import train_test_split,RandomizedSearchCV
 from sklearn.model_selection import KFold, cross_val_score, GridSearchCV, StratifiedKFold
 from sklearn.metrics import accuracy_score, r2_score
-import numpy as np
-import pandas as pd
-from sklearn import metrics
-from tensorflow.python.keras.models import Sequential,  load_model
-from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout,LSTM
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score, mean_squared_error
-from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
-from sklearn.utils import all_estimators
-from sklearn.metrics import accuracy_score, r2_score
-import warnings
-warnings.filterwarnings('ignore')
-from sklearn.model_selection import KFold, cross_val_score
 
 #1. 데이터
-path = './_data/ddarung/'
-train_set = pd.read_csv(path + 'train.csv', 
-                        index_col=0) 
+datasets = load_diabetes()
+print(datasets.DESCR)
+print(datasets.feature_names)
+x = datasets['data']
+y = datasets.target
 
-
-test_set = pd.read_csv(path + 'test.csv', 
-                       index_col=0)
-
-
-
-train_set =  train_set.dropna()
-
-test_set = test_set.fillna(test_set.mean())
-
-
-x = train_set.drop(['count'], axis=1) 
-
-
-y = train_set['count']
 
 x_train, x_test, y_train, y_test = train_test_split(x, y,
         train_size=0.8, shuffle=True, random_state=666)
@@ -62,7 +36,7 @@ from sklearn.tree import DecisionTreeClassifier # 가지치기 형식으로 결�
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor # DecisionTreeClassifier가 ensemble 엮여있는게 random으로 
 
 # model = SVC(C=1, kernel='linear', degree=3)
-model = GridSearchCV(RandomForestRegressor(),parameters, cv=kfold, verbose=1,             # 42 * 5 = 210
+model = RandomizedSearchCV(RandomForestRegressor(),parameters, cv=kfold, verbose=1,             # 42 * 5 = 210
                      refit=True, n_jobs=-1)                             # n_jobs는 cpu 사용 갯수
                                                                         # refit=True 최적의 값을 찾아서 저장 후 모델 학습
                                                                     
@@ -93,11 +67,18 @@ print("최적 튠 R2 : ", r2_score(y_test,y_pred_best))
 # 최적 튠 ACC :  0.9666666666666667
 print("걸린시간 : ", round(end-start, 4))
 
+# 최적의 매개변수 :  RandomForestRegressor(max_depth=14, min_samples_leaf=3)
+# 최적의 파라미터 :  {'max_depth': 14, 'min_samples_leaf': 3}
+# best_score_ :  0.45955555849794527
+# model.score :  0.45808780022505646
+# r2_score :  0.45808780022505646
+# 최적 튠 R2 :  0.45808780022505646
+# 걸린시간 :  18.8161
 
-# 최적의 매개변수 :  RandomForestRegressor(max_depth=12)
-# 최적의 파라미터 :  {'max_depth': 12, 'n_estimators': 100}
-# best_score_ :  0.7673526022221917
-# model.score :  0.7701840050833797
-# r2_score :  0.7701840050833797
-# 최적 튠 R2 :  0.7701840050833797
-# 걸린시간 :  32.5641
+# 최적의 매개변수 :  RandomForestRegressor(min_samples_leaf=5, min_samples_split=10)
+# 최적의 파라미터 :  {'min_samples_split': 10, 'min_samples_leaf': 5}
+# best_score_ :  0.4445239557291595
+# model.score :  0.4693579600751193
+# r2_score :  0.4693579600751193
+# 최적 튠 R2 :  0.4693579600751193
+# 걸린시간 :  3.677

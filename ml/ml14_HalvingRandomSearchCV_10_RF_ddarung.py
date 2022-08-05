@@ -8,7 +8,7 @@ import pandas as pd
 from sklearn import metrics
 from tensorflow.python.keras.models import Sequential,  load_model
 from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout,LSTM
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split,RandomizedSearchCV
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 from sklearn.utils import all_estimators
@@ -16,6 +16,8 @@ from sklearn.metrics import accuracy_score, r2_score
 import warnings
 warnings.filterwarnings('ignore')
 from sklearn.model_selection import KFold, cross_val_score
+from sklearn.experimental import enable_halving_search_cv   
+from sklearn.model_selection import HalvingRandomSearchCV
 
 #1. 데이터
 path = './_data/ddarung/'
@@ -62,7 +64,7 @@ from sklearn.tree import DecisionTreeClassifier # 가지치기 형식으로 결�
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor # DecisionTreeClassifier가 ensemble 엮여있는게 random으로 
 
 # model = SVC(C=1, kernel='linear', degree=3)
-model = GridSearchCV(RandomForestRegressor(),parameters, cv=kfold, verbose=1,             # 42 * 5 = 210
+model = HalvingRandomSearchCV(RandomForestRegressor(),parameters, cv=kfold, verbose=1,             # 42 * 5 = 210
                      refit=True, n_jobs=-1)                             # n_jobs는 cpu 사용 갯수
                                                                         # refit=True 최적의 값을 찾아서 저장 후 모델 학습
                                                                     
@@ -93,7 +95,7 @@ print("최적 튠 R2 : ", r2_score(y_test,y_pred_best))
 # 최적 튠 ACC :  0.9666666666666667
 print("걸린시간 : ", round(end-start, 4))
 
-
+# GridSearchCV
 # 최적의 매개변수 :  RandomForestRegressor(max_depth=12)
 # 최적의 파라미터 :  {'max_depth': 12, 'n_estimators': 100}
 # best_score_ :  0.7673526022221917
@@ -101,3 +103,30 @@ print("걸린시간 : ", round(end-start, 4))
 # r2_score :  0.7701840050833797
 # 최적 튠 R2 :  0.7701840050833797
 # 걸린시간 :  32.5641
+
+# RandomizedSearchCV
+# 최적의 매개변수 :  RandomForestRegressor(min_samples_split=5, n_jobs=6)
+# 최적의 파라미터 :  {'n_jobs': 6, 'min_samples_split': 5}
+# best_score_ :  0.7630833611064008
+# model.score :  0.7729084838020452
+# r2_score :  0.7729084838020452
+# 최적 튠 R2 :  0.7729084838020452
+# 걸린시간 :  4.1015
+
+# HalvingGridSearchCV
+# 최적의 매개변수 :  RandomForestRegressor(n_jobs=4)
+# 최적의 파라미터 :  {'min_samples_split': 2, 'n_jobs': 4}
+# best_score_ :  0.761292045510392
+# model.score :  0.7754452504088395
+# r2_score :  0.7754452504088395
+# 최적 튠 R2 :  0.7754452504088395
+# 걸린시간 :  23.6543
+
+# HalvingRandomSearchCV
+# 최적의 매개변수 :  RandomForestRegressor(max_depth=14, min_samples_leaf=3)
+# 최적의 파라미터 :  {'min_samples_leaf': 3, 'max_depth': 14}
+# best_score_ :  0.7539925780417219
+# model.score :  0.7674643795951215
+# r2_score :  0.7674643795951215
+# 최적 튠 R2 :  0.7674643795951215
+# 걸린시간 :  22.3939

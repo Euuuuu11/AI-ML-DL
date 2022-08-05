@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
-from sklearn.model_selection import KFold, cross_val_score, GridSearchCV, StratifiedKFold
+from sklearn.model_selection import KFold, cross_val_score, GridSearchCV, StratifiedKFold,RandomizedSearchCV
 from sklearn.metrics import accuracy_score, r2_score
 from tabnanny import verbose
 from typing import Counter
@@ -252,7 +252,7 @@ from sklearn.tree import DecisionTreeClassifier # 가지치기 형식으로 결�
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor # DecisionTreeClassifier가 ensemble 엮여있는게 random으로 
 
 # model = SVC(C=1, kernel='linear', degree=3)
-model = GridSearchCV(RandomForestRegressor(),parameters, cv=kfold, verbose=1,             # 42 * 5 = 210
+model = RandomizedSearchCV(RandomForestRegressor(),parameters, cv=kfold, verbose=1,             # 42 * 5 = 210
                      refit=True, n_jobs=-1)                             # n_jobs는 cpu 사용 갯수
                                                                         # refit=True 최적의 값을 찾아서 저장 후 모델 학습
                                                                     
@@ -292,3 +292,10 @@ print("걸린시간 : ", round(end-start, 4))
 # 최적 튠 R2 :  0.8540689699259156
 # 걸린시간 :  32.5373
 
+# 최적의 매개변수 :  RandomForestRegressor(min_samples_split=3)
+# 최적의 파라미터 :  {'min_samples_split': 3}
+# best_score_ :  0.8481533925221143
+# model.score :  0.8580542360144274
+# r2_score :  0.8580542360144274
+# 최적 튠 R2 :  0.8580542360144274
+# 걸린시간 :  5.6326

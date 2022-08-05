@@ -8,7 +8,7 @@ import pandas as pd
 from sklearn import metrics
 from tensorflow.python.keras.models import Sequential,  load_model
 from tensorflow.python.keras.layers import Activation, Dense, Conv2D, Flatten, MaxPooling2D, Input, Dropout,LSTM
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split,RandomizedSearchCV
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 from sklearn.utils import all_estimators
@@ -62,7 +62,7 @@ from sklearn.tree import DecisionTreeClassifier # 가지치기 형식으로 결�
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor # DecisionTreeClassifier가 ensemble 엮여있는게 random으로 
 
 # model = SVC(C=1, kernel='linear', degree=3)
-model = GridSearchCV(RandomForestRegressor(),parameters, cv=kfold, verbose=1,             # 42 * 5 = 210
+model = RandomizedSearchCV(RandomForestRegressor(),parameters, cv=kfold, verbose=1,             # 42 * 5 = 210
                      refit=True, n_jobs=-1)                             # n_jobs는 cpu 사용 갯수
                                                                         # refit=True 최적의 값을 찾아서 저장 후 모델 학습
                                                                     
@@ -101,3 +101,11 @@ print("걸린시간 : ", round(end-start, 4))
 # r2_score :  0.7701840050833797
 # 최적 튠 R2 :  0.7701840050833797
 # 걸린시간 :  32.5641
+
+# 최적의 매개변수 :  RandomForestRegressor(min_samples_split=5, n_jobs=6)
+# 최적의 파라미터 :  {'n_jobs': 6, 'min_samples_split': 5}
+# best_score_ :  0.7630833611064008
+# model.score :  0.7729084838020452
+# r2_score :  0.7729084838020452
+# 최적 튠 R2 :  0.7729084838020452
+# 걸린시간 :  4.1015

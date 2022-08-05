@@ -42,7 +42,7 @@ print('ACC : ', scores, '\n cross_val_score : ', round(np.mean(scores), 4))
 
 y_predict = cross_val_predict(model, x_test, y_test, cv=kfold)
 
-end_time = time.time() - start_time
+end_time = time.time()
 
 print(y_predict)
 
@@ -51,7 +51,7 @@ print(y_test)
 acc = accuracy_score(y_test, y_predict)
 print('cross_val_predict ACC : ', acc)
 
-print('끝난 시간 : ',end_time)
+print('끝난 시간 : ',end_time - start_time)
 
 # cross_val_predict ACC :  0.9089954648330938
 # 끝난 시간 :  431.3595139980316
