@@ -1,5 +1,6 @@
-import numpy as datasets
+import sklearn as datasets
 from sklearn.datasets import load_diabetes
+import numpy as np
 
 #1. 데이터
 datasets = load_diabetes()

@@ -9,7 +9,6 @@ y = datasets.target
 print(x.shape)
 
 x = np.delete(x, 1, axis=1)
-# y = np.delete(y, 1)
 print(x.shape)
 
 from sklearn.model_selection import train_test_split
