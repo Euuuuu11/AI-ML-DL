@@ -20,7 +20,7 @@ from sklearn.model_selection import HalvingGridSearchCV
 path = './_data/kaggle_titanic/' # 경로 = .현재폴더 /하단
 train_set = pd.read_csv(path + 'train.csv', # train.csv 의 데이터가 train set에 들어가게 됨
                         index_col=0) # 0번째 컬럼은 인덱스로 지정하는 명령
-test_set = pd.read_csv(path + 'test.csv',
+test_set = pd.read_csv(path + 'test.csv',   
                        index_col=0)
 
 # print(train_set)
