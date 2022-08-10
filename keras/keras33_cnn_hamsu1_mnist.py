@@ -61,12 +61,13 @@ es = EarlyStopping(monitor='val_loss', patience=60, mode='auto', verbose=1,
 mcp = ModelCheckpoint(monitor='val_loss', mode='auto',verbose=1,
                       save_best_only=True,filepath= "".join([filepath,'k28_',date, '_', filename])) 
         
-
-
+import time
+start = time.time()
 model.fit(x_train, y_train, epochs=100, batch_size=100,
                  validation_split=0.2,
                  callbacks=[es,mcp],
                  verbose=1)
+end = time.time()
 
 #4. 평가,예측
 result = model.evaluate(x_test,y_test)
@@ -80,6 +81,7 @@ y_test = np.argmax(y_test, axis=1)
 
 acc = accuracy_score(y_test, y_predict)
 print('acc스코어 : ', acc)
+print("걸린시간 : ", round(end-start, 4))
 
 # [과제]
 # loss :  0.06705739349126816
