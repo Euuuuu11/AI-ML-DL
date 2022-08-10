@@ -35,7 +35,7 @@ y = datasets.target
 # x = pca.fit_transform(x)
 
 # lda = LinearDiscriminantAnalysis()
-lda = LinearDiscriminantAnalysis()
+lda = LinearDiscriminantAnalysis(n_components=2)
 lda.fit(x,y)
 x = lda.transform(x)
 print(x)
@@ -52,7 +52,7 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,train_size=0.8,shuffle=T
 # x_train = lda.transform(x_train)
 # x_test = lda.transform(x_test)
 
-# print(np.unique(y_train, return_counts=True))               # array([1, 2, 3, 4, 5, 6, 7] > 
+print(np.unique(y_train, return_counts=True))               # array([1, 2, 3, 4, 5, 6, 7] > 
                                                             # array([0, 1, 2, 3, 4, 5, 6]
                                                             
 #2. 모델

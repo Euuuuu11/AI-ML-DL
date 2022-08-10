@@ -55,9 +55,6 @@ gender_submission = pd.read_csv(path + 'gender_submission.csv', #예측에서 �
 x = x.drop(x.columns[[2]], axis=1)
 # datasets = load_breast_cancer()
 
-
-x = datasets.data
-y = datasets.target
 # print(x.shape)              # (581012, 54)
 
 # le = LabelEncoder()
@@ -67,7 +64,7 @@ y = datasets.target
 # x = pca.fit_transform(x)
 
 # lda = LinearDiscriminantAnalysis()
-lda = LinearDiscriminantAnalysis()
+lda = LinearDiscriminantAnalysis(n_components=1)
 lda.fit(x,y)
 x = lda.transform(x)
 print(x)
@@ -84,7 +81,7 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,train_size=0.8,shuffle=T
 # x_train = lda.transform(x_train)
 # x_test = lda.transform(x_test)
 
-# print(np.unique(y_train, return_counts=True))               # array([1, 2, 3, 4, 5, 6, 7] > 
+print(np.unique(y_train, return_counts=True))               # array([1, 2, 3, 4, 5, 6, 7] > 
                                                             # array([0, 1, 2, 3, 4, 5, 6]
                                                             
 #2. 모델

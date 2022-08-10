@@ -35,7 +35,7 @@ y = datasets.target
 # x = pca.fit_transform(x)
 
 # lda = LinearDiscriminantAnalysis()
-lda = LinearDiscriminantAnalysis()
+lda = LinearDiscriminantAnalysis(n_components=9)
 lda.fit(x,y)
 x = lda.transform(x)
 print(x)
@@ -52,8 +52,7 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,train_size=0.8,shuffle=T
 # x_train = lda.transform(x_train)
 # x_test = lda.transform(x_test)
 
-# print(np.unique(y_train, return_counts=True))               # array([1, 2, 3, 4, 5, 6, 7] > 
-                                                            # array([0, 1, 2, 3, 4, 5, 6]
+print(np.unique(y_train, return_counts=True))           
                                                             
 #2. 모델
 from xgboost import XGBClassifier ,XGBRFRegressor
@@ -74,16 +73,5 @@ print("결과 :",results)
 print("시간 :", end-start )
 
 
-# XGBClassifier
-# 결과: 0.8695988915948814
-# 시간 : 6.970503330230713
-
-# XGBClassifier
-# pca = PCA(n_components=10)
-# 결과: 0.8406065247885166
-# 시간 : 4.496622323989868
-
-# XGBClassifier
-# pca = PCA(n_components=20)   
-# 결과: 0.8855279123602661
-# 시간 : 5.378031492233276
+# 결과 : 0.8376922997296407
+# 시간 : 0.6461646556854248
