@@ -1,46 +1,47 @@
-# SMOTE 단점 : 데이터가 많으면 속도가 많이 느려진다.
+# 1 357
+# 0 212
 
+# 라벨 0을 112개 삭제해서 재구성
+
+# smote 넣어서 만들기
+# 넣은거 안넣은거 비교
+# smote 넣은거 안넣은거 비교
 import numpy as np
 import pandas as pd
-from sklearn.datasets import load_wine
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, f1_score
 from imblearn.over_sampling import SMOTE    # pip install imblearn
 import sklearn as sk
-# print('사이킷런 : ', sk.__version__)    # 사이킷런 :  1.1.2
+from sklearn.datasets import load_breast_cancer
 
-#1. 데이터
-datasets = load_wine()
-x = datasets.data
-y = datasets['target']
-# print(x.shape, y.shape) # (178, 13) (178,)
-# print(type(x))          # <class 'numpy.ndarray'>
-# print(np.unique(y, return_counts=True)) # (array([0, 1, 2]), array([59, 71, 48], dtype=int64))
-# print(pd.Series(y).value_counts())
-# 1    71
-# 0    59
-# 2    48
-# print(y)
-# [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-#  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-#  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
-#  2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2]
+data = load_breast_cancer()
 
-x = x[:-25]
-y = y[:-25]
+x = data.data
+y = data.target
 # print(pd.Series(y).value_counts())
-# 1    71
-# 0    59
-# 2    8
+# 1    357
+# 0    212  --> 112개 삭제
+#print(x.shape, y.shape)  # (569, 30) (569,)
+
+index_list = np.where(y==0) # y에서 0이 들어있는 인덱스 위치가 담긴 리스트
+print(len(index_list[0])) # 212
+
+del_index_list = index_list[0][100:]
+print(len(del_index_list))    # 112
+
+new_x = np.delete(x,del_index_list,axis=0) # del_index_list
+new_y = np.delete(y,del_index_list)
+        
+print(pd.Series(new_y).value_counts())
+# 1    357
+# 0    100
+
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=123, shuffle=True, 
                                                     train_size=0.75, stratify=y)
 
 print(pd.Series(y_train).value_counts())
-# 1    53
-# 0    44
-# 2     6
+
 
 #2. 모델
 from sklearn.ensemble import RandomForestClassifier
@@ -67,9 +68,8 @@ print('f1_score(macro) : ', f1_score(y_test,y_predict, average='macro'))
 # 데이터 축소 후(2라벨을 25개 줄인 후)
 # acc_score :  0.9428571428571428
 # f1_score(macro) :  0.8596176821983273
-
 print('============================ SMOTE 적용 후 ============================')
-smote = SMOTE(random_state=123)
+smote = SMOTE(random_state=123,k_neighbors=1)
 x_train, y_train = smote.fit_resample(x_train,y_train)
 
 # print(pd.Series(y_train).value_counts())
@@ -92,14 +92,8 @@ print('acc_score : ', accuracy_score(y_test,y_predict))
 print('f1_score(macro) : ', f1_score(y_test,y_predict, average='macro'))
 # print('f1_score(micro) : ', f1_score(y_test,y_predict, average='micro'))
 
-# acc_score :  0.9743589743589743
-# f1_score(macro) :  0.9797235023041475
-
-
-
-
-
-
-
-
-
+# acc_score :  0.965034965034965
+# f1_score(macro) :  0.9623783214943435
+# ============================ SMOTE 적용 후 ============================
+# acc_score :  0.972027972027972
+# f1_score(macro) :  0.9702455264253016
