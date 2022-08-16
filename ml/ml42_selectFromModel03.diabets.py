@@ -59,8 +59,8 @@ print("시간 :", end-start )
 
 from sklearn.metrics import accuracy_score,r2_score
 y_predict = model.predict(x_test)
-acc = r2_score(y_test,y_predict)
-print("최종 r2_score :", acc)
+r2 = r2_score(y_test,y_predict)
+print("최종 r2_score :", r2)
 
 
 print(model.feature_importances_)
