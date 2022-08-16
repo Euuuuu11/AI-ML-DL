@@ -5,9 +5,9 @@ from xgboost import XGBClassifier, XGBRegressor
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LinearRegression
 
-file = 'D:/study_data/_data/'
+path = 'D:/study_data/_data/'
 
-data = pd.read_csv(file + 'winequality-white.csv', index_col=None,
+data = pd.read_csv(path + 'winequality-white.csv', index_col=None,
                    header=0, sep=';')  
 
 # print(data.shape)   # (4898, 12)
@@ -21,7 +21,7 @@ y = le.fit_transform(y)
 # print(x.shape,y.shape)
 # exit()
 x_train, x_test, y_train, y_test = train_test_split(x, y, shuffle=True, train_size=0.8, 
-                                                    random_state=123,stratify=y)
+                                                    random_state=123,stratify=y)    # 랜덤스테이트 값으로 결과가 변하는 이유는 데이터 분포가 고르지 않아서이다.
 
 scaler = MinMaxScaler()
 x_train = scaler.fit_transform(x_train)
