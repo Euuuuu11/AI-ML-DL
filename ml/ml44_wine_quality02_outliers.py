@@ -19,26 +19,28 @@ data2 = data.to_numpy()
 # print(type(data))   # <class 'numpy.ndarray'>
 # print(data.shape)   # (4898, 12)
 
-def remove_outlier(input_data):
-    q1 = input_data.quantile(0.25) # 제 1사분위수
-    q3 = input_data.quantile(0.75) # 제 3사분위수
-    iqr = q3 - q1 # IQR(Interquartile range) 계산
-    minimum = q1 - (iqr * 1.5) # IQR 최솟값
-    maximum = q3 + (iqr * 1.5) # IQR 최댓값
-    ### IQR 범위 내에 있는 데이터만 산출(IQR 범위 밖의 데이터는 이상치) ###
-    df_removed_outlier = input_data[(minimum < input_data) & (input_data < maximum)]
-    return df_removed_outlier
-
-# 이상치 제거한 데이터셋
-data = remove_outlier(data)
-print(data[:40])
-
-# 이상치 채워주기
-data = data.interpolate()
-print(data[:40])
-
 x = data2[:, :11]
 y = data2[:, 11]
+
+def outliers(data_out) :
+    quartile_1, q2, quartile_3 = np.percentile(data_out,
+                                               [25, 50, 75])
+    print('1사분위 : ',quartile_1)
+    print('q2 : ', q2)
+    print('3사분위 : ',quartile_3)
+    iqr = quartile_3 - quartile_1
+    print('iqr : ', iqr)
+    lower_bound = quartile_1 - (iqr * 1.5)
+    upper_bound = quartile_3 + (iqr * 1.5)
+    return np.where((data_out>upper_bound) |
+                    (data_out<lower_bound))
+    
+outliers_loc = outliers(data2)
+print('이상치의 위치 : ', outliers_loc)     
+
+x = np.delete(x, outliers_loc, 0)
+y = np.delete(y, outliers_loc, 0)
+
 # print(x.shape, y.shape) # (4898, 11) (4898,)
 
 # print(np.unique(y, return_counts=True))
@@ -50,7 +52,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=123, shuffle=True,
-                                                    train_size=0.8, stratify=y)
+                                                    train_size=0.8)
 
 #2. 모델
 from sklearn.ensemble import RandomForestClassifier
