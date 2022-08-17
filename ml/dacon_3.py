@@ -65,4 +65,18 @@ model.add(Flatten())
 model.add(Dense(1))
 
 
+model.compile(loss='mse', optimizer='adam')
+
+model.fit(train_input_list, train_target_list, epochs=100, batch_size=100, verbose=1)
+#4. 평가, 예측
+loss = model.evaluate(val_input_list ,val_target_list)
+print('loss : ', loss)
+
+y_predict = model.predict(val_input_list)
+
+from sklearn.metrics import r2_score
+r2 = r2_score(val_target_list, y_predict)
+print('r2스코어 : ', r2)
+
+
 
