@@ -37,8 +37,8 @@ print(pd.Series(new_y).value_counts())
 # 0    100
 
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=123, shuffle=True, 
-                                                    train_size=0.75, stratify=y)
+x_train, x_test, y_train, y_test = train_test_split(new_x, new_y , random_state=123, shuffle=True, 
+                                                    train_size=0.75)
 
 print(pd.Series(y_train).value_counts())
 
@@ -92,8 +92,8 @@ print('acc_score : ', accuracy_score(y_test,y_predict))
 print('f1_score(macro) : ', f1_score(y_test,y_predict, average='macro'))
 # print('f1_score(micro) : ', f1_score(y_test,y_predict, average='micro'))
 
-# acc_score :  0.965034965034965
-# f1_score(macro) :  0.9623783214943435
+# acc_score :  0.9652173913043478
+# f1_score(macro) :  0.9515993265993266
 # ============================ SMOTE 적용 후 ============================
-# acc_score :  0.972027972027972
-# f1_score(macro) :  0.9702455264253016
+# acc_score :  0.9652173913043478
+# f1_score(macro) :  0.9538893344025661
