@@ -66,3 +66,7 @@ print('f1_score(macro) : ', f1_score(y_test,y_predict, average='macro'))
 # 증폭 전
 # acc_score :  0.9539424314816217
 # f1_score(macro) :  0.9241513178102323
+
+# 증폭 후
+# acc_score :  0.9541351985845387
+# f1_score(macro) :  0.9225708873716857
