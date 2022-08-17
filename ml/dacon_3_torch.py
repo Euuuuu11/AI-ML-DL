@@ -183,10 +183,18 @@ for test_input_path, test_target_path in zip(test_input_list, test_target_list):
     test_loader = DataLoader(test_dataset, batch_size = CFG['BATCH_SIZE'], shuffle=False, num_workers=0)
     inference_per_case(best_model, test_loader, test_target_path, device)
     
+# import zipfile
+# os.chdir("D:\study_data\_data\dacon3test_target/")
+# submission = zipfile.ZipFile("../submission.zip", 'w')
+# for path in test_target_list:
+#     path = path.split('/')[-1]
+#     submission.write(path)
+# submission.close()
+
 import zipfile
+filelist = ['TEST_01.csv','TEST_02.csv','TEST_03.csv','TEST_04.csv','TEST_05.csv', 'TEST_06.csv']
 os.chdir("D:\study_data\_data\dacon3test_target/")
-submission = zipfile.ZipFile("../submission.zip", 'w')
-for path in test_target_list:
-    path = path.split('/')[-1]
-    submission.write(path)
-submission.close()
+with zipfile.ZipFile("submission.zip", 'w') as my_zip:
+    for i in filelist:
+        my_zip.write(i)
+    my_zip.close()
