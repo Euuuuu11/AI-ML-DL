@@ -21,7 +21,7 @@ x_test = scaler.transform(x_test)
 from sklearn.ensemble import BaggingClassifier  # 한가지 모델을 여러번 돌리는 것(파라미터 조절).
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
-model = BaggingClassifier(LogisticRegression(),
+model = BaggingClassifier(DecisionTreeClassifier(),
                           n_estimators=100, 
                           n_jobs=1,
                           random_state=123
@@ -31,9 +31,13 @@ model = BaggingClassifier(LogisticRegression(),
 model.fit(x_train, y_train)
 
 #4. 평가, 예측
-print(model.score(x_test, y_test))  # 0.9736842105263158
+print(model.score(x_test, y_test))  
 
+# LogisticRegression
+# 1.0
 
+# DecisionTreeClassifier
+# 0.9444444444444444
 
 
 

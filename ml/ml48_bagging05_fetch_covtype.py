@@ -30,9 +30,13 @@ model = BaggingClassifier(LogisticRegression(),
 model.fit(x_train, y_train)
 
 #4. 평가, 예측
-print(model.score(x_test, y_test))  # 0.9736842105263158
+print(model.score(x_test, y_test))  
 
+# LogisticRegression
+# 0.9736842105263158
 
+# DecisionTreeClassifier
+# 0.9649122807017544
 
 
 
