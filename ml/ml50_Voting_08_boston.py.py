@@ -18,7 +18,7 @@ df = pd.DataFrame(datasets.data, columns=datasets.feature_names)
 # print(df.head(7))
 
 x_train, x_test, y_train, y_test = train_test_split(
-    datasets.data, datasets.target, train_size= 0.8, random_state=123,
+    datasets.data, datasets.target, train_size= 0.8, random_state=1234,
     )
 
 scaler = StandardScaler()
@@ -56,7 +56,7 @@ for model2 in classifiers:
     class_name = model2.__class__.__name__
     print('{0} 정확도 : {1:.4f}'.format(class_name, score2))
     
-# voting :  0.8369
-# XGBRegressor 정확도 : 0.8196
-# LGBMRegressor 정확도 : 0.7481
-# CatBoostRegressor 정확도 : 0.8763
+# voting :  0.9275
+# XGBRegressor 정확도 : 0.9112
+# LGBMRegressor 정확도 : 0.9226
+# CatBoostRegressor 정확도 : 0.9245
