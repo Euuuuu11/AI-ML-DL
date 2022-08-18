@@ -10,6 +10,8 @@ datasets = fetch_covtype()
 x, y = datasets.data, datasets.target
 # print(x.shape, y.shape) # (569, 30) (569,)
 
+
+
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, random_state=123, train_size=0.8, shuffle=True, stratify=y)
 
@@ -19,8 +21,9 @@ x_test = scaler.transform(x_test)
 
 #2. 모델
 from sklearn.ensemble import BaggingClassifier  # 한가지 모델을 여러번 돌리는 것(파라미터 조절).
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
-model = BaggingClassifier(LogisticRegression(),
+model = BaggingClassifier(DecisionTreeClassifier(),
                           n_estimators=100, 
                           n_jobs=1,
                           random_state=123
@@ -33,7 +36,7 @@ model.fit(x_train, y_train)
 print(model.score(x_test, y_test))  
 
 # LogisticRegression
-# 0.9736842105263158
+# 0.7238023114721651
 
 # DecisionTreeClassifier
 # 0.9649122807017544
