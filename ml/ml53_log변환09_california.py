@@ -42,14 +42,14 @@ print("그냥 결과 : ", round(results, 4))
 df = pd.DataFrame(datasets.data, columns=[datasets.feature_names])
 print(df)
 
-# df.plot.box()
-# plt.title('boston')
-# plt.xlabel('Feature')
-# plt.ylabel('데이터값')
-# plt.show()
-
+df.plot.box()
+plt.title('boston')
+plt.xlabel('Feature')
+plt.ylabel('데이터값')
+plt.show()
+exit()
 # print(df['B'].head())                 #  그냥 결과 :  0.7665
-df['B'] = np.log1p(df['B'])           #  그냥 결과 :  0.7711
+df['population'] = np.log1p(df['population'])           #  그냥 결과 :  0.7711
 # print(df['B'].head())
 
 # df['CRIM'] = np.log1p(df['CRIM'])   # 로그변환 결과 :  0.7596

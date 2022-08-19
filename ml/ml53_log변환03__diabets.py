@@ -43,19 +43,19 @@ df = pd.DataFrame(datasets.data, columns=[datasets.feature_names])
 print(df)
 
 # df.plot.box()
-# plt.title('boston')
+# plt.title('diabets')
 # plt.xlabel('Feature')
 # plt.ylabel('데이터값')
 # plt.show()
 
-# print(df['B'].head())                 #  그냥 결과 :  0.7665
-df['B'] = np.log1p(df['B'])           #  그냥 결과 :  0.7711
+# print(df['B'].head())                 #  그냥 결과 :  0.4626
+# df['s1'] = np.log1p(df['s1'])           #  그냥 결과 :  0.4579
 # print(df['B'].head())
 
-# df['CRIM'] = np.log1p(df['CRIM'])   # 로그변환 결과 :  0.7596
-df['ZN'] = np.log1p(df['ZN'])       # 로그변환 결과 :  0.7734
-df['TAX'] = np.log1p(df['TAX'])     # 로그변환 결과 :  0.7669
-                                    # 3개 모두 쓰면 : 0.7785
+df['s2'] = np.log1p(df['s2'])   # 로그변환 결과 :  0.4662
+# df['s3'] = np.log1p(df['s3'])       # 로그변환 결과 :  0.4624
+# df['s6'] = np.log1p(df['s6'])     # 로그변환 결과 :  0.458
+                                    # 3개 모두 쓰면 :  0.4627
                                     
 x_train, x_test, y_train, y_test = train_test_split(
     df, y, test_size=0.2, random_state=1234,
@@ -76,8 +76,6 @@ y_predict = model.predict(x_test)
 results = r2_score(y_test, y_predict)
 print("로그변환 결과 : ", round(results, 4))
 
-# LinearRegression
-# 그냥 결과 :  0.7711
+# 그냥 결과 :  0.4626
 
-# RandomForestRegressor
-# 그냥 결과 :  0.9153
+# 로그변환 결과 :  0.4575
