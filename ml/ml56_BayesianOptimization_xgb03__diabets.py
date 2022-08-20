@@ -14,10 +14,6 @@ from xgboost import XGBClassifier, XGBRegressor
 datasets = load_diabetes()
 x, y = datasets.data, datasets.target
 
-from sklearn.preprocessing import LabelEncoder
-le = LabelEncoder()
-y = le.fit_transform(y)
-
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, random_state=1234, train_size=0.8
 )
@@ -27,12 +23,12 @@ x_test = scaler.transform(x_test)
 
 #2. 모델
 bayesian_params = {      
-    'max_depth':(1,10),
-    'min_child_weight' : (0,200),
-    'subsample':(0.5,1),
-    'colsample_bytree':(0.5,1),
-    'reg_lambda' : (0.0001,100),
-    'reg_alpha':(0.01,100)
+   'max_depth':(6,12),
+    'min_child_weight' : (1,7),
+    'subsample':(0.7,1.3),
+    'colsample_bytree':(0.7,1.3),
+    'reg_lambda' : (37,43),
+    'reg_alpha':(22,28)
 }
 
 def lgb_hamsu(max_depth, min_child_weight,
@@ -53,17 +49,17 @@ def lgb_hamsu(max_depth, min_child_weight,
     
     # *여러개의인자를받겠다
     # **키워드받겠다(딕셔너리형태)
-    model = XGBClassifier(**params)
+    model = XGBRegressor(**params)
     
     model.fit(x_train, y_train,
               eval_set=[(x_train, y_train), (x_test, y_test)],
-              eval_metric='mrmsle',
+              eval_metric='rmse',
               verbose=0,
               early_stopping_rounds=50
               )
     
     y_predict = model.predict(x_test)
-    results = accuracy_score(y_test, y_predict)
+    results = r2_score(y_test, y_predict)
     
     return results
 
@@ -79,21 +75,22 @@ print(lgb_bo.max)
 ########################### [실습] ###########################
 #1. 수정한 파라미터로 모델 만들어서 비교!!!
 
-# {'target': 0.9122807017543859, 'params': {'colsample_bytree': 1.0, 'max_depth': 10.0, 
-#                                           'min_child_weight': 0.0, 'reg_alpha': 77.16428889055729, 'reg_lambda': 0.0001, 'subsample': 1.0}}
+# {'target': 0.8803092160885161, 'params': {'colsample_bytree': 1.0, 'max_depth': 9.172342906790268, 'min_child_weight': 4.70870620090763,
+# 'reg_alpha': 25.88191630163494, 'reg_lambda': 40.63970824337975, 'subsample': 1.0}}
 
 #2. 수정한 파라미터로 이용해서 재조정!!!!
+# {'target': 0.8823785605406569, 'params': {'colsample_bytree': 1.2636226668047854, 'max_depth': 11.465364467877958, 'min_child_weight': 3.1338154591221943,
+# 'reg_alpha': 26.728172045587378, 'reg_lambda': 39.78985076919175, 'subsample': 1.2661537011692694}}
 
-# {'target': 0.9122807017543859, 'params': {'colsample_bytree': 1.2884585190307694, 'max_depth': 11.108978431509179, 'min_child_weight': 0.4442795704453083, 
-#                                           'reg_alpha': 76.3527051091649, 'reg_lambda': 0.00014383942629883907, 'subsample': 1.137429824430425}}
 
-# model = XGBRegressor(n_estimators = 500, learning_rate= 0.02, colsample_bytree =max(min(1.2884585190307694,1),0) ,
-# max_depth=int(round(11.108978431509179)), min_child_weight =int(round(0.4442795704453083)),
-# reg_alpha= max(76.3527051091649,0), reg_lambda=max(0.00014383942629883907,0), subsample=max(min(1.137429824430425,1),0))
 
-# model.fit(x_train, y_train)
-# y_pred = model.predict(x_test)
-# score = accuracy_score(y_test, y_pred)
-# print('파마리터 수정 후 score : ', score)
+model = XGBRegressor(n_estimators = 500, learning_rate= 0.02, colsample_bytree =max(min(1.2636226668047854,1),0) ,
+max_depth=int(round(11.465364467877958)), min_child_weight =int(round(3.1338154591221943)),
+reg_alpha= max(26.728172045587378,0), reg_lambda=max(39.78985076919175,0), subsample=max(min(1.2661537011692694,1),0))
 
-# 파마리터 수정 후 score :  0.9122807017543859
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+score = r2_score(y_test, y_pred)
+print('파마리터 수정 후 score : ', score)
+
+# 파마리터 수정 후 score :  0.3897150016539983

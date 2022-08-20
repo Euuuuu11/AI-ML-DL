@@ -1,7 +1,7 @@
 from bayes_opt import BayesianOptimization
 from lightgbm import LGBMRegressor, LGBMClassifier
 import numpy as np
-
+import pandas as pd
 from sklearn.datasets import load_wine
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
@@ -11,8 +11,55 @@ warnings.filterwarnings('ignore')
 from xgboost import XGBClassifier, XGBRegressor
 
 #1.데이터
-datasets = load_wine()
-x, y = datasets.data, datasets.target
+path = './_data/kaggle_titanic/'
+train_set = pd.read_csv(path + 'train.csv',index_col =0)
+test_set = pd.read_csv(path + 'test.csv', index_col=0)
+
+##########전처리############
+train_test_data = [train_set, test_set]
+sex_mapping = {"male":0, "female":1}
+for dataset in train_test_data:
+    dataset['Sex'] = dataset['Sex'].map(sex_mapping)
+
+print(dataset)
+
+for dataset in train_test_data:
+    # 가족수 = 형제자매 + 부모님 + 자녀 + 본인
+    dataset['FamilySize'] = dataset['SibSp'] + dataset['Parch'] + 1
+    dataset['IsAlone'] = 1
+    
+    # 가족수 > 1이면 동승자 있음
+    dataset.loc[dataset['FamilySize'] > 1, 'IsAlone'] = 0
+
+for dataset in train_test_data:
+    dataset['Embarked'] = dataset['Embarked'].fillna('S')
+embarked_mapping = {'S':0, 'C':1, 'Q':2}
+for dataset in train_test_data:
+    dataset['Embarked'] = dataset['Embarked'].map(embarked_mapping)
+
+for dataset in train_test_data:
+    dataset['Title'] = dataset['Name'].str.extract('([\w]+)\.', expand=False)
+for dataset in train_test_data:
+    dataset['Title'] = dataset['Title'].apply(lambda x: 0 if x=="Mr" else 1 if x=="Miss" else 2 if x=="Mrs" else 3 if x=="Master" else 4)
+
+train_set['Cabin'] = train_set['Cabin'].str[:1]
+for dataset in train_test_data:
+    dataset['Age'].fillna(dataset.groupby("Title")["Age"].transform("median"), inplace=True)
+for dataset in train_test_data:
+    dataset['Agebin'] = pd.cut(dataset['Age'], 5, labels=[0,1,2,3,4])
+for dataset in train_test_data:
+    dataset["Fare"].fillna(dataset.groupby("Pclass")["Fare"].transform("median"), inplace=True)
+for dataset in train_test_data:
+    dataset['Farebin'] = pd.qcut(dataset['Fare'], 4, labels=[0,1,2,3])
+    drop_column = ['Name', 'Age', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin']
+
+for dataset in train_test_data:
+    dataset = dataset.drop(drop_column, axis=1, inplace=True)
+print(train_set.head())
+
+
+x = train_set.drop(['Survived'], axis=1,)
+y = train_set['Survived']
 
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, random_state=1234, train_size=0.8
@@ -53,7 +100,7 @@ def lgb_hamsu(max_depth, min_child_weight,
     
     model.fit(x_train, y_train,
               eval_set=[(x_train, y_train), (x_test, y_test)],
-              eval_metric='merror',
+              eval_metric='rmse',
               verbose=0,
               early_stopping_rounds=50
               )
@@ -84,13 +131,13 @@ print(lgb_bo.max)
 # 'reg_lambda': 26.613082639937048, 'subsample': 1.880564370248726}}
 
 
-model = XGBClassifier(n_estimators = 500, learning_rate= 0.02, colsample_bytree =max(min(0.2625067497745618,1),0) ,
-max_depth=int(round(12.50686297327293)), min_child_weight =int(round(0.16586485962120545)),
-reg_alpha= max(9.43520604988787,0), reg_lambda=max(26.613082639937048,0), subsample=max(min(1.880564370248726,1),0))
+# model = XGBClassifier(n_estimators = 500, learning_rate= 0.02, colsample_bytree =max(min(0.2625067497745618,1),0) ,
+# max_depth=int(round(12.50686297327293)), min_child_weight =int(round(0.16586485962120545)),
+# reg_alpha= max(9.43520604988787,0), reg_lambda=max(26.613082639937048,0), subsample=max(min(1.880564370248726,1),0))
 
-model.fit(x_train, y_train)
-y_pred = model.predict(x_test)
-score = accuracy_score(y_test, y_pred)
-print('파마리터 수정 후 score : ', score)
+# model.fit(x_train, y_train)
+# y_pred = model.predict(x_test)
+# score = accuracy_score(y_test, y_pred)
+# print('파마리터 수정 후 score : ', score)
 
 # 파마리터 수정 후 score :  0.9166666666666666

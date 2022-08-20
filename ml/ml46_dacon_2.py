@@ -102,7 +102,7 @@ print(test)
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier, XGBRegressor
 from sklearn.linear_model import LogisticRegression
-model = RandomForestClassifier()
+model = XGBClassifier()
 
 # 분석할 의미가 없는 칼럼을 제거합니다.
 # 상관계수 그래프를 통해 연관성이 적은것과 - 인것을 빼준다.
