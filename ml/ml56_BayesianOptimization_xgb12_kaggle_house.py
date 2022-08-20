@@ -62,12 +62,12 @@ x_test = scaler.transform(x_test)
 
 #2. 모델
 bayesian_params = {      
-   'max_depth':(1,10),
-    'min_child_weight' : (0,200),
-    'subsample':(0.5,1),
-    'colsample_bytree':(0.5,1),
-    'reg_lambda' : (0.0001,100),
-    'reg_alpha':(0.01,100)
+   'max_depth':(7,13),
+    'min_child_weight' : (28,34),
+    'subsample':(0.1,4),
+    'colsample_bytree':(0.1,3.5),
+    'reg_lambda' : (32,38),
+    'reg_alpha':(31,37)
 }
 
 def lgb_hamsu(max_depth, min_child_weight,
@@ -113,23 +113,22 @@ print(lgb_bo.max)
 
 ########################### [실습] ###########################
 #1. 수정한 파라미터로 모델 만들어서 비교!!!
-
-# {'target': 0.8803092160885161, 'params': {'colsample_bytree': 1.0, 'max_depth': 9.172342906790268, 'min_child_weight': 4.70870620090763,
-# 'reg_alpha': 25.88191630163494, 'reg_lambda': 40.63970824337975, 'subsample': 1.0}}
+# {'target': 0.8990628525352931, 'params': {'colsample_bytree': 0.5163070271476488, 'max_depth': 9.819095208997838, 'min_child_weight': 31.552553161785713, 
+# 'reg_alpha': 33.93391972418055, 'reg_lambda': 35.50813676981957, 'subsample': 0.8551416812982002}}
 
 #2. 수정한 파라미터로 이용해서 재조정!!!!
-# {'target': 0.8823785605406569, 'params': {'colsample_bytree': 1.2636226668047854, 'max_depth': 11.465364467877958, 'min_child_weight': 3.1338154591221943,
-# 'reg_alpha': 26.728172045587378, 'reg_lambda': 39.78985076919175, 'subsample': 1.2661537011692694}}
+# {'target': 0.8981587014719727, 'params': {'colsample_bytree': 0.7660541379008128, 'max_depth': 11.763876660617445, 'min_child_weight': 33.50774735728058, 'reg_alpha': 34.54269973676894, 'reg_lambda': 35.85030643309713, 'subsample': 0.9416759219934018}}
 
 
 
-# model = XGBRegressor(n_estimators = 500, learning_rate= 0.02, colsample_bytree =max(min(1.2636226668047854,1),0) ,
-# max_depth=int(round(11.465364467877958)), min_child_weight =int(round(3.1338154591221943)),
-# reg_alpha= max(26.728172045587378,0), reg_lambda=max(39.78985076919175,0), subsample=max(min(1.2661537011692694,1),0))
 
-# model.fit(x_train, y_train)
-# y_pred = model.predict(x_test)
-# score = r2_score(y_test, y_pred)
-# print('파마리터 수정 후 score : ', score)
+model = XGBRegressor(n_estimators = 500, learning_rate= 0.02, colsample_bytree =max(min(0.7660541379008128,1),0) ,
+max_depth=int(round(11.763876660617445)), min_child_weight =int(round(33.50774735728058)),
+reg_alpha= max(34.54269973676894,0), reg_lambda=max(35.85030643309713,0), subsample=max(min(0.9416759219934018,1),0))
 
-# 파마리터 수정 후 score :  0.8827718726390009
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+score = r2_score(y_test, y_pred)
+print('파마리터 수정 후 score : ', score)
+
+# 파마리터 수정 후 score :  0.8984286975922108

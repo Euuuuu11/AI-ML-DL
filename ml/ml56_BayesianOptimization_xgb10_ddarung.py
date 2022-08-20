@@ -90,18 +90,18 @@ print(lgb_bo.max)
 # 'reg_alpha': 79.22963095238099, 'reg_lambda': 3.3486931278206886, 'subsample': 0.9280375742122018}}
 
 #2. 수정한 파라미터로 이용해서 재조정!!!!
-# {'target': 0.8186382222966879, 'params': {'colsample_bytree': 3.232167559274687, 'max_depth': 9.331529360392189, 'min_child_weight': 5.0, 
-# 'reg_alpha': 77.35758304380352, 'reg_lambda': 1.46897977622571, 'subsample': 2.5890543943964714}}
+# {'target': 0.9628872000035885, 'params': {'colsample_bytree': 1.0, 'max_depth': 10.0, 'min_child_weight': 0.0, 'reg_alpha': 56.3303069530731, 
+# 'reg_lambda': 23.781528830734004, 'subsample': 0.6761268531513006}}
 
 
 
-model = XGBRegressor(n_estimators = 500, learning_rate= 0.02, colsample_bytree =max(min(3.232167559274687,1),0) ,
-max_depth=int(round(9.331529360392189)), min_child_weight =int(round(5)),
-reg_alpha= max(77.35758304380352,0), reg_lambda=max(1.46897977622571,0), subsample=max(min(2.5890543943964714,1),0))
+model = XGBRegressor(n_estimators = 500, learning_rate= 0.02, colsample_bytree =max(min(1,1),0) ,
+max_depth=int(round(10)), min_child_weight =int(round(0)),
+reg_alpha= max(56.3303069530731,0), reg_lambda=max(23.781528830734004,0), subsample=max(min(0.6761268531513006,1),0))
 
 model.fit(x_train, y_train)
 y_pred = model.predict(x_test)
 score = r2_score(y_test, y_pred)
 print('파마리터 수정 후 score : ', score)
 
-# 파마리터 수정 후 score :  0.8129475785915912
+# 파마리터 수정 후 score :  0.7797975616250135
