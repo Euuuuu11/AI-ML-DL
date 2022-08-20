@@ -18,7 +18,6 @@ from sklearn.preprocessing import LabelEncoder
 le = LabelEncoder()
 y = le.fit_transform(y)
 
-
 x_train, x_test, y_train, y_test = train_test_split(
     x, y, random_state=1234, train_size=0.8
 )
@@ -58,7 +57,7 @@ def lgb_hamsu(max_depth, min_child_weight,
     
     model.fit(x_train, y_train,
               eval_set=[(x_train, y_train), (x_test, y_test)],
-              eval_metric='rmse',
+              eval_metric='mrmsle',
               verbose=0,
               early_stopping_rounds=50
               )
