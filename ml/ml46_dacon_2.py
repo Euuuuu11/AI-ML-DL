@@ -7,6 +7,7 @@ from sklearn.metrics import r2_score, mean_squared_error,accuracy_score
 from tqdm import tqdm_notebook
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense
+
 #1. 데이터
 path = 'D:\study_data\_data/dacon2/'
 train = pd.read_csv(path + 'train.csv',                 
@@ -127,7 +128,7 @@ print(prediction[:10])
 # 예측된 값을 정답파일과 병합
 sample_submission['ProdTaken'] = prediction
 
-# 정답파일 데이터프레임 확인
+
 print(sample_submission)
 
 sample_submission.to_csv(path+'sample_submission.csv',index = False)
@@ -173,6 +174,7 @@ y = train_set['ProdTaken']
 print(y.shape) #(1955,)
 
 y = np.array(y).reshape(-1, 1)
+
 from sklearn.model_selection import train_test_split
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
@@ -180,10 +182,10 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
                                                     random_state=58525
                                                     )
 
-print(x_train.shape) # (712, 7)
-print(y_train.shape) # (712, 1)
-print(x_test.shape) # (179, 7)
-print(y_test.shape) # (179, 1)
+# print(x_train.shape) # (712, 7)
+# print(y_train.shape) # (712, 1)
+# print(x_test.shape) # (179, 7)
+# print(y_test.shape) # (179, 1)
 
 
 #2. 모델구성
