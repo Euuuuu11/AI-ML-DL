@@ -23,12 +23,12 @@ x_test = scaler.transform(x_test)
 
 #2. 모델
 bayesian_params = {      
-    'max_depth':(1, 10),                                         
-    'min_child_weight':(0, 200),             
+    'max_depth':(3, 9),                                         
+    'min_child_weight':(0.8, 6.8),             
     'subsample':(0.5 ,1),                        
-    'colsample_bytree':(0.5,1),                                 
-    'reg_alpha':(0.0001,100),                           
-    'reg_lambda':(0.01,100)
+    'colsample_bytree':(0.3,1),                                 
+    'reg_alpha':(3.5,9.5),                           
+    'reg_lambda':(0.3,0.9)
 }
 def lgb_hamsu(max_depth, min_child_weight,
               subsample, colsample_bytree, reg_alpha, reg_lambda ):
@@ -73,11 +73,22 @@ print(lgb_bo.max)
 
 ########################### [실습] ###########################
 #1. 수정한 파라미터로 모델 만들어서 비교!!!!
-# {'target': 0.7429951690821256, 'params': {'colsample_bytree': 0.6312952464075539, 'max_bin': 11.779904623902896, 'max_depth': 12.90838185015963, 
-# 'min_child_samples': 144.81187361329597, 'min_child_weight': 9.877363607133844, 'num_leaves': 30.481074123605598, 'reg_alpha': 2.377888753370187, 
-# 'reg_lambda': 5.078293840286648, 'subsample': 0.593082760434454}}
+
+# {'target': 1.0, 'params': {'colsample_bytree': 0.7658344939354672, 'max_depth': 6.25768839440154, 'min_child_weight': 3.833518251499446,
+#                            'reg_alpha': 6.526941232961757, 'reg_lambda': 0.6493600035852132, 'subsample': 0.5396582787493862}}
 
 #2. 수정한 파라미터로 이용해서 재조정!!!!
 
-# 'target': 0.8164251207729468, 'params': {'colsample_bytree': 0.3, 'max_bin': 8.0, 'max_depth': 9.0, 'min_child_samples': 144.98158214197016, 
-# 'min_child_weight': 10.246864012756383, 'num_leaves': 33.0, 'reg_alpha': 0.1, 'reg_lambda': 2.0, 'subsample': 1.0}}
+# {'target': 1.0, 'params': {'colsample_bytree': 0.787528429918503, 'max_depth': 4.716836009702277, 'min_child_weight': 2.1611087213852187, 
+#                            'reg_alpha': 6.807888614497347, 'reg_lambda': 0.7316813818713379, 'subsample': 0.7115532300622305}}
+
+model = XGBClassifier(n_estimators = 500, learning_rate= 0.02, colsample_bytree =max(min(0.787528429918503,1),0) ,
+max_depth=int(round(4.716836009702277)), min_child_weight =int(round(2.1611087213852187)),
+reg_alpha= max(6.807888614497347,0), reg_lambda=max(0.7316813818713379,0), subsample=max(min(0.7115532300622305,1),0))
+
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+score = accuracy_score(y_test, y_pred)
+print('파마리터 수정 후 score : ', score)
+
+# 파마리터 수정 후 score :  1.0
