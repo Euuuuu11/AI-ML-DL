@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set(font_scale=0.3)
 sns.heatmap(data=train.corr(),square=True, annot=True, cbar=True) 
-plt.show()
+# plt.show()
 
 
 
@@ -99,36 +99,108 @@ print(test)
 
 
 # 모델 선언
-from sklearn.ensemble import RandomForestClassifier
-from xgboost import XGBClassifier, XGBRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LogisticRegression, LinearRegression     # LogisticRegression 분류모델 LinearRegression 회귀
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor 
+from xgboost import XGBClassifier, XGBRegressor 
 from sklearn.linear_model import LogisticRegression
-model = XGBClassifier()
+from lightgbm import LGBMClassifier,LGBMRegressor
+from catboost import CatBoostClassifier, CatBoostRegressor
+
+# import matplotlib.pyplot as plt
+
+# train_enc.plot.box()
+# plt.title('boston')
+# plt.xlabel('Feature')
+# plt.ylabel('data')
+# plt.show()
+
+# exit()
 
 # 분석할 의미가 없는 칼럼을 제거합니다.
 # 상관계수 그래프를 통해 연관성이 적은것과 - 인것을 빼준다.
 train = train_enc.drop(columns=['TypeofContact','NumberOfChildrenVisiting','NumberOfPersonVisiting','OwnCar', 'MonthlyIncome'])  
 test = test.drop(columns=['TypeofContact','NumberOfChildrenVisiting','NumberOfPersonVisiting','OwnCar', 'MonthlyIncome'])
-
+# 'TypeofContact','NumberOfChildrenVisiting','NumberOfPersonVisiting','OwnCar', 'MonthlyIncome'
 
 # 학습에 사용할 정보와 예측하고자 하는 정보를 분리합니다.
-x_train = train.drop(columns=['ProdTaken'])
-y_train = train[['ProdTaken']]
-print(x_train.info())
-print(y_train.info())
+x = train.drop(columns=['ProdTaken'])
+y = train[['ProdTaken']]
 
+x_train,x_test,y_train,y_test = train_test_split(x,y, random_state=72, train_size=0.88,shuffle=True,stratify=y)
+
+# from sklearn.preprocessing import MinMaxScaler, StandardScaler
+# from sklearn.model_selection import train_test_split, KFold , StratifiedKFold
+# scaler = MinMaxScaler()
+# x_train = scaler.fit_transform(x_train)
+# x_test = scaler.transform(x_test)
 
 # 모델 학습
+# xgb = XGBClassifier(n_estimators=100, learning_rate=0.1, gamma = 1, subsample=1, colsample_bytree = 1, max_depth=4,random_state=123)
+
+
+# ##########################GridSearchCV###############################
+# n_splits = 5
+
+# parameters = {'n_estimators':[1000],
+#               'learning_rate':[0.1],
+#               'max_depth':[3],
+#               'gamma': [0],
+#             #   'min_child_weight':[1],
+#               'subsample':[1],
+#               'colsample_bytree':[1],
+#             #   'colsample_bylevel':[1],
+#             #   'colsample_byload':[1],
+#             #   'reg_alpha':[0],
+#             #   'reg_lambda':[1]
+#               }  
+
+# kfold = KFold(n_splits=n_splits ,shuffle=True, random_state=123)
+# xgb = XGBClassifier(random_state=123,
+#                     )
+
+# model = GridSearchCV(xgb,param_grid=parameters, cv =kfold, n_jobs=8)
+##########################GridSearchCV###############################
+
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+############################0821_1####################################
+param_grid = [
+              {'n_estimators':[3,10,30,35,40], 'max_features':[2,4,6,8,10,12]},
+              {'bootstrap':[False],'n_estimators':[3,5,10], 'max_features':[2,3,4]}
+]
+
+forest_reg = RandomForestClassifier()
+
+model = GridSearchCV(forest_reg, param_grid, cv=5,
+                           scoring='accuracy',
+                           verbose=1,
+                           return_train_score=True)
+
+############################0821_1####################################
+
+
+# model = RandomForestClassifier()
+
 model.fit(x_train,y_train)
 
-prediction = model.predict(test)
+prediction = model.predict(x_test)
+prediction1 = model.predict(test)
+
 print('----------------------예측된 데이터의 상위 10개의 값 확인--------------------\n')
+
+print('acc : ', accuracy_score(prediction,y_test))
 
 print(prediction[:10])
 # print(model.score(x_train, y_train))
 # 예측된 값을 정답파일과 병합
-sample_submission['ProdTaken'] = prediction
+print(prediction.shape)
 
+sample_submission['ProdTaken'] = prediction1
 
+# 정답파일 데이터프레임 확인
 print(sample_submission)
 
 sample_submission.to_csv(path+'sample_submission.csv',index = False)
