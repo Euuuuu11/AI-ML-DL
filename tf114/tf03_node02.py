@@ -1,6 +1,6 @@
 import tensorflow as tf
 node1 = tf.constant(2.0)
-node2 = tf.constant(3.0)
+node2 = tf.constant(4.0)
 
 # 실습
 # 덧셈 node3

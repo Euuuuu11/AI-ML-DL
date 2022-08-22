@@ -6,7 +6,7 @@ tf.set_random_seed(123)
 x = [1, 2, 3, 4, 5]
 y = [1, 2, 3, 4, 5]
 
-w = tf.Variable(4,  dtype=tf.float32)
+w = tf.Variable(11,  dtype=tf.float32)
 b = tf.Variable(10,  dtype=tf.float32)
 
 #2. 모델 구성
@@ -24,7 +24,7 @@ train = optimizer.minimize(loss)
 sess = tf.compat.v1.Session()
 sess.run(tf.global_variables_initializer())
 
-epochs = 5000
+epochs = 5003
 for step in range(epochs) : 
     sess.run(train)     # model.fit 부분
     if step %20 == 0:
