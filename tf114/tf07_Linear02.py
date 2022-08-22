@@ -24,7 +24,7 @@ train = optimizer.minimize(loss)
 sess = tf.compat.v1.Session()
 sess.run(tf.global_variables_initializer())
 
-epochs = 5003
+epochs = 5040
 for step in range(epochs) : 
     sess.run(train)     # model.fit 부분
     if step %20 == 0:
