@@ -1,4 +1,7 @@
 import tensorflow as tf
+import warnings
+warnings.filterwarnings('ignore')
+
 tf.compat.v1.set_random_seed(123)
 
 # [실습]
@@ -42,8 +45,8 @@ for step in range(epochs):
                                              feed_dict=(
                                                  {x_train: x_train_data, y_train: y_train_data})
                                              )
-     if step % 20 == 0:  # %20 의 나머지가 0이 아닐때 프린트함. 즉, 20번에 한번씩 실행시킨다.
-        print(step, loss_val, W_val, b_val)
+    #  if step % 20 == 0:  # %20 의 나머지가 0이 아닐때 프린트함. 즉, 20번에 한번씩 실행시킨다.
+    #     print(step, loss_val, W_val, b_val)
 x_test_data = [6, 7, 8]
 x_test = tf.compat.v1.placeholder(tf.float32, shape=[None])
 y_preidct = x_test * W_val + b_val                          # y_predict = model.predict(x_test)
@@ -96,8 +99,8 @@ for step in range(epochs):
                                              feed_dict=(
                                                  {x_train: x_train_data, y_train: y_train_data})
                                              )
-     if step % 20 == 0:  # %20 의 나머지가 0이 아닐때 프린트함. 즉, 20번에 한번씩 실행시킨다.
-        print(step, loss_val, W_val, b_val)
+    #  if step % 20 == 0:  # %20 의 나머지가 0이 아닐때 프린트함. 즉, 20번에 한번씩 실행시킨다.
+    #     print(step, loss_val, W_val, b_val)
 x_test_data = [6, 7, 8]
 x_test = tf.compat.v1.placeholder(tf.float32, shape=[None])
 y_preidct = x_test * W_val + b_val                          # y_predict = model.predict(x_test)
