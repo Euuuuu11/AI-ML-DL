@@ -27,7 +27,7 @@ import seaborn as sns
 sns.set(font_scale=0.3)
 sns.heatmap(data=train.corr(),square=True, annot=True, cbar=True) 
 # plt.show()
-
+# exit()
 
 
 # 결측치를 처리하는 함수를 작성.
@@ -122,15 +122,19 @@ from catboost import CatBoostClassifier, CatBoostRegressor
 
 # 분석할 의미가 없는 칼럼을 제거합니다.
 # 상관계수 그래프를 통해 연관성이 적은것과 - 인것을 빼준다.
-train = train_enc.drop(columns=['TypeofContact','NumberOfChildrenVisiting','NumberOfPersonVisiting','OwnCar', 'MonthlyIncome'])  
-test = test.drop(columns=['TypeofContact','NumberOfChildrenVisiting','NumberOfPersonVisiting','OwnCar', 'MonthlyIncome'])
+# train = train_enc.drop(columns=['TypeofContact','NumberOfChildrenVisiting','NumberOfPersonVisiting','OwnCar', 'MonthlyIncome'])  
+# test = test.drop(columns=['TypeofContact','NumberOfChildrenVisiting','NumberOfPersonVisiting','OwnCar', 'MonthlyIncome'])
+train = train_enc.drop(columns=['NumberOfChildrenVisiting','MonthlyIncome', 'NumberOfFollowups', 'NumberOfTrips','Age', 'Passport'])  
+test = test.drop(columns=['NumberOfChildrenVisiting','MonthlyIncome', 'NumberOfFollowups', 'NumberOfTrips','Age', 'Passport'])
 # 'TypeofContact','NumberOfChildrenVisiting','NumberOfPersonVisiting','OwnCar', 'MonthlyIncome'
-
+# print(train.shape)  
+# print(test.shape) 
+# exit()      
 # 학습에 사용할 정보와 예측하고자 하는 정보를 분리합니다.
 x = train.drop(columns=['ProdTaken'])
 y = train[['ProdTaken']]
 
-x_train,x_test,y_train,y_test = train_test_split(x,y, random_state=72, train_size=0.88,shuffle=True,stratify=y)
+x_train,x_test,y_train,y_test = train_test_split(x,y, random_state=72, train_size=0.8,shuffle=True,stratify=y)
 
 # from sklearn.preprocessing import MinMaxScaler, StandardScaler
 # from sklearn.model_selection import train_test_split, KFold , StratifiedKFold
@@ -193,14 +197,14 @@ print('----------------------예측된 데이터의 상위 10개의 값 확인--
 
 print('acc : ', accuracy_score(prediction,y_test))
 
-print(prediction[:10])
+# print(prediction[:10])
 # print(model.score(x_train, y_train))
 # 예측된 값을 정답파일과 병합
-print(prediction.shape)
+# print(prediction.shape)
 
 sample_submission['ProdTaken'] = prediction1
 
 # 정답파일 데이터프레임 확인
-print(sample_submission)
+# print(sample_submission)
 
 sample_submission.to_csv(path+'sample_submission.csv',index = False)

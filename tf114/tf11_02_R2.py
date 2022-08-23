@@ -1,13 +1,15 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-x_train =[1]
-y_train =[1]
+x_train =[1, 2, 3]
+y_train =[1, 2, 3]
+x_test =[4, 5, 6]
+y_test =[4, 5, 6]
 x = tf.compat.v1.placeholder(tf.float32)
 y = tf.compat.v1.placeholder(tf.float32)
 
-# w = tf.compat.v1.Variable(tf.compat.v1.random_normal([1]), name = 'weight')
-w = tf.compat.v1.Variable(10, dtype = tf.float32, name = 'weight')
+w = tf.compat.v1.Variable(tf.compat.v1.random_normal([1]), name = 'weight')
+# w = tf.compat.v1.Variable(10, dtype = tf.float32, name = 'weight')
 
 # sess = tf.compat.v1.Session()
 # print(sess.run(w))
@@ -36,11 +38,20 @@ for step in range(4) :
     
     w_history.append(w_v)
     loss_history.append(loss_v)
-    
+
+###################### [실습] R2로 만들기 ######################
+
+y_predict = x_test * w_v
+
+print(y_predict)
+
+from sklearn.metrics import accuracy_score, r2_score, mean_absolute_error
+r2 = r2_score(y_test, y_predict)
+print('r2 : ', r2)
+
+mae = mean_absolute_error(y_test, y_predict)  
+print('mae : ', mae)
+
 sess.close()
 
-print('=========================== W history===========================')        
-print(w_history)
-print('=========================== loss history===========================')        
-print(loss_history)
 
