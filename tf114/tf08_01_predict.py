@@ -7,8 +7,8 @@ tf.set_random_seed(123)  # 항상 같은 랜덤값이 지정 됨
 # x = [1, 2, 3, 4, 5]
 # y = [1, 2, 3, 4, 5]
 
-x = tf.placeholder(tf.float32, shape=[None])
-y = tf.placeholder(tf.float32, shape=[None])
+x_train = tf.placeholder(tf.float32, shape=[None])
+y_train = tf.placeholder(tf.float32, shape=[None])
 # shape :: input shape
 
 
@@ -22,10 +22,10 @@ b = tf.Variable(tf.random_normal([1]), dtype=tf.float32)
 # print(sess.run(W))
 
 # 2. 모델 구성
-hypothesis = x * W + b  # y = wx + b
+hypothesis = x_train * W + b  # y = wx + b
 
 # 3-1. 컴파일
-loss = tf.reduce_mean(tf.square(hypothesis-y))  # mse
+loss = tf.reduce_mean(tf.square(hypothesis-y_train))  # mse
 # square = 제곱, reduce_mean = 평균
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
 train = optimizer.minimize(loss)    # loss 값이 제일 최소값이 되는걸 찾아낸다.
@@ -42,12 +42,30 @@ with tf.compat.v1.Session() as sess:
         # sess.run(train)
         _, loss_val, W_val, b_val = sess.run([train, loss, W, b],
                                              feed_dict=(
-                                                 {x: [1, 2, 3, 4, 5], y: [1, 2, 3, 4, 5]})
+                                                 {x_train: [1, 2, 3, 4, 5], y_train: [1, 2, 3, 4, 5]})
                                              )
         if step % 20 == 0:  # %20 의 나머지가 0이 아닐때 프린트함. 즉, 20번에 한번씩 실행시킨다.
             print(step, loss_val, W_val, b_val)
+    x_data = [6, 7, 8]
+    x_test = tf.compat.v1.placeholder(tf.float32, shape=[None])
+
+    sess = tf.compat.v1.Session()
+
+    y_preidct = x_test * W_val + b_val                          # y_predict = model.predict(x_test)
+    print('[6, 7, 8] 예측 : ', sess.run(y_preidct, feed_dict={x_test: x_data}))
 
 # _ 의미 :: 따로 정의는 하지 않고 실행만 시키겠다. train 값을 저장 할 필요 없다.
 
 # sess.close()
 # with문의 개념 :: with 문 안의 내용들은 with 문이  끝날때 자동으로 끝이난다. (sess.close 사용할 필요가 없음)
+
+################################################################################################################
+
+# x_data = [6, 7, 8]
+# x_test = tf.compat.v1.placeholder(tf.float32, shape=[None])
+
+# sess = tf.compat.v1.Session()
+
+# y_preidct = x_test * W_val + b_val                          # y_predict = model.predict(x_test)
+# print('[6, 7, 8] 예측 : ', sess.run(y_preidct, feed_dict={x_test: x_data}))
+
