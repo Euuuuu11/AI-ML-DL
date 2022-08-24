@@ -43,3 +43,5 @@ r2 = r2_score(y_data, y_predict)
 print('r2스코어 : ', r2)
 
 sess.close()
+
+# r2스코어 :  0.02379543779684523

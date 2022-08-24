@@ -3,6 +3,8 @@ tf.compat.v1.set_random_seed(123)
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_breast_cancer
 import numpy as np
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
 
 #1. 데이터
 datasets = load_breast_cancer()
@@ -20,14 +22,15 @@ x_train, x_test, y_train, y_test =train_test_split(
 # print(type(x_train), type(y_train))     # <class 'numpy.ndarray'> <class 'numpy.ndarray'>
 # print(x_train.dtype, y_train.dtype)     # float64 int32
 
-y_train  = np.array(y_train, dtype='float32')
-
 x = tf.compat.v1.placeholder(tf.float32, shape=[None, 30])   # placeholder를 이용해서 입력값을 받을 수 있다.
 y = tf.compat.v1.placeholder(tf.float32, shape=[None, 1])
 
 w = tf.compat.v1.Variable(tf.compat.v1.random_normal([30,1], name='weight'))
 b = tf.compat.v1.Variable(tf.zeros([1], name='bias'))
 
+scaler = MinMaxScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)
 
 #2. 모델
 hypothesis = tf.compat.v1.sigmoid(tf.matmul(x, w) + b)  # matmul 행렬연산
