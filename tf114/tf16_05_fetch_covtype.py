@@ -40,7 +40,7 @@ loss = -tf.reduce_sum(-tf.reduce_sum(y * tf.log(hypothesis), axis=1))  # categor
 # optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
 # train = optimizer.minimize(loss)
 
-train = tf.train.GradientDescentOptimizer(learning_rate=0.01).optimizer.minimize(loss)
+train = tf.train.GradientDescentOptimizer(learning_rate=1e-5).minimize(loss)
 
 sess = tf.compat.v1.Session()
 sess.run(tf.compat.v1.global_variables_initializer())
