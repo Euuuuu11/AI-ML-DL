@@ -55,14 +55,14 @@ for epochs in range(epoch):
         print(epochs, "loss : ", cost_val, "\n", hy_val)
         
 # exit()
-#. 평가, 예측
-# y_predict = sess.run(tf.cast(hy_val>0.5, dtype=tf.float32))
+#4. 평가, 예측
+y_predict = sess.run(tf.cast(hy_val>0.5, dtype=tf.float32))
 
-# sess.close()
+sess.close()
 
-# from sklearn.metrics import accuracy_score, r2_score, mean_absolute_error
-# acc = accuracy_score(y_test, y_predict)
-# print('acc : ', acc)
+from sklearn.metrics import accuracy_score, r2_score, mean_absolute_error
+acc = accuracy_score(y_test, y_predict)
+print('acc : ', acc)
 
-# mae = mean_absolute_error(y_test, y_predict)  
-# print('mae : ', mae)
+mae = mean_absolute_error(y_test, y_predict)  
+print('mae : ', mae)

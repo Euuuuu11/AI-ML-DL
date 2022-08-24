@@ -1,55 +1,51 @@
-import numpy as np
+from sklearn.datasets import load_digits
 import tensorflow as tf
-tf.set_random_seed(123)
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder
+import numpy as np
+tf.set_random_seed(66)
 
-x_data = [[1, 2, 1, 1],
-          [2, 1, 3, 2],
-          [3, 1, 3, 4],
-          [4, 1, 5, 5],
-          [1, 7, 5, 5],
-          [1, 2, 5, 6],
-          [1, 6, 6, 6],
-          [1, 7, 6, 7]]
-y_data = [[0, 0, 1],    # 2
-          [0, 0, 1],
-          [0, 0, 1],
-          [0, 1, 0],    # 1
-          [0, 1, 0],
-          [0, 1, 0],
-          [1, 0, 0],    # 0
-          [1, 0, 0]]
+#1. 데이터
+dataset = load_digits()
+x_data = dataset.data
+y_data = dataset.target.reshape(-1,1)
 
-#2. 모델구성 // 시작
-x = tf.compat.v1.placeholder(tf.float32, shape=[None, 4])   # placeholder를 이용해서 입력값을 받을 수 있다.
+ohe = OneHotEncoder()
+ohe.fit(y_data)
+y_data = ohe.transform(y_data).toarray()
 
-w = tf.compat.v1.Variable(tf.compat.v1.random_normal([4, 3], name='weight'))
+# print(x_data.shape)  # (1797, 64)
+# print(y_data.shape)  # (1797, 10)
 
-b = tf.Variable(tf.random_normal([1, 3], name='bias'))
+x_train, x_test, y_train, y_test = train_test_split (x_data, y_data, train_size = 0.8, random_state=66)
 
-y = tf.compat.v1.placeholder(tf.float32, shape=[None, 3])
+x = tf.compat.v1.placeholder('float',shape=[None,64])
+y = tf.compat.v1.placeholder('float',shape=[None,10])
 
-hypothesis = tf.nn.softmax(tf.matmul(x, w) + b)  # matmul 행렬연산
-# model.add(Dense(3, activation= "softmax", input_dim= 4))
-# hypothesis 와 y의 shape값이 일치해야한다.
+w = tf.compat.v1.Variable(tf.zeros([64,10]), name='weight')
+b = tf.compat.v1.Variable(tf.zeros([1,10]), name = 'bias')
 
-#3-1. 컴파일
-# loss = tf.reduce_mean(tf.square(hypothesis-y_data))                   # mse
-loss = -tf.reduce_sum(-tf.reduce_sum(y * tf.log(hypothesis), axis=1))  # categorical_crossentropy
-# model.compile(loss='categorical_crossentropy')
+#2. 모델링
+hypothesis = tf.nn.softmax(tf.matmul(x, w) + b)
 
-# optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
-# train = optimizer.minimize(loss)
+#3. 컴파일, 훈련
+loss = tf.reduce_mean(-tf.reduce_sum(y * tf.log(hypothesis), axis=1)) # categorical_crossentropy
 
-train = tf.train.GradientDescentOptimizer(learning_rate=1e-5).minimize(loss)
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.000001).minimize(loss)
+#optimizer = tf.train.AdamOptimizer(learning_rate=0.01).minimize(loss)
 
-sess = tf.compat.v1.Session()
-sess.run(tf.compat.v1.global_variables_initializer())
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
 
-epoch = 2001
-for epochs in range(epoch):
-    cost_val, hy_val, _ = sess.run([loss, hypothesis, train], 
-                                   feed_dict={x:x_data , y:y_data})
-    if epochs % 20 ==0:
-        print(epochs, "loss : ", cost_val, "\n", hy_val)
-        
+    for step in range(2001):
+        _, loss_val, = sess.run([optimizer, loss], feed_dict = {x:x_train,y:y_train})
+        if step % 200 == 0:
+            print(step, loss_val)
 
+    y_acc_test = sess.run(tf.argmax(y_test, 1))  # 실제값
+    predict = sess.run(tf.argmax(sess.run(hypothesis, feed_dict={x:x_test}), 1))  # 예측값
+    accuracy = accuracy_score(y_acc_test, predict)
+    print("accuracy_score : ", accuracy)
+
+# accuracy_score :  0.75
