@@ -122,10 +122,10 @@ from catboost import CatBoostClassifier, CatBoostRegressor
 
 # 분석할 의미가 없는 칼럼을 제거합니다.
 # 상관계수 그래프를 통해 연관성이 적은것과 - 인것을 빼준다.
-# train = train_enc.drop(columns=['TypeofContact','NumberOfChildrenVisiting','NumberOfPersonVisiting','OwnCar', 'MonthlyIncome'])  
-# test = test.drop(columns=['TypeofContact','NumberOfChildrenVisiting','NumberOfPersonVisiting','OwnCar', 'MonthlyIncome'])
-train = train_enc.drop(columns=['NumberOfChildrenVisiting','MonthlyIncome', 'NumberOfFollowups', 'NumberOfTrips','Age', 'Passport'])  
-test = test.drop(columns=['NumberOfChildrenVisiting','MonthlyIncome', 'NumberOfFollowups', 'NumberOfTrips','Age', 'Passport'])
+train = train_enc.drop(columns=['TypeofContact','NumberOfChildrenVisiting','NumberOfPersonVisiting','OwnCar', 'MonthlyIncome'])  
+test = test.drop(columns=['TypeofContact','NumberOfChildrenVisiting','NumberOfPersonVisiting','OwnCar', 'MonthlyIncome'])
+# train = train_enc.drop(columns=['NumberOfChildrenVisiting','MonthlyIncome', 'NumberOfFollowups', 'NumberOfTrips','Age', 'Passport'])  
+# test = test.drop(columns=['NumberOfChildrenVisiting','MonthlyIncome', 'NumberOfFollowups', 'NumberOfTrips','Age', 'Passport'])
 # 'TypeofContact','NumberOfChildrenVisiting','NumberOfPersonVisiting','OwnCar', 'MonthlyIncome'
 # print(train.shape)  
 # print(test.shape) 
@@ -208,3 +208,6 @@ sample_submission['ProdTaken'] = prediction1
 # print(sample_submission)
 
 sample_submission.to_csv(path+'sample_submission.csv',index = False)
+
+
+

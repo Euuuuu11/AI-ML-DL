@@ -1,5 +1,6 @@
 from bayes_opt import BayesianOptimization
 from lightgbm import LGBMRegressor
+from sklearn.preprocessing import StandardScaler
 import numpy as np
 
 from sklearn.datasets import load_diabetes
