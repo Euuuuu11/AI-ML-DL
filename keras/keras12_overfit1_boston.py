@@ -22,15 +22,15 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(11, input_dim=13))
-model.add(Dense(22))
-model.add(Dense(33))
-model.add(Dense(44))
-model.add(Dense(55))
-model.add(Dense(66))
-model.add(Dense(75))
-model.add(Dense(88))
-model.add(Dense(99))
+model.add(Dense(8, input_dim=13))
+model.add(Dense(16))
+model.add(Dense(32))
+model.add(Dense(64))
+model.add(Dense(32))
+model.add(Dense(128))
+model.add(Dense(64))
+model.add(Dense(32))
+model.add(Dense(8))
 model.add(Dense(1))
 
 import time
