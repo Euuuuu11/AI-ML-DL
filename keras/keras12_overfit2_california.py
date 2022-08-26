@@ -24,15 +24,15 @@ print(datasets.DESCR)
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(40, input_dim=8,activation='selu'))
-model.add(Dense(45))
+model.add(Dense(32, input_dim=8,activation='selu'))
+model.add(Dense(64))
 model.add(Dropout(0.2))
-model.add(Dense(50,activation='selu'))
+model.add(Dense(128,activation='selu'))
 model.add(Dropout(0.2))
-model.add(Dense(55))
+model.add(Dense(64))
 model.add(Dropout(0.2))
-model.add(Dense(60,activation='selu'))
-model.add(Dense(65))
+model.add(Dense(32,activation='selu'))
+model.add(Dense(16))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
