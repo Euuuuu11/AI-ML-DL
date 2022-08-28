@@ -19,12 +19,12 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 
 # 2. 모델구성
 model = Sequential()     # activation? 활성화 함수
-model.add(Dense(100, input_dim=30,activation='sigmoid')) 
-model.add(Dense(80))
-model.add(Dense(80))
-model.add(Dense(60))
-model.add(Dense(40,activation='relu'))  # 'relu' 히든 레이어에서만 사용 가능(음수는 없애고, linear와 동일)
-model.add(Dense(10,activation='sigmoid'))
+model.add(Dense(128, input_dim=30,activation='sigmoid')) 
+model.add(Dense(64))
+model.add(Dense(64))
+model.add(Dense(32))
+model.add(Dense(16,activation='relu'))  # 'relu' 히든 레이어에서만 사용 가능(음수는 없애고, linear와 동일)
+model.add(Dense(8,activation='sigmoid'))
 model.add(Dense(1,activation='sigmoid')) # 이진분류 마지막은 무조건 'sigmoid'(0 ~ 1까지), loss='binary_crossentropy'
 
 #3. 컴파일, 훈련
