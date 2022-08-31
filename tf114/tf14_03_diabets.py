@@ -1,47 +1,58 @@
+from sklearn.metrics import r2_score, accuracy_score
+import numpy as np
+from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_diabetes
+from sklearn.metrics import mean_absolute_error, r2_score, median_absolute_error
 import tensorflow as tf
-tf.set_random_seed(66)
+tf.compat.v1.set_random_seed(1234)
 
-#1. 데이터
+# 1. 데이터
+
 datasets = load_diabetes()
-x_data = datasets.data
-y_data = datasets.target
-y_data = y_data.reshape(442,1)
-#print(x_data.shape, y_data.shape) # (442, 10) (442,)
 
-x = tf.placeholder(tf.float32, shape = [None,10])
-y = tf.placeholder(tf.float32, shape = [None,1])
+x = datasets.data
+y = datasets.target
 
-w = tf.compat.v1.Variable(tf.random.normal([10,1]), name = 'weight')     
-b = tf.compat.v1.Variable(tf.random.normal([1]), name = 'bias')
+print(x.shape, y.shape)
+# (442, 10) (442,)
 
-#2. 모델구성
-hypothesis =  tf.matmul(x,w) + b
+y = y.reshape(-1, 1)
 
-#3-1. 컴파일
-loss = tf.reduce_mean(tf.square(hypothesis - y))    # mse
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, train_size=0.8, random_state=123
+)
 
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=1e-5)  
+x = tf.compat.v1.placeholder(tf.float32, shape=[None, 10])
+y = tf.compat.v1.placeholder(tf.float32, shape=[None, 1])
+
+w = tf.compat.v1.Variable(tf.compat.v1.random_normal([10, 1]), name='weight')
+b = tf.compat.v1.Variable(tf.compat.v1.random_normal([1]), name='bias')
+
+hypothesis = tf.compat.v1.matmul(x, w) + b  # matmul :: 행렬곱 함수
+# hypothesis = :: y의 shape값과 같아야한다.
+
+loss = tf.reduce_mean(tf.square(hypothesis-y))  # mse
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
 train = optimizer.minimize(loss)
 
-#3-2. 훈련
+# 3-1. 컴파일
+
 sess = tf.compat.v1.Session()
 sess.run(tf.compat.v1.global_variables_initializer())
 
-for epochs in range(200001):
-    _, loss_val, w_val = sess.run([train, loss, w], feed_dict={x:x_data, y:y_data})
-    if epochs % 200 ==0:
-        print(epochs, '\t', loss_val)
-    
-#4. 예측
-predict = tf.matmul(x,w_val) + b  
-y_predict = sess.run(predict, feed_dict={x:x_data, y:y_data})
-#print("예측 : " , y_predict)
+epoch = 1001
+for epochs in range(epoch):
+    cost_val, hy_val, _ = sess.run([loss, hypothesis, train],
+                                   feed_dict={x: x_train, y: y_train})
+    if epochs % 20 == 0:
+        print(epochs, "loss :: ", cost_val, "\n", hy_val)
 
-from sklearn.metrics import r2_score, mean_absolute_error
-r2 = r2_score(y_data, y_predict)
-print('r2스코어 : ', r2)
 
+# 4. 평가, 예측
+
+y_predict = sess.run(hypothesis, feed_dict={x: x_test, y: y_test})
+r2 = r2_score(y_test, y_predict)
+print('r2 :', r2)
 sess.close()
 
-# r2스코어 :  0.02379543779684523
+# r2 : 0.1090695286114044

@@ -1,68 +1,71 @@
-import tensorflow as tf
-tf.compat.v1.set_random_seed(123)
-from sklearn.model_selection import train_test_split
-from sklearn.datasets import load_breast_cancer
 import numpy as np
-
+import pandas as pd
+import tensorflow as tf
+from sklearn.ensemble import VotingClassifier, VotingRegressor   # 투표를 통해 최종 예측 결과를 결정하는 방식
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.datasets import load_diabetes
+from sklearn.metrics import accuracy_score, r2_score
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from xgboost import XGBClassifier, XGBRegressor
+from lightgbm import LGBMClassifier, LGBMRegressor
+from catboost import CatBoostClassifier, CatBoostRegressor
 #1. 데이터
-datasets = load_breast_cancer()
-x,y = datasets.data, datasets.target
-# print(x_data.shape, y_data.shape)     # (569, 30) (569,)
+path = './_data/ddarung/'
+train_set = pd.read_csv(path + 'train.csv',                 # + 명령어는 문자를 앞문자와 더해줌
+                        index_col=0)                        # index_col=n n번째 컬럼을 인덱스로 인식
 
-y = y.reshape(-1, 1)
-# print(x_data.shape, y_data.shape)     # (569, 30) (569, 1)
+test_set = pd.read_csv(path + 'test.csv',                    # 예측에서 쓸거임                
+                       index_col=0)
 
-#[실습] 시그모이드 빼고 만들기.
+train_set = train_set.fillna(train_set.mean())       # dropna() : train_set 에서 na, null 값 들어간 행 삭제
+test_set = test_set.fillna(test_set.mean()) # test_set 에서 이빨빠진데 바로  ffill : 위에서 가져오기 test_set.mean : 평균값
 
-x_train, x_test, y_train, y_test =train_test_split(
-    x, y, test_size=0.2, random_state=123, stratify = y) 
+x = train_set.drop(['count'], axis=1)                    # drop 데이터에서 ''사이 값 빼기
 
-# print(type(x_train), type(y_train))     # <class 'numpy.ndarray'> <class 'numpy.ndarray'>
-# print(x_train.dtype, y_train.dtype)     # float64 int32
+y = train_set['count'] 
+x = np.array(x)
+x = np.delete(x,[2,3,4], axis=1)  
 
-y_train  = np.array(y_train, dtype='float32')
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, train_size=0.8, random_state=123
+)
 
-x = tf.compat.v1.placeholder(tf.float32, shape=[None, 30])   # placeholder를 이용해서 입력값을 받을 수 있다.
+x = tf.compat.v1.placeholder(tf.float32, shape=[None, 9])
 y = tf.compat.v1.placeholder(tf.float32, shape=[None, 1])
 
-w = tf.compat.v1.Variable(tf.compat.v1.random_normal([30,1], name='weight'))
-b = tf.compat.v1.Variable(tf.zeros([1], name='bias'))
+w = tf.compat.v1.Variable(tf.compat.v1.random_normal([9, 1]), name='weight')
+b = tf.compat.v1.Variable(tf.compat.v1.random_normal([1]), name='bias')
 
+hypothesis = tf.compat.v1.matmul(x, w) + b  # matmul :: 행렬곱 함수
+# hypothesis = :: y의 shape값과 같아야한다.
 
-#2. 모델
-hypothesis = tf.compat.v1.sigmoid(tf.matmul(x, w) + b)  # matmul 행렬연산
-# model.add(Dense(1, activation= "sigmoid", input_dim= 2))
-# hypothesis 와 y의 shape값이 일치해야한다.
-
-#3-1. 컴파일
-# loss = tf.reduce_mean(tf.square(hypothesis-y_data))                   # mse
-loss = -tf.reduce_sum(y*tf.log(hypothesis)+(1-y)*tf.log(1-hypothesis))  # binary_crossentropy
-
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=1e-5)
-# optimizer = tf.train.AdamOptimizer(learning_rate=1e-5)
-# model.compile(loss='binary_crossentropy')
-
+loss = tf.reduce_mean(tf.square(hypothesis-y))  # mse
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.00000001)
 train = optimizer.minimize(loss)
+
+# 3-1. 컴파일
 
 sess = tf.compat.v1.Session()
 sess.run(tf.compat.v1.global_variables_initializer())
 
-epoch = 101
+epoch = 2001
 for epochs in range(epoch):
-    cost_val, hy_val, _ = sess.run([loss, hypothesis, train], 
-                                   feed_dict={x:x_train , y:y_train})
-    if epochs % 20 ==0:
-        print(epochs, "loss : ", cost_val, "\n", hy_val)
-        
-# exit()
-#. 평가, 예측
-# y_predict = sess.run(tf.cast(hy_val>0.5, dtype=tf.float32))
+    cost_val, hy_val, _ = sess.run([loss, hypothesis, train],
+                                   feed_dict={x: x_train, y: y_train})
+    if epochs % 20 == 0:
+        print(epochs, "loss :: ", cost_val, "\n", hy_val)
 
-# sess.close()
 
-# from sklearn.metrics import accuracy_score, r2_score, mean_absolute_error
-# acc = accuracy_score(y_test, y_predict)
-# print('acc : ', acc)
+# 4. 평가, 예측
+y_predict = sess.run(hypothesis, feed_dict={x: x_test, y: y_test})
 
-# mae = mean_absolute_error(y_test, y_predict)  
-# print('mae : ', mae)
+r2 = r2_score(y_test, y_predict)
+print("R2 :: ", r2)
+# mae = mean_absolute_error(y_test, y_predict)
+# print("mae :: ", mae)
+
+sess.close()
+
+# R2 ::  -0.2639427377908956

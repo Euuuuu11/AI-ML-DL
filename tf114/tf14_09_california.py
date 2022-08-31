@@ -1,48 +1,75 @@
-from sklearn.datasets import fetch_california_housing
+
+from sklearn.preprocessing import MinMaxScaler
+import pandas as pd
 import tensorflow as tf
-tf.set_random_seed(66)
+from sklearn.metrics import r2_score
+from sklearn.svm import LinearSVC, LinearSVR
+import time
+from sklearn.datasets import fetch_california_housing
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+from matplotlib import font_manager, rc
+font_path = "C:/Windows/Fonts/gulim.TTc"
+font = font_manager.FontProperties(fname=font_path).get_name()
+rc('font', family=font)
 
-#1. 데이터
+
+# 1. 데이터
 datasets = fetch_california_housing()
-x_data = datasets.data
-y_data = datasets.target
-# print(x_data.shape, y_data.shape)   # (20640, 8) (20640,)
-y_data = y_data.reshape(20640,1)
-# print(x_data.shape, y_data.shape)   # ((20640, 8) (20640, 1
+x = datasets.data
+y = datasets.target
 
-x = tf.placeholder(tf.float32, shape = [None,8])
-y = tf.placeholder(tf.float32, shape = [None,1])
+y = y.reshape(-1, 1)
 
-w = tf.compat.v1.Variable(tf.random.normal([8,1]), name = 'weight')     
-b = tf.compat.v1.Variable(tf.random.normal([1]), name = 'bias')
 
-#2. 모델구성
-hypothesis =  tf.matmul(x,w) + b
+# y = pd.get_dummies(y)
 
-#3-1. 컴파일
-loss = tf.reduce_mean(tf.square(hypothesis - y))    # mse
 
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=1e-5)  
+print(x.shape, y.shape)
+# (20640, 8) (20640, 1)
+
+
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, train_size=0.8, random_state=123
+)
+
+scaler = MinMaxScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)
+
+
+x = tf.compat.v1.placeholder(tf.float32, shape=[None, 8])
+y = tf.compat.v1.placeholder(tf.float32, shape=[None, 1])
+
+w = tf.compat.v1.Variable(tf.compat.v1.random_normal([8, 1]), name='weight')
+b = tf.compat.v1.Variable(tf.compat.v1.random_normal([1]), name='bias')
+
+hypothesis = tf.compat.v1.matmul(x, w) + b  # matmul :: 행렬곱 함수
+# hypothesis = :: y의 shape값과 같아야한다.
+
+loss = tf.reduce_mean(tf.square(hypothesis-y))  # mse
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
 train = optimizer.minimize(loss)
 
-#3-2. 훈련
+# 3-1. 컴파일
+
 sess = tf.compat.v1.Session()
 sess.run(tf.compat.v1.global_variables_initializer())
 
-for epochs in range(200001):
-    _, loss_val, w_val = sess.run([train, loss, w], feed_dict={x:x_data, y:y_data})
-    if epochs % 200 ==0:
-        print(epochs, '\t', loss_val)
-    
-#4. 예측
-predict = tf.matmul(x,w_val) + b  
-y_predict = sess.run(predict, feed_dict={x:x_data, y:y_data})
-#print("예측 : " , y_predict)
+epoch = 2001
+for epochs in range(epoch):
+    cost_val, hy_val, _ = sess.run([loss, hypothesis, train],
+                                   feed_dict={x: x_train, y: y_train})
+    if epochs % 20 == 0:
+        print(epochs, "loss :: ", cost_val, "\n", hy_val)
 
-from sklearn.metrics import r2_score, mean_absolute_error
-r2 = r2_score(y_data, y_predict)
-print('r2스코어 : ', r2)
+
+# 4. 평가, 예측
+y_predict = sess.run(hypothesis, feed_dict={x: x_test, y: y_test})
+
+r2 = r2_score(y_test, y_predict)
+print("R2 :: ", r2)
 
 sess.close()
 
-# r2스코어 :  0.02379543779684523
+# R2 ::  0.3920209994306497

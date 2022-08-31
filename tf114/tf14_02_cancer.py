@@ -1,71 +1,58 @@
-import tensorflow as tf
-tf.compat.v1.set_random_seed(123)
+from sklearn.metrics import r2_score, accuracy_score
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_breast_cancer
-import numpy as np
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.metrics import mean_absolute_error, r2_score, median_absolute_error
+import tensorflow as tf
+tf.compat.v1.set_random_seed(1234)
 
+# 1. 데이터
 
-#1. 데이터
 datasets = load_breast_cancer()
-x,y = datasets.data, datasets.target
-# print(x_data.shape, y_data.shape)     # (569, 30) (569,)
+
+x = datasets.data
+y = datasets.target
+
+print(x.shape, y.shape)
+# (442, 10) (442,)
 
 y = y.reshape(-1, 1)
-# print(x_data.shape, y_data.shape)     # (569, 30) (569, 1)
 
-#[실습] 시그모이드 빼고 만들기.
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, train_size=0.8, random_state=123
+)
 
-x_train, x_test, y_train, y_test =train_test_split(
-    x, y, test_size=0.2, random_state=123, stratify = y) 
-
-# print(type(x_train), type(y_train))     # <class 'numpy.ndarray'> <class 'numpy.ndarray'>
-# print(x_train.dtype, y_train.dtype)     # float64 int32
-
-x = tf.compat.v1.placeholder(tf.float32, shape=[None, 30])   # placeholder를 이용해서 입력값을 받을 수 있다.
+x = tf.compat.v1.placeholder(tf.float32, shape=[None, 10])
 y = tf.compat.v1.placeholder(tf.float32, shape=[None, 1])
 
-w = tf.compat.v1.Variable(tf.compat.v1.random_normal([30,1], name='weight'))
-b = tf.compat.v1.Variable(tf.zeros([1], name='bias'))
+w = tf.compat.v1.Variable(tf.compat.v1.random_normal([10, 1]), name='weight')
+b = tf.compat.v1.Variable(tf.compat.v1.random_normal([1]), name='bias')
 
-scaler = MinMaxScaler()
-x_train = scaler.fit_transform(x_train)
-x_test = scaler.transform(x_test)
+hypothesis = tf.compat.v1.matmul(x, w) + b  # matmul :: 행렬곱 함수
+# hypothesis = :: y의 shape값과 같아야한다.
 
-#2. 모델
-hypothesis = tf.compat.v1.sigmoid(tf.matmul(x, w) + b)  # matmul 행렬연산
-# model.add(Dense(1, activation= "sigmoid", input_dim= 2))
-# hypothesis 와 y의 shape값이 일치해야한다.
-
-#3-1. 컴파일
-# loss = tf.reduce_mean(tf.square(hypothesis-y_data))                   # mse
-loss = -tf.reduce_sum(y*tf.log(hypothesis)+(1-y)*tf.log(1-hypothesis))  # binary_crossentropy
-
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=1e-5)
-# optimizer = tf.train.AdamOptimizer(learning_rate=1e-5)
-# model.compile(loss='binary_crossentropy')
-
+loss = tf.reduce_mean(tf.square(hypothesis-y))  # mse
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
 train = optimizer.minimize(loss)
+
+# 3-1. 컴파일
 
 sess = tf.compat.v1.Session()
 sess.run(tf.compat.v1.global_variables_initializer())
 
-epoch = 101
+epoch = 1001
 for epochs in range(epoch):
-    cost_val, hy_val, _ = sess.run([loss, hypothesis, train], 
-                                   feed_dict={x:x_train , y:y_train})
-    if epochs % 20 ==0:
-        print(epochs, "loss : ", cost_val, "\n", hy_val)
-        
-# exit()
-#4. 평가, 예측
-y_predict = sess.run(tf.cast(hy_val>0.5, dtype=tf.float32))
+    cost_val, hy_val, _ = sess.run([loss, hypothesis, train],
+                                   feed_dict={x: x_train, y: y_train})
+    if epochs % 20 == 0:
+        print(epochs, "loss :: ", cost_val, "\n", hy_val)
 
+
+# 4. 평가, 예측
+
+y_predict = sess.run(hypothesis, feed_dict={x: x_test, y: y_test})
+r2 = r2_score(y_test, y_predict)
+print('r2 :', r2)
 sess.close()
 
-from sklearn.metrics import accuracy_score, r2_score, mean_absolute_error
-acc = accuracy_score(y_test, y_predict)
-print('acc : ', acc)
-
-mae = mean_absolute_error(y_test, y_predict)  
-print('mae : ', mae)
+# r2 : 0.1090695286114044
