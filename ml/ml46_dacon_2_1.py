@@ -175,7 +175,7 @@ print(x.shape)
 
 from sklearn.model_selection import GridSearchCV,RandomizedSearchCV
 from sklearn.model_selection import KFold,StratifiedKFold
-from sklearn.preprocessing import StandardScaler,MinMaxScaler, Normalizer 
+from sklearn.preprocessing import StandardScaler,MinMaxScaler, Normalizer ,RobustScaler
 from xgboost import XGBClassifier,XGBRegressor
 from sklearn.ensemble import RandomForestClassifier,RandomForestRegressor
 from imblearn.over_sampling import SMOTE
@@ -227,7 +227,3 @@ submission['ProdTaken'] = y_summit
 
 submission.to_csv(path+'sample_submission_3.csv',index=False)
 
-
-# acc : 0.936046511627907
-
-# acc : 0.936046511627907
