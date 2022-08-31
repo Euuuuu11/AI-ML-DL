@@ -175,7 +175,7 @@ print(x.shape)
 
 from sklearn.model_selection import GridSearchCV,RandomizedSearchCV
 from sklearn.model_selection import KFold,StratifiedKFold
-from sklearn.preprocessing import StandardScaler,MinMaxScaler 
+from sklearn.preprocessing import StandardScaler,MinMaxScaler, Normalizer 
 from xgboost import XGBClassifier,XGBRegressor
 from sklearn.ensemble import RandomForestClassifier,RandomForestRegressor
 from imblearn.over_sampling import SMOTE
@@ -185,7 +185,7 @@ x_train,x_test,y_train,y_test = train_test_split(x,y,train_size=0.91,shuffle=Tru
 # smote = SMOTE(random_state=123)
 # x_train,y_train = smote.fit_resample(x_train,y_train)
 
-scaler = StandardScaler()
+scaler = Normalizer()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 
@@ -226,3 +226,8 @@ submission = pd.read_csv(path + 'sample_submission.csv',#예측에서 쓸거야!
 submission['ProdTaken'] = y_summit
 
 submission.to_csv(path+'sample_submission_3.csv',index=False)
+
+
+# acc : 0.936046511627907
+
+# acc : 0.936046511627907
