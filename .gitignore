@@ -467,3 +467,11 @@ _ModelCheckpoint/k31_9/k31_0712_1035_0078-27.9177.hdf5
 _ModelCheckpoint/k31_9/k31_0712_1035_0085-27.5452.hdf5
 _ModelCheckpoint/k31_9/k31_0712_1035_0087-27.0652.hdf5
 _ModelCheckpoint/k31_9/k31_0712_1035_0099-26.2604.hdf5
+oracle.json
+tuner0.json
+trial.json
+checkpoint
+checkpoint.data-00000-of-00001
+checkpoint.index
+pipeline
+trial.json
