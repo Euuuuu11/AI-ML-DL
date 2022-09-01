@@ -47,15 +47,12 @@ print(train_set.shape)
 test_set = test_set.fillna(test_set.median())
 
 x = train_set.drop(['SalePrice'],axis=1) #axis는 컬럼 
-print(x.columns)
-print(x.shape) #(1460, 75)
+# print(x.columns)
 y = train_set['SalePrice']
-
-
-print(x.shape, y.shape) # (1338, 12) (1338,)
-# exit()
 y = np.array(y)
 y = y.reshape(-1, 1)
+print(x.shape, y.shape) # (1460, 75) (1460, 1)
+# exit()
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, random_state=1234)
 scaler = MinMaxScaler()
@@ -64,10 +61,10 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
 # 2. 모델
-x = tf.compat.v1.placeholder(tf.float32, shape=[None, 12])
+x = tf.compat.v1.placeholder(tf.float32, shape=[None, 75])
 y = tf.compat.v1.placeholder(tf.float32, shape=[None, 1])
 
-w = tf.compat.v1.Variable(tf.compat.v1.zeros([12,10]), name='weight')
+w = tf.compat.v1.Variable(tf.compat.v1.zeros([75,10]), name='weight')
 b = tf.compat.v1.Variable(tf.compat.v1.zeros([10]), name='bias')
 hidden = tf.compat.v1.matmul(x, w) + b
 
