@@ -33,4 +33,7 @@ print('시간: ', round(end-start, 4))
 #                         metrics: MetricsType | None = None, project_name: str = "image_classifier",
 #                         max_trials: int = 100, directory: str | Path | None = None, objective: str = "val_loss", tuner: str 
 #                         | Type[AutoTuner] = None, overwrite: bool = False, seed: int | None = None,
-#                         max_model_size: int | None = None, **kwargs: Any)
+#                         max_model_size: int | None = None, **kwargs: Any)\
+
+# 결과:  [2.537951946258545, 0.3792000114917755]
+# 시간:  2678.8341

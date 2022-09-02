@@ -476,3 +476,6 @@ checkpoint.index
 pipeline
 trial.json
 _data/
+image_classifier/trial_0/trial.json
+image_classifier/trial_1/trial.json
+image_classifier/trial_0/trial.json
