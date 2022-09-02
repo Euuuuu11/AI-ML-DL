@@ -192,7 +192,7 @@ n_splits = 6
 # 최상의 점수 :  0.9044520547945205
 # acc : 0.954248366013072
 # 걸린 시간 : 5.827547073364258 
-kfold = StratifiedKFold(n_splits=n_splits,shuffle=True,random_state=123)
+kfold = StratifiedKFold(n_splits=n_splits,shuffle=True,random_state=72)
 # {'target': 0.9825581395348837, 
 #  'params': {'depth': 9.870692750101593,
 #             'fold_permutation_block': 8.315144786179879, 
@@ -220,7 +220,7 @@ cat_paramets = {"learning_rate" : [0.01],
                 # 'model_size_reg': [0.44979263197508923],
                 'fold_permutation_block': [142],
                 'l2_leaf_reg' :[0.33021257848638497]}
-cat = CatBoostClassifier(random_state=1127,verbose=False,n_estimators=1304)
+cat = CatBoostClassifier(random_state=72,verbose=False,n_estimators=1304)
 model = RandomizedSearchCV(cat,cat_paramets,cv=kfold,n_jobs=-1,)
 
 import time 
@@ -246,13 +246,4 @@ submission.to_csv(path+'sample_submission_3.csv',index=False)
 
 
 
-
-##########
-# 최상의 점수 :  0.8930338463986
-# acc : 0.9418604651162791
-# 걸린 시간 : 11.291642665863037
-
-############ RandomState = 100
-# 최상의 점수 :  0.8813139873889755
-# acc : 0.921875
 

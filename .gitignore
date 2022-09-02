@@ -479,3 +479,4 @@ _data/
 image_classifier/trial_0/trial.json
 image_classifier/trial_1/trial.json
 image_classifier/trial_0/trial.json
+catboost_info/catboost_training.json
