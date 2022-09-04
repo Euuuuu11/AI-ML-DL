@@ -27,7 +27,7 @@ y_predict = model.predict(x_test)
 
 results = model.evaluate(x_test, y_test)
 print('결과: ', results)
-print('시간: ', round(end-start, 4))
+print('시간: ', round(end-start, 5))
 
 # (class) ImageClassifier(num_classes: int | None = None, multi_label: bool = False, loss: LossType = None, 
 #                         metrics: MetricsType | None = None, project_name: str = "image_classifier",
