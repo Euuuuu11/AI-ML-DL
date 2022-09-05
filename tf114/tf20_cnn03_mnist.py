@@ -1,39 +1,69 @@
 import tensorflow as tf
-from sklearn.metrics import accuracy_score, r2_score, mean_squared_error
+import keras
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.datasets import mnist
+from sklearn.metrics import accuracy_score, r2_score, mean_squared_error
+tf.compat.v1.set_random_seed(123)
 
-# 1. 데이터
+#1. 데이터
+from keras.datasets import mnist
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
-# print(x_train.shape, y_train.shape) # (60000, 28, 28) (60000,)
 
-x_train = x_train.reshape(60000, 784)
-x_test = x_test.reshape(10000, 784)
-y_train = y_train.reshape(60000, 1)
-y_test = y_test.reshape(10000, 1)
-# print(x_train.shape, y_train.shape) # (60000, 28, 28) (60000,)
+from keras.utils import to_categorical
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test)
 
-scaler = MinMaxScaler()
-x_train = scaler.fit_transform(x_train)
-x_test = scaler.transform(x_test)
+x_train = x_train.reshape(60000, 28, 28, 1).astype('float32')/255.
+x_test = x_test.reshape(10000, 28, 28, 1).astype('float32')/255.
 
-# 2. 모델 / sigmoid
-x = tf.compat.v1.placeholder(tf.float32, shape=[None, 784])
-y = tf.compat.v1.placeholder(tf.float32, shape=[None, 1])
+#2. 모델구성
+x = tf.compat.v1.placeholder(tf.float32, [None, 28, 28, 1])     # input_shape
+y = tf.compat.v1.placeholder(tf.float32, [None, 10])     
 
-w = tf.compat.v1.Variable(tf.compat.v1.zeros([784,128]), name='weight')
-b = tf.compat.v1.Variable(tf.compat.v1.zeros([128]), name='bias')
-hidden = tf.compat.v1.nn.relu(tf.compat.v1.matmul(x, w) + b)
+w1 = tf.compat.v1.get_variable('w1', shape=[2, 2, 1 ,128])   # kernel_size, color, filter
+L1 = tf.nn.conv2d(x, w1, strides=[1,1,1,1], padding='SAME')
+L1 = tf.nn.relu(L1)
+L1_maxpool = tf.nn.max_pool2d(L1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
+# model.add(Conv2d(64, kernel_size=(2,2), input_shape =(28, 28, 1), activation = 'relu'))
 
-w = tf.compat.v1.Variable(tf.compat.v1.zeros([128,10]), name='weight')
-b = tf.compat.v1.Variable(tf.compat.v1.zeros([10]), name='bias')
-hidden = tf.compat.v1.matmul(hidden, w) + b
+# print(w1)   # <tf.Variable 'w1:0' shape=(2, 2, 1, 64) dtype=float32_ref>
+# print(L1)   # Tensor("Conv2D:0", shape=(?, 28, 28, 128), dtype=float32)
+# print(L1_maxpool)   # Tensor("MaxPool2d:0", shape=(?, 14, 14, 128), dtype=float32)
 
-w = tf.compat.v1.Variable(tf.compat.v1.zeros([10,1]), name='weight')
-b = tf.compat.v1.Variable(tf.compat.v1.zeros([1]), name='bias')
-hypothesis = tf.compat.v1.sigmoid(tf.compat.v1.matmul(hidden, w) + b)
+# Layer2 
+w2 = tf.compat.v1.get_variable('w2', shape=[3, 3, 128 ,64])   # kernel_size, color, filter
+L2 = tf.nn.conv2d(L1_maxpool, w2, strides=[1,1,1,1], padding='VALID')
+L2 = tf.nn.selu(L2)
+L2_maxpool = tf.nn.max_pool2d(L2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
+
+# print(L2)           # Tensor("Selu:0", shape=(?, 13, 13, 64), dtype=float32)
+# print(L2_maxpool)   # Tensor("MaxPool2d_1:0", shape=(?, 7, 7, 64), dtype=float32)   
+
+# Layer3 
+w3 = tf.compat.v1.get_variable('w3', shape=[3, 3, 64 ,32])   # kernel_size, color, filter
+L3 = tf.nn.conv2d(L2_maxpool, w3, strides=[1,1,1,1], padding='VALID')
+L3 = tf.nn.elu(L3)
+
+# print(L3)   # Tensor("Elu:0", shape=(?, 4, 4, 32), dtype=float32)
+
+# Flatten
+L_flat = tf.reshape(L3, [-1, 4*4*32])
+# print("플레튼 : ", L_flat)      # 플레튼 :  Tensor("Reshape:0", shape=(?, 512), dtype=float32)
+
+# Layer4 DNN
+w4 = tf.get_variable('w4', shape=[4*4*32 ,100],
+                     initializer=tf.contrib.layers.xavier_initializer())   
+b4 = tf.Variable(tf.random_normal([100], name = 'b4'))
+L4 = tf.nn.selu(tf.matmul(L_flat, w4) + b4)
+L4 = tf.nn.dropout(L4, keep_prob=0.7)   # rate=0.3
+
+# Layer5 DNN
+w5 = tf.get_variable('w5', shape=[100 ,10],
+                     initializer=tf.contrib.layers.xavier_initializer())   
+b5 = tf.Variable(tf.random_normal([10], name = 'b5'))
+L5 = tf.matmul(L4, w5) + b5
+hypothesis = tf.nn.softmax(L5)
+
+# print(hypothesis)   # Tensor("Softmax:0", shape=(?, 10), dtype=float32)
 
 # 3-1. 컴파일
 loss = -tf.reduce_mean(y*tf.log(hypothesis)+(1-y)*tf.log(1-hypothesis)) # binary_crossentropy
@@ -48,7 +78,7 @@ sess.run(tf.global_variables_initializer())
 
 epochs = 1001
 for step in range(epochs):
-    _, hy_val, cost_val, b_val = sess.run([train,hypothesis,loss,b], feed_dict={x:x_train, y:y_train})
+    _, hy_val, cost_val, b_val = sess.run([train,hypothesis,loss,b5], feed_dict={x:x_train, y:y_train})
     if step%20 == 0:
         print(step, cost_val, hy_val)
         
@@ -61,8 +91,3 @@ print('acc: ', acc)
 
 mae = mean_squared_error(y_train, hy_val)
 print('mae: ', mae)
-
-sess.close()
-
-# acc:  0.11236666666666667
-# mae:  23.979021
