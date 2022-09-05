@@ -25,7 +25,6 @@ model=Sequential()
 # model.add(Dense(64,input_shape=(28*28, )))
 model.add(Dense(64,input_shape=(784, )))
 model.add(Dense(128, activation='tanh'))
-model.add(Dropout(0.2))
 model.add(Dense(10, activation='softmax'))
 model.summary()  
 

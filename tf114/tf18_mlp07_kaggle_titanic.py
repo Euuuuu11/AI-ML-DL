@@ -75,7 +75,7 @@ y = np.array(y).reshape(-1, 1)
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8,shuffle=True, random_state=9)
 print(x_train.shape, x_test.shape) # (712, 7) (179, 7)
-exit()
+
 
 # 2. 모델 / sigmoid
 x = tf.compat.v1.placeholder(tf.float32, shape=[None, 7])

@@ -15,8 +15,11 @@ w = tf.compat.v1.constant([[[[1.]], [[1.]]],
 
 # print(w)    # Tensor("Const:0", shape=(2, 2, 1, 1), dtype=float32)
 
-L1 = tf.nn.conv2d(x, w, strides=(1,1,1,1), padding='VALID')
+# L1 = tf.nn.conv2d(x, w, strides=(1,1,1,1), padding='VALID')
 # print(L1)   # Tensor("Conv2D:0", shape=(?, 2, 2, 1), dtype=float32)
+# L1 = tf.nn.conv2d(x, w, strides=(1,1,1,1), padding='SAME')
+L1 = tf.nn.conv2d(x, w, strides=(1,2,2,1), padding='SAME')
+
 
 sess = tf.compat.v1.Session()
 output = sess.run(L1, feed_dict={x:x_train})  
