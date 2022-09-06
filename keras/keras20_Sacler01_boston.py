@@ -1,10 +1,10 @@
 from subprocess import call
 from tabnanny import verbose
-from sklearn.datasets import load_boston
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense
 import numpy as np  
 from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_boston
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 
 #1. 데이터
