@@ -3,10 +3,10 @@ import numpy as np
 from keras.applications import VGG19
 
 # 1. 데이터
-x_train = np.load('d:/study_data/_save/_npy/keras47_01_train_x.npy')
-y_train = np.load('d:/study_data/_save/_npy/keras47_01_train_y.npy')
-x_test = np.load('d:/study_data/_save/_npy/keras47_01_test_x.npy')
-y_test = np.load('d:/study_data/_save/_npy/keras47_01_test_y.npy')
+x_train = np.load('d:/study_data/_save/_npy/keras47_2_train_x.npy')
+y_train = np.load('d:/study_data/_save/_npy/keras47_2_train_y.npy')
+x_test = np.load('d:/study_data/_save/_npy/keras47_2_test_x.npy')
+y_test = np.load('d:/study_data/_save/_npy/keras47_2_test_y.npy')
 
 print(x_train.shape) # (500, 150, 150, 3)
 print(y_train.shape) # (500,)
