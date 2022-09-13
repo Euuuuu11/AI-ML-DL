@@ -7,26 +7,24 @@ from keras.datasets import mnist
 
 (x_train, _), (x_test, _) = mnist.load_data()
 
-x_train = x_train.reshape(60000, 784).astype('float32')/255.
-x_test = x_test.reshape(10000, 784).astype('float32')/255.
+x_train = x_train.reshape(60000, 28, 28, 1).astype('float32')/255.
+x_test = x_test.reshape(10000, 28, 28, 1).astype('float32')/255.
 
 from keras.models import Sequential, Model
-from keras.layers import Dense, Input
-
-# def autoencoder(hidden_layer_size):
-#     model = Sequential()
-#     model.add(Dense(units=hidden_layer_size, input_shape=(784,),
-#                     activation='relu'))
-#     model.add(Dense(units=784, activation='sigmoid'))
-#     return model
+from keras.layers import Dense, Input, Conv2D, MaxPooling2D, Flatten, Dropout, UpSampling2D
 
 def autoencoder(hidden_layer_size):
     model = Sequential()
-    model.add(Dense(units=hidden_layer_size, input_shape=(784,), activation='relu'))
-    model.add(Dense(units=hidden_layer_size, activation='relu'))
-    model.add(Dense(units=hidden_layer_size, activation='relu'))
-    model.add(Dense(units=hidden_layer_size, activation='relu'))
-    model.add(Dense(units=784, activation='sigmoid'))
+    model.add(Conv2D(filters=hidden_layer_size, input_shape=(28, 28, 1), kernel_size=3, padding='same', strides=1, activation='relu'))
+    model.add(MaxPooling2D(2))
+    model.add(Conv2D(128, 3, padding='same', activation='relu'))
+    model.add(MaxPooling2D(2))
+    model.add(Conv2D(256, 3, padding='same', activation='relu'))
+    model.add(Conv2D(256, 3, padding='same', activation='relu'))
+    model.add(UpSampling2D())
+    model.add(Conv2D(128, 3, padding='same', activation='relu'))
+    model.add(UpSampling2D())
+    model.add(Conv2D(1, 3, padding='same'))
     return model
 
 model_01 = autoencoder(hidden_layer_size=1)

@@ -51,7 +51,7 @@ np.save('d:/study_data/_save/_npy/keras47_4_train_x.npy', arr=x_train)
 np.save('d:/study_data/_save/_npy/keras47_4_train_y.npy', arr=y_train)
 np.save('d:/study_data/_save/_npy/keras47_4_test_x.npy', arr=x_test)
 np.save('d:/study_data/_save/_npy/keras47_4_test_y.npy', arr=y_test)
-np.save('d:/study_data/_save/_npy/keras47_4_test_set.npy', arr=test_set)
+np.save('d:/study_data/_save/_npy/keras100_4_test_set.npy', arr=test_set)
 
 
 #2. 모델 구성
