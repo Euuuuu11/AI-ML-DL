@@ -31,10 +31,10 @@ output1 = Dense(32, activation='relu', name = 'out_jg1') (dense3)
 
 #2-2. 모델2
 input2 = Input(shape=(3,))
-dense11 = Dense(256, activation='relu', name = 'jg11') (input2)
-dense12 = Dense(128, activation='relu', name = 'jg12') (dense11)
-dense13 = Dense(64, activation='relu', name = 'jg13') (dense12)
-dense14 = Dense(32, activation='relu', name = 'jg14') (dense13)
+dense11 = Dense(128, activation='relu', name = 'jg11') (input2)
+dense12 = Dense(64, activation='relu', name = 'jg12') (dense11)
+dense13 = Dense(32, activation='relu', name = 'jg13') (dense12)
+dense14 = Dense(16, activation='relu', name = 'jg14') (dense13)
 output2 = Dense(16, activation='relu', name = 'out_jg2') (dense14)
 
 from tensorflow.python.keras.layers import concatenate, Concatenate # 연산하지 않고, 연결만 해준다.
