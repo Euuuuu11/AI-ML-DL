@@ -11,7 +11,6 @@ from tensorflow.keras.layers import LSTM, Dense,Conv1D, Flatten
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 
 #1. 데이터
-
 path = './_data/kaggle_bike/'
 train_set = pd.read_csv(path + 'train.csv')
 test_set = pd.read_csv(path + 'test.csv')
