@@ -7,5 +7,5 @@ feil_name = ["01_iris","02_cancer","03__diabets","04_wine","05_fetch_covtype",\
 # feil_name = ["01_iris.py"]
 
 for feil_name in feil_name:
-    with open(f"./keras2/keras58_ReduceLR_{feil_name}.py","w") as file:
+    with open(f"./torch/torch12_DataLoader__{feil_name}.py","w") as file:
         file.write("")
