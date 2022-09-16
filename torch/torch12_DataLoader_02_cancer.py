@@ -112,7 +112,8 @@ def train(model, criterion, optimizer, loader):
 EPOCHS = 100
 for epoch in range(1, EPOCH+1):
     loss = train(model, criterion, optimizer, train_loader)
-    print('epoch : {}, loss : {:.8f}'.format(epoch, loss))
+    if epoch % 10 == 0:
+        print('epoch : {}, loss : {:.8f}'.format(epoch, loss))
 
 #4. 평가, 예측
 print('============= 평가, 예측 =============')    

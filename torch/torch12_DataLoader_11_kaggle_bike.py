@@ -1,40 +1,66 @@
-from calendar import EPOCH
-from sklearn.datasets import load_breast_cancer
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import torch.nn.functional as F
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.preprocessing import MaxAbsScaler, RobustScaler
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_squared_error
 
-USE_CUDA = torch.cuda.is_available
-DEVICE = torch.device('cuda:0' if USE_CUDA else 'cpu')
-print('torch : ', torch.__version__, '사용DEVICE : ', DEVICE)
 
 #1. 데이터
-datasets = load_breast_cancer()
-x = datasets.data
-y = datasets['target']
+path = './_data/kaggle_bike/'
+train_set = pd.read_csv(path + 'train.csv')
+test_set = pd.read_csv(path + 'test.csv')
+# print(train_set.shape)  # (10886, 12)
+# print(test_set.shape)   # (6493, 9)
+# train_set.info() # 데이터 온전한지 확인.
+train_set['datetime'] = pd.to_datetime(train_set['datetime']) 
+#datetime은 날짜와 시간을 나타내는 정보이므로 DTYPE을 datetime으로 변경.
+#세부 날짜별 정보를 보기 위해 날짜 데이터를 년도,월,일, 시간으로 나눈다.
+train_set['year'] = train_set['datetime'].dt.year  # 분과 초는 모든값이 0이므로 추가x
+train_set['month'] = train_set['datetime'].dt.month
+train_set['day'] = train_set['datetime'].dt.day
+train_set['hour'] = train_set['datetime'].dt.hour
+train_set.drop(['datetime', 'day', 'year'], inplace=True, axis=1)
+train_set['month'] = train_set['month'].astype('category')
+train_set['hour'] = train_set['hour'].astype('category')
+train_set = pd.get_dummies(train_set, columns=['season','weather'])
+train_set.drop(['casual', 'registered'], inplace=True, axis=1)
+train_set.drop('atemp', inplace=True, axis=1)
 
-x = torch.FloatTensor(x)
-y = torch.FloatTensor(y)
+test_set['datetime'] = pd.to_datetime(test_set['datetime'])
+test_set['month'] = test_set['datetime'].dt.month
+test_set['hour'] = test_set['datetime'].dt.hour
+test_set['month'] = test_set['month'].astype('category')
+test_set['hour'] = test_set['hour'].astype('category')
+test_set = pd.get_dummies(test_set, columns=['season','weather'])
+drop_feature = ['datetime', 'atemp']
+test_set.drop(drop_feature, inplace=True, axis=1)
+
+x = train_set.drop(['count'], axis=1)
+y = train_set['count']
+USE_CUDA = torch.cuda.is_available()
+DEVICE = torch.device('cuda' if USE_CUDA else 'cpu')
+
+x = torch.FloatTensor(x.values)
+y = torch.FloatTensor(y.values).unsqueeze(1)
 
 from sklearn.model_selection import train_test_split
-x_train, x_test, y_train, y_test = train_test_split(x, y,
-        train_size=0.7, shuffle=True, random_state=123, stratify=y)
-
-x_train = torch.FloatTensor(x_train)
-y_train = torch.FloatTensor(y_train).unsqueeze(1).to(DEVICE)
-x_test = torch.FloatTensor(x_test)
-y_test = torch.FloatTensor(y_test).unsqueeze(-1).to(DEVICE)
-
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler()
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.2,
+                                                    train_size=0.8,shuffle=True,
+                                                    random_state=66)
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+scaler = MinMaxScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
-
 x_train = torch.FloatTensor(x_train).to(DEVICE)
 x_test = torch.FloatTensor(x_test).to(DEVICE)
-
-# print(x_train.size())   #torch.Size([398, 30])
-# print(x_train.shape)   #torch.Size([398, 30])
+y_train = torch.FloatTensor(y_train).to(DEVICE)
+y_test = torch.FloatTensor(y_test).to(DEVICE)
 
 ############################# 시작 #############################
 from torch.utils.data import TensorDataset, DataLoader
@@ -53,29 +79,31 @@ print('='*80)
 train_loader = DataLoader(train_set, batch_size=40, shuffle=True)
 test_loader = DataLoader(test_set, batch_size=40, shuffle=True)
 
+# print(x_train.size())
+# exit()
 
 #2. 모델
 # model = nn.Sequential(
-#     nn.Linear(30, 64),
+#     nn.Linear(15,100),
 #     nn.ReLU(),
-#     nn.Linear(64, 32),
+#     nn.Linear(100,200),
 #     nn.ReLU(),
-#     nn.Linear(32, 16),
+#     nn.Linear(200,150),
 #     nn.ReLU(),
-#     nn.Linear(16, 1),
-#     nn.Sigmoid()
-# ).to(DEVICE)
+#     nn.Linear(150,50),
+#     nn.ReLU(),
+#     nn.Linear(50,1)).to(DEVICE)
 
 class Model(nn.Module):
     def __init__(self, input_dim, output_dim):
         # super().__init__()
         super(Model, self).__init__()
-        self.linear1 = nn.Linear(input_dim,64)
-        self.linear2 = nn.Linear(64, 32)        
-        self.linear3 = nn.Linear(32, 16)        
-        self.linear4 = nn.Linear(16, output_dim)        
+        self.linear1 = nn.Linear(input_dim,100)
+        self.linear2 = nn.Linear(100, 200)        
+        self.linear3 = nn.Linear(200, 150)
+        self.linear4 = nn.Linear(150, 50)
+        self.linear5 = nn.Linear(50, output_dim)        
         self.relu = nn.ReLU()
-        self.sigmoid = nn.Sigmoid()        
         
     def forward(self, input_size):
         x = self.linear1(input_size)
@@ -85,62 +113,58 @@ class Model(nn.Module):
         x = self.linear3(x)
         x = self.relu(x)
         x = self.linear4(x)
-        x = self.sigmoid(x)
+        x = self.relu(x)
+        x = self.linear5(x)
         return x 
 
-model = Model(30, 1).to(DEVICE)
+model = Model(15,1).to(DEVICE)
 
-#3. 컴파일, 훈련
-criterion = nn.BCELoss()    # BCELoss = Binary Cross Entropy
+#3. 컴파일,훈련
+criterion = nn.MSELoss()
+optimizer = optim.Adam(model.parameters(),lr=0.001)
 
-optimizer = optim.Adam(model.parameters(), lr=0.01)
-
-def train(model, criterion, optimizer, loader):
-    # model.train()
+def train(model,criterion,optimizer,loader):
+    model.train()
     total_loss = 0
     for x_batch, y_batch in loader:
         optimizer.zero_grad()
-        hypothesis = model(x_batch)
-        loss = criterion(hypothesis, y_batch)
+        prediction = model(x_batch)
+        loss = criterion(prediction,y_batch)
     
         loss.backward()
         optimizer.step()
         total_loss += loss.item()
-
+        
     return total_loss / len(loader)
 
-EPOCHS = 100
-for epoch in range(1, EPOCH+1):
-    loss = train(model, criterion, optimizer, train_loader)
-    print('epoch : {}, loss : {:.8f}'.format(epoch, loss))
 
-#4. 평가, 예측
-print('============= 평가, 예측 =============')    
-def evaluate(model, criterion, loader):
-    model. eval()
+def r2_score(y_test,y_pred):
+    u = ((y_test-y_pred)**2).sum()
+    v = ((y_test-y_test.mean())**2).sum()
+    return 1-u/v
+
+epochs = 1000
+for epoch in range(1, epochs+1):
+    loss = train(model,criterion,optimizer,train_loader)
+    if epoch % 100 == 0:
+        print('Epoch {:4d}/{} Loss: {:.6f} r2_score: {:.4f}'.format(
+            epoch,epochs,loss,r2_score(y_test,model(x_test))))
+        
+#4. 평가,예측
+def evaluate(model,criterion,loader):
+    model.eval()
     total_loss = 0
     
     for x_batch, y_batch in loader:
         with torch.no_grad():
-            hypothesis = model(x_test)
-            loss = criterion(hypothesis,y_test)
-            total_loss += loss.item()
+            prediction = model(x_test)
+            loss = criterion(prediction,y_test)
+    return loss.item()
 
-    return total_loss
+loss = evaluate(model,criterion,test_loader)
 
-loss = evaluate(model, criterion, test_loader)
-print('loss : ', loss)
+print('Loss: {:.6f}'.format(loss))
+print('r2_score: {:.4f}'.format(r2_score(y_test,model(x_test))))
 
-y_predict = (model(x_test) >= 0.5).float()
-print(y_predict[:10])
-
-score = (y_predict == y_test).float().mean()
-print('accuracy :  {:.4f}'.format(score))       
-
-from sklearn.metrics import accuracy_score
-
-score = accuracy_score(y_test.cpu().numpy(), y_predict.cpu().numpy())
-print('accuray_score : ', score)
-
-# accuracy :  0.9825
-# accuray_score :  0.9824561403508771
+# Loss: 8551.783203
+# r2_score: 0.7294

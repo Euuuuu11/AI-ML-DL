@@ -62,7 +62,7 @@ class Model(nn.Module):
         self.linear3 = nn.Linear(32, 16)        
         self.linear4 = nn.Linear(16, output_dim)        
         self.relu = nn.ReLU()
-        self.sigmoid = nn.Sigmoid()        
+        # self.sigmoid = nn.Sigmoid()        
         
     def forward(self, input_size):
         x = self.linear1(input_size)
@@ -72,7 +72,7 @@ class Model(nn.Module):
         x = self.linear3(x)
         x = self.relu(x)
         x = self.linear4(x)
-        x = self.sigmoid(x)
+        # x = self.sigmoid(x)
         return x 
 
 model = Model(4, 3).to(DEVICE)
