@@ -14,21 +14,13 @@ from sklearn.metrics import r2_score, mean_squared_error
 path = './_data/ddarung/'
 train_set = pd.read_csv(path + 'train.csv', 
                         index_col=0) 
-
-
 test_set = pd.read_csv(path + 'test.csv', 
                        index_col=0)
 
-
-
 train_set =  train_set.dropna()
-
 test_set = test_set.fillna(test_set.mean())
 
-
 x = train_set.drop(['count'], axis=1) 
-#
-
 y = train_set['count']
 
 USE_CUDA = torch.cuda.is_available()
@@ -97,12 +89,9 @@ def evaluate(model,criterion,x_test,y_test):
         loss = criterion(prediction,y_test)
     return loss.item()
 
-
 loss = evaluate(model,criterion,x_test,y_test)
 
 print('Loss: {:.6f}'.format(loss))
 print('r2_score: {:.4f}'.format(r2_score(y_test,model(x_test))))
-
-
 # Loss: 1535.007812
 # r2_score: 0.7469
