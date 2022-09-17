@@ -70,9 +70,9 @@ class Model(nn.Module):
         # super().__init__()
         super(Model, self).__init__()
         self.linear1 = nn.Linear(input_dim,64)
-        self.linear2 = nn.Linear(64, 32)        
-        self.linear3 = nn.Linear(32, 16)        
-        self.linear4 = nn.Linear(16, output_dim)        
+        self.linear2 = nn.Linear(64, 128)        
+        self.linear3 = nn.Linear(128, 32)        
+        self.linear4 = nn.Linear(32, output_dim)        
         self.relu = nn.ReLU()
         # self.sigmoid = nn.Sigmoid()        
         
