@@ -193,7 +193,7 @@ for test_input_path, test_target_path in zip(test_input_list, test_target_list):
 
 import zipfile
 filelist = ['TEST_01.csv','TEST_02.csv','TEST_03.csv','TEST_04.csv','TEST_05.csv', 'TEST_06.csv']
-os.chdir("D:\study_data\_data\dacon3test_target/")
+os.chdir("D:\study_data\_data\dacon3/test_target/")
 with zipfile.ZipFile("submission.zip", 'w') as my_zip:
     for i in filelist:
         my_zip.write(i)
