@@ -256,7 +256,7 @@ print(len(train_set))   # 398
 print('='*80)
 
 train_loader = DataLoader(train_set, batch_size=40, shuffle=True)
-test_loader = DataLoader(test_set, batch_size=40, shuffle=True)
+test_loader = DataLoader(test_set, batch_size=40, shuffle=False)
 
 
 # print(x_train.size())
