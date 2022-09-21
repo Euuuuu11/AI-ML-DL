@@ -65,11 +65,11 @@ class Model(nn.Module):
     def __init__(self, input_dim, output_dim):
         # super().__init__()
         super(Model, self).__init__()
-        self.linear1 = nn.Linear(input_dim,100)
-        self.linear2 = nn.Linear(100, 200)        
-        self.linear3 = nn.Linear(200, 150)
-        self.linear4 = nn.Linear(150, 50)                
-        self.linear5 = nn.Linear(50, output_dim)        
+        self.linear1 = nn.Linear(input_dim,128)
+        self.linear2 = nn.Linear(128, 64)        
+        self.linear3 = nn.Linear(64, 32)
+        self.linear4 = nn.Linear(32, 16)                
+        self.linear5 = nn.Linear(16, output_dim)        
         self.relu = nn.ReLU()
         
     def forward(self, input_size):
