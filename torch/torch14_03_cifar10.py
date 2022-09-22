@@ -25,17 +25,16 @@ test_dataset = CIFAR10(path, train=False, download=True)
 x_train, y_train = train_dataset.data/255, train_dataset.targets
 x_test, y_test = test_dataset.data/255, test_dataset.targets
 
-x_trian = torch.FloatTensor(x_train).to(DEVICE)
-y_trian = torch.FloatTensor(y_train).to(DEVICE)
+x_train = torch.FloatTensor(x_train).to(DEVICE)
+y_train = torch.LongTensor(y_train).to(DEVICE)
 x_test = torch.FloatTensor(x_test).to(DEVICE)
-y_test = torch.FloatTensor(y_test).to(DEVICE)
+y_test = torch.LongTensor(y_test).to(DEVICE)
 
-print(x_train.shape, x_test.shape)     # (50000, 32, 32, 3) (10000, 32, 32, 3)
-print(y_train.shape, y_test.shape)     # (50000, 32, 32, 3) (10000, 32, 32, 3)
-exit()
-print(np.min(x_train.numpy()), np.max(x_train.numpy()))     # 0.0 1.0
+# print(x_train.shape, x_test.shape)     # (50000, 32, 32, 3) (10000, 32, 32, 3)
+# print(y_train.shape, y_test.shape)     # (50000, 32, 32, 3) (10000, 32, 32, 3)
+# print(np.min(x_train.numpy()), np.max(x_train.numpy()))     # 0.0 1.0
 
-x_train, x_test = x_train.view(-1, 32*32*3), x_test.view(-1, 32*32*3) 
+x_train, x_test = x_train.reshape(-1, 32*32*3), x_test.reshape(-1, 32*32*3) 
 print(x_train.shape, x_test.size())     # torch.Size([60000, 784]) torch.Size([10000, 784])
 
 train_dset = TensorDataset(x_train, y_train)
@@ -84,7 +83,7 @@ class DNN(nn.Module):
         x = self.output_layer(x)
         return x
 
-model = DNN(784).to(DEVICE) 
+model = DNN(3072).to(DEVICE) 
 
 #3. 컴파일, 훈련
 criterion = nn.CrossEntropyLoss()
@@ -152,3 +151,4 @@ for epoch in range(1, epochs + 1):
     print('epoch:{}, loss:{:.4f}, acc:{:.3f}, val_loss:{:.4f}, val_acc:{:.3f}'.format(
         epoch, loss, acc, val_loss, val_acc
     ))     
+# epoch:20, loss:1.3646, acc:0.511, val_loss:1.4475, val_acc:0.480
