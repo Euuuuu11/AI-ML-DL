@@ -145,3 +145,9 @@ print('accuray_score : ', score)
 
 # accuracy :  0.9825
 # accuray_score :  0.9824561403508771
+
+path = './_save/'
+torch.save(model.state_dict(), path + 'torch13_state_dict.pt')
+
+
+
