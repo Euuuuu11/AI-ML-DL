@@ -49,27 +49,27 @@ class DNN(nn.Module):
         super().__init__()
         
         self.hidden_layer1 = nn.Sequential(
-            nn.Linear(num_fratures, 100), 
+            nn.Linear(num_fratures, 128), 
             nn.ReLU(),
             nn.Dropout(0.2)
         )    
         self.hidden_layer2 = nn.Sequential(
-            nn.Linear(100, 100), 
+            nn.Linear(128, 64), 
             nn.ReLU(),
             nn.Dropout(0.2)
         )    
         self.hidden_layer3 = nn.Sequential(
-            nn.Linear(100, 100), 
+            nn.Linear(64, 32), 
             nn.ReLU(),
             nn.Dropout(0.2)
         )
         self.hidden_layer4 = nn.Sequential(
-            nn.Linear(100, 100), 
+            nn.Linear(32, 16), 
             nn.ReLU(),
             nn.Dropout(0.2)
         ) 
         self.hidden_layer5 = nn.Sequential(
-            nn.Linear(100, 100), 
+            nn.Linear(16, 100), 
             nn.ReLU()
         )    
         self.output_layer = nn.Linear(100, 10)   
