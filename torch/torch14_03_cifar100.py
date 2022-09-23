@@ -10,7 +10,7 @@ DEVICE = torch.device('cuda:0' if USE_CUDA else 'cpu')
 print('torch : ', torch.__version__, '사용DEVICE : ', DEVICE)
 
 import torchvision.transforms as tr
-transf = tr.Compose([tr.Resize(15), tr.ToTensor()])
+transf = tr.Compose([tr.Resize(150), tr.ToTensor()])
 
 #1. 데이터
 path = './_data/torch_data/'
