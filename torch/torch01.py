@@ -1,7 +1,6 @@
 import numpy as np
 import torch
 print(torch.__version__)        # 1.12.1
-
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
