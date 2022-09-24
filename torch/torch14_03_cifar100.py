@@ -88,7 +88,7 @@ model = DNN(3072).to(DEVICE)
 #3. 컴파일, 훈련
 criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.Adam(model.parameters(), lr=1e-4) # 0.0001
+optimizer = optim.Adam(model.parameters(), lr=0.001) # 0.0001
 
 def train(model, criterion, optimizer, loader):
     
