@@ -20,7 +20,7 @@ print(np.unique(y, return_counts=True))
 
 
 x_train, x_test, y_train, y_test = train_test_split(x, y,
-        train_size=0.8, shuffle=True, random_state=68)
+        train_size=0.8, shuffle=True, random_state=123)
 
 #2. 모델구성
 model = LinearSVC()
