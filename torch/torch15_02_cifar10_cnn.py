@@ -25,17 +25,13 @@ test_dataset = CIFAR10(path, train=False, download=False)
 x_train, y_train = train_dataset.data/255. , train_dataset.targets
 x_test, y_test = test_dataset.data/255. , test_dataset.targets
 
-# print(x_train.shape, x_test.size())     # torch.Size([60000, 28, 28]) torch.Size([10000, 28, 28])
-# print(y_train.shape, y_test.size())     # torch.Size([60000]) torch.Size([10000])
+x_train = torch.FloatTensor(x_train).to(DEVICE)
+y_train = torch.LongTensor(y_train).to(DEVICE)
+x_test = torch.FloatTensor(x_test).to(DEVICE)
+y_test = torch.LongTensor(y_test).to(DEVICE)
 
-# print(np.min(x_train.numpy()), np.max(x_train.numpy()))     # 0.0 1.0
-
-# tensor torch 차이점.
-# 60000, 28, 28, 1 -> 60000, 1, 28, 28
-
-# x_train, x_test = x_train.view(60000, 1, 28, 28), x_test.view(10000, 1, 28, 28) 
 x_train, x_test = x_train.unsqueeze(1), x_test.unsqueeze(1)     #
-print(x_train.shape, x_test.size())     # torch.Size([60000, 784]) torch.Size([10000, 784]) torch.Size([60000, 1, 28, 28]) torch.Size([10000, 1, 28, 28])
+# print(x_train.shape, x_test.size())    torch.Size([50000, 1, 32, 32, 3]) torch.Size([10000, 1, 32, 32, 3])
 
 train_dset = TensorDataset(x_train, y_train)
 test_dset = TensorDataset(x_test, y_test)
