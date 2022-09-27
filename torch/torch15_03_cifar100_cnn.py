@@ -154,7 +154,7 @@ def evaluate (model,criterion,loader):
 
 
 
-epochs =20
+epochs =17
 for epoch in range(1,epochs +1):
     
     loss,acc =train(model,criterion,optimizer, train_loader)
