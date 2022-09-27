@@ -19,8 +19,8 @@ transf = tr.Compose([tr.Resize(15),tr.ToTensor()])
 # train_dataset = MNIST(path, train=True,download=True,transform=transf)
 # test_dataset = MNIST(path, train=False,download=True,transform=transf)
 
-train_dataset = CIFAR100(path, train=True,download=False)
-test_dataset = CIFAR100(path, train=False,download=False)
+train_dataset = CIFAR10(path, train=True,download=False)
+test_dataset = CIFAR10(path, train=False,download=False)
 
 # print(train_dataset[0][0].shape)
 
@@ -83,7 +83,7 @@ class CNN(nn.Module):
         self.hidden_layer3 = nn.Linear(32*6*6,32)
         
 
-        self.output_layer = nn.Linear(in_features =32,out_features = 100)    
+        self.output_layer = nn.Linear(in_features =32,out_features = 10)    
             
     def forward(self,x):
         x = self.hidden_layer1(x)
@@ -94,9 +94,10 @@ class CNN(nn.Module):
         return x 
 
 model = CNN(3).to(DEVICE)
-# from torchsummary import summary 
-# summary(model,(1,32,32))   
+from torchsummary import summary 
+summary(model,(3,32,32))   
 
+exit()
 
 #3.컴파일훈련
 
@@ -154,7 +155,7 @@ def evaluate (model,criterion,loader):
 
 
 
-epochs =20
+epochs =100
 for epoch in range(1,epochs +1):
     
     loss,acc =train(model,criterion,optimizer, train_loader)
@@ -164,4 +165,5 @@ for epoch in range(1,epochs +1):
      
         
                                                                                       
-                                           
+# epochs:100,loss1.1773,acc:0.583,val_loss:1.3225,val_acc0.5295
+                                          

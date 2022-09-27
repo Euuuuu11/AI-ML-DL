@@ -4,139 +4,164 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
-
-USE_CUDA = torch.cuda.is_available
-DEVICE = torch.device('cuda:0' if USE_CUDA else 'cpu')
-print('torch : ', torch.__version__, '사용DEVICE : ', DEVICE)
-
 import torchvision.transforms as tr
-transf = tr.Compose([tr.Resize(150), tr.ToTensor()])
+
+USE_CUDA = torch.cuda.is_available()                   
+DEVICE = torch.device('cuda:0' if USE_CUDA else 'cpu')
+print(torch.__version__, '사용DVICE:', DEVICE)
+
 
 #1. 데이터
 path = './_data/torch_data/'
 
-# train_dataset = MNIST(path, train=True, download=True, transform=transf)
-# test_dataset = MNIST(path, train=False, download=True, transform=transf)
-train_dataset = MNIST(path, train=True, download=False)
-test_dataset = MNIST(path, train=False, download=False)
+transf = tr.Compose([tr.Resize(15),tr.ToTensor()])
 
-# print(train_dataset[0][0].shape)        # torch.Size([1, 15, 15])
+# train_dataset = MNIST(path, train=True,download=True,transform=transf)
+# test_dataset = MNIST(path, train=False,download=True,transform=transf)
 
-x_train, y_train = train_dataset.data/255. , train_dataset.targets
-x_test, y_test = test_dataset.data/255. , test_dataset.targets
+train_dataset = CIFAR100(path, train=True,download=False)
+test_dataset = CIFAR100(path, train=False,download=False)
 
-print(x_train.shape, x_test.size())     # torch.Size([60000, 28, 28]) torch.Size([10000, 28, 28])
-print(y_train.shape, y_test.size())     # torch.Size([60000]) torch.Size([10000])
+# print(train_dataset[0][0].shape)
 
-print(np.min(x_train.numpy()), np.max(x_train.numpy()))     # 0.0 1.0
+x_train,y_train = train_dataset.data/255, train_dataset.targets
+x_test,y_test = test_dataset.data/255, test_dataset.targets
 
-# tensor torch 차이점.
-# 60000, 28, 28, 1 -> 60000, 1, 28, 28
+x_train = torch.FloatTensor(x_train).to(DEVICE)
+y_train = torch.LongTensor(y_train).to(DEVICE)
+x_test = torch.FloatTensor(x_test).to(DEVICE)
+y_test = torch.LongTensor(y_test).to(DEVICE)
 
-# x_train, x_test = x_train.view(60000, 1, 28, 28), x_test.view(10000, 1, 28, 28) 
-x_train, x_test = x_train.unsqueeze(1), x_test.unsqueeze(1)     #
-print(x_train.shape, x_test.size())     # torch.Size([60000, 784]) torch.Size([10000, 784]) torch.Size([60000, 1, 28, 28]) torch.Size([10000, 1, 28, 28])
+print(x_train.shape,x_test.shape)          # torch.Size([60000, 28, 28]) torch.Size([10000, 28, 28])
+print(x_test.shape,x_test.shape)           # torch.Size([10000, 28, 28]) torch.Size([10000, 28, 28])
 
-train_dset = TensorDataset(x_train, y_train)
-test_dset = TensorDataset(x_test, y_test)
+# print(np.min(x_train),np.max(x_train))      # 0.0 1.0
 
-train_loader = DataLoader(train_dset, batch_size=32, shuffle=True)
-test_loader = DataLoader(test_dset, batch_size=32, shuffle=False)
 
-#2. 모델 구성
+x_train, x_test = x_train.reshape(50000,3,32,32),x_test.reshape(10000,3,32,32)      # torch reshape 방법
+# x_train, x_test = x_train.unsqueeze(1), x_test.unsqueeze(1)  
+print(x_train.shape,x_test.shape)       # torch.Size([50000, 32, 32, 3]) torch.Size([10000, 32, 32, 3])
+
+train_dset = TensorDataset(x_train,y_train)
+test_dset = TensorDataset(x_test,y_test)
+
+train_loader = DataLoader(train_dset, batch_size=128,shuffle=True)
+test_loader = DataLoader(test_dset, batch_size=128,shuffle=False)
+
+
+#2.모델
+# class DNN(nn.Module):
+#     def __init__(self, num_features):
+#         super().__init__()
+
+#         self.hidden_layer1 = nn.Sequential(nn.Linear(num_features,128),
+#                                            nn.ReLU(),
+#                                            nn.Dropout(0.1))
+#         self.hidden_layer2 = nn.Sequential(nn.Linear(128,64),
+#                                            nn.ReLU(),
+#                                            nn.Dropout(0.1))
+#         self.hidden_layer3 = nn.Sequential(nn.Linear(64,32),
+#                                            nn.ReLU(),
+#                                            nn.Dropout(0.1),)    
+#         self.hidden_layer4 = nn.Sequential(nn.Linear(32,16),
+#                                            nn.ReLU(),
+#                                            nn.Dropout(0.1))
+#         self.output_layer = nn.Linear(16,10)
 class CNN(nn.Module):
     def __init__(self, num_features):
-        super(CNN, self).__init__()
+        super(CNN,self).__init__()
+
+        self.hidden_layer1 = nn.Sequential(nn.Conv2d(num_features,128, kernel_size=(3,3),stride=1),
+                                           nn.ReLU(),
+                                           nn.MaxPool2d(kernel_size=(2,2)),
+                                           nn.Dropout(0.1))
+        self.hidden_layer2 = nn.Sequential(nn.Conv2d(128,32, kernel_size=(3,3)),
+                                            nn.ReLU(),
+                                            nn.MaxPool2d(kernel_size=(2,2)),
+                                            nn.Dropout(0.1))
+    
+        self.hidden_layer3 = nn.Linear(32*6*6,32)
         
-        self.hidden_layer1 = nn.Sequential(
-            nn.Conv2d(num_features, 64, kernel_size=(3,3), stride=1), 
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=(2, 2)),
-            nn.Dropout(0.2)
-        )    
-        self.hidden_layer2 = nn.Sequential(
-            nn.Conv2d(64, 32, kernel_size=(3,3)), 
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=(2, 2)),
-            nn.Dropout(0.2)
-        )               # 32, 5 ,5    
-        self.hidden_layer3 = nn.Linear(32*5*5, 32)
-        
-        self.output_layer = nn.Linear(in_features= 32, out_features= 10)
-          
-    def forward(self, x):
+
+        self.output_layer = nn.Linear(in_features =32,out_features = 100)    
+            
+    def forward(self,x):
         x = self.hidden_layer1(x)
         x = self.hidden_layer2(x)
-        x = x.view(x.shape[0], -1)      # flatten
+        x = x.view(x.shape[0],-1)     # flatten/ -1 : 32*5*5         
         x = self.hidden_layer3(x)
         x = self.output_layer(x)
-        return x
+        return x 
 
-model = CNN(1).to(DEVICE) 
+model = CNN(3).to(DEVICE)
+# from torchsummary import summary 
+# summary(model,(1,32,32))   
 
-#3. 컴파일, 훈련
-criterion = nn.CrossEntropyLoss()
 
-optimizer = optim.Adam(model.parameters(), lr=1e-4) # 0.0001
+#3.컴파일훈련
 
-def train(model, criterion, optimizer, loader):
+criterion = nn.CrossEntropyLoss().to(DEVICE)
+optimizer = optim.Adam(model.parameters(),lr=1e-4)  #0.0001
+
+def train(model,criterion,optimizer,loader):
     
     epoch_loss = 0
     epoch_acc = 0
-
-    for x_batch, y_batch in loader:
-        x_batch, y_batch = x_batch.to(DEVICE), y_batch.to(DEVICE)
-        
+    
+    for x_batch, y_batch in loader :
+        x_batch,y_batch = x_batch.to(DEVICE),y_batch.to(DEVICE)
+                
         optimizer.zero_grad()
         
-        hypothesis = model(x_batch)
+        h = model(x_batch)
         
-        loss = criterion(hypothesis, y_batch) 
-        loss.backward()  
+        loss = criterion(h,y_batch)   
+        loss.backward()
         optimizer.step()
-        
+
         epoch_loss += loss.item()
-        
-        y_predict = torch.argmax(hypothesis, 1)
+        y_predict = torch.argmax(h,1)
         acc = (y_predict == y_batch).float().mean()
         
         epoch_acc += acc.item()
-    
-    return epoch_loss / len(loader), epoch_acc / len(loader) 
-# hist = model.fit(x_train, y_train)         # hist에는 loss와 acc가 들어간다.   
-# 엄밀하게 얘기하면 hist라고 하기엔 그렇고, loss와 acc를 반환해준다.
+        
+    return epoch_loss / len(loader), epoch_acc / len(loader)
+        
+# hist  = model.fit (x_trian, y_train)      # hist 에는 loss와 acc가 들어가
+# 엄밀하게 얘기하면 hist라고 하기는그렇고 , loss와 acc를 반환해준다고함.
 
-def evaluate(model, criteron, loader):
-    model.eval()        # eval 모드에선 dropout 기능 하지 않도록 설정되어있
+def evaluate (model,criterion,loader):
+    model.eval()                # eval 모드에서는 dropout의 기능이 하지 않도록 설정이 되어있다.
     
     epoch_loss = 0
-    epoch_acc =0
+    epoch_acc = 0
     
     with torch.no_grad():
-        for x_batch, y_batch in loader:
-            x_batch, y_batch = x_batch.to(DEVICE), y_batch.to(DEVICE)
+        for x_batch,y_batch in loader:
+            x_batch,y_batch = x_batch.to(DEVICE),y_batch.to(DEVICE)
             
-            hypothesis = model(x_batch)
+            h = model(x_batch)
             
-            loss = criterion(hypothesis, y_batch) 
+            loss = criterion(h, y_batch)
             
             epoch_loss += loss.item()
-        
-            y_predict = torch.argmax(hypothesis, 1)
+            y_predict = torch.argmax(h,1)
             acc = (y_predict == y_batch).float().mean()
         
             epoch_acc += acc.item()
-            
-        return epoch_loss / len(loader), epoch_acc / len(loader) 
-# loss, acc = model.evaluate(x_test, y_test)
-            
-epochs = 20
-for epoch in range(1, epochs + 1):
+        
+        return epoch_loss / len(loader), epoch_acc / len(loader)
+
+
+
+epochs =20
+for epoch in range(1,epochs +1):
     
-    loss, acc = train(model, criterion, optimizer, train_loader)
+    loss,acc =train(model,criterion,optimizer, train_loader)
+    val_loss,val_acc = evaluate(model,criterion,test_loader)
     
-    val_loss, val_acc = evaluate(model, criterion, test_loader)
-    
-    print('epoch:{}, loss:{:.4f}, acc:{:.3f}, val_loss:{:.4f}, val_acc:{:.3f}'.format(
-        epoch, loss, acc, val_loss, val_acc
-    ))     
+    print('epochs:{},loss{:.4f},acc:{:.3f},val_loss:{:.4f},val_acc{:.4f}'.format(epoch, loss, acc, val_loss,val_acc))        
+     
+        
+                                                                                      
+                                           
