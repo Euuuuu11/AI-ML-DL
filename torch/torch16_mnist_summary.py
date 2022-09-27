@@ -36,8 +36,7 @@ print(np.min(x_train.numpy()), np.max(x_train.numpy()))     # 0.0 1.0
 # x_train, x_test = x_train.view(60000, 1, 28, 28), x_test.view(10000, 1, 28, 28) 
 x_train, x_test = x_train.unsqueeze(1), x_test.unsqueeze(1)     #
 print(x_train.shape, x_test.size())     # torch.Size([60000, 784]) torch.Size([10000, 784]) torch.Size([60000, 1, 28, 28]) torch.Size([10000, 1, 28, 28])
-
-train_dset = TensorDataset(x_train, y_train)
+ 
 test_dset = TensorDataset(x_test, y_test)
 
 train_loader = DataLoader(train_dset, batch_size=32, shuffle=True)
