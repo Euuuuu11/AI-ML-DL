@@ -47,13 +47,13 @@ train_set = TensorDataset(x_train, y_train) # x와 y를 합친다
 test_set = TensorDataset(x_test, y_test) # x와 y를 합친다
 
 print(train_set)    # <torch.utils.data.dataset.TensorDataset object at 0x0000019493120CA0>
-print('='*80)
+print('='*60)
 print(train_set[0])
-print('='*80)
+print('='*60)
 print(train_set[0][0])
-print('='*80)
+print('='*60)
 print(len(train_set))   # 398
-print('='*80)
+print('='*60)
 
 train_loader = DataLoader(train_set, batch_size=40, shuffle=True)
 test_loader = DataLoader(test_set, batch_size=40, shuffle=False)
