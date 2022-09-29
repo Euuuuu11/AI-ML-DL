@@ -97,7 +97,7 @@ model = CNN(3).to(DEVICE)
 from torchsummary import summary 
 summary(model,(3,32,32))   
 
-exit()
+# exit()
 
 #3.컴파일훈련
 
