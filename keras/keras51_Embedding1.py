@@ -25,7 +25,7 @@ print(x)
 # [[2, 3], [1, 4], [1, 5, 6, 7], [8, 9, 10], [11, 12, 13, 14, 15], [16], [17], 
 # [18, 19], [20, 21], [22], [2, 23], [1, 24], [25, 26, 27, 28], [29, 30]]
 
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 # 앞에 0을 채워주는게 더 효율적이다.
 pad_x = pad_sequences(x, padding='pre', maxlen=5)       # pre 앞 post 뒤
 print(pad_x)
@@ -33,7 +33,7 @@ print(pad_x.shape)      # (14, 5)
 
 word_size = len(token.word_index)
 print("word_size :", word_size) # 단어사전의 개수 : 30
-
+print(token.word_index)
 print(np.unique(pad_x, return_counts=True))
 # (array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
 #        17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30])
