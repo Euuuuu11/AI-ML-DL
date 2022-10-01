@@ -54,10 +54,10 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(80, input_dim=15,activation='relu'))
-model.add(Dense(50))
-model.add(Dense(20,activation='relu'))
-model.add(Dense(10))
+model.add(Dense(128, input_dim=15,activation='relu'))
+model.add(Dense(64))
+model.add(Dense(32,activation='relu'))
+model.add(Dense(16))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
