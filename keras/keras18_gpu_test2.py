@@ -28,12 +28,12 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 
 # 2. 모델구성
 model = Sequential()     # activation? 활성화 함수
-model.add(Dense(500, input_dim=30,activation='relu')) 
-model.add(Dense(300,activation='relu'))
-model.add(Dense(300))
-model.add(Dense(400,activation='relu'))
-model.add(Dense(300,activation='relu'))
-model.add(Dense(400))
+model.add(Dense(256, input_dim=30,activation='relu')) 
+model.add(Dense(128,activation='relu'))
+model.add(Dense(128))
+model.add(Dense(64,activation='relu'))
+model.add(Dense(64,activation='relu'))
+model.add(Dense(32))
 model.add(Dense(1,activation='sigmoid')) # 이진분류 마지막은 무조건 'sigmoid'(0 ~ 1까지), loss='binary_crossentropy'
 
 #3. 컴파일, 훈련
