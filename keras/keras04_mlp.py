@@ -10,10 +10,11 @@ y = np.array([11,12,13,14,15,16,17,18,19,20])
 print(x.shape) #(2, 10)
 print(y.shape) #(10, )
 x = x.T
+# print(x)
 # x = x.transpose()
-# x = x.reshape(10,2)    
+x = x.reshape(10,2)    
 print(x)
-print(x.shape)    #10, 2)
+# print(x.shape)    #10, 2)
 
 #2. 모델구성
 model = Sequential()

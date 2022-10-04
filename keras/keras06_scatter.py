@@ -31,7 +31,7 @@ y_predict = model.predict(x)
 
 import matplotlib.pyplot as plt
 plt.scatter(x,y) #흩어지게하다
-plt.plot(x,y_predict, color='red')
+plt.plot(x,y_predict, color='red', marker='^')
 plt.show()
 
 # loss :  1.698475956916809

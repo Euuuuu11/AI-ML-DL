@@ -34,7 +34,7 @@ test_set = test_set.fillna(test_set.mean())
 x = train_set.drop(['count'], axis=1) #drop 지운다. axis 열을 따라 동작함.
 #print(x)
 #print(x.columns)
-#print(x.shape) # (1459, 9)
+print(x.shape) # (1459, 9)
 
 y = train_set['count']
 # print(y)
@@ -43,6 +43,7 @@ y = train_set['count']
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
              train_size=0.75, shuffle=True, random_state=777)
+print(x.sh)
 #2. 모델구성
 model = Sequential()
 model.add(Dense(64,input_dim=9))
