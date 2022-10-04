@@ -97,8 +97,6 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
                                                     )
 
 
-
-
 #2. 모델구성
 model = Sequential()
 model.add(Dense(256, input_dim=8, activation='relu')) #sigmoid : 이진분류일때 아웃풋에 activation = 'sigmoid' 라고 넣어줘서 아웃풋 값 범위를 0에서 1로 제한해줌
@@ -118,20 +116,15 @@ model.compile(loss='binary_crossentropy', optimizer='adam',
               metrics=['accuracy'])   # 이진분류에 한해 로스함수는 무조건 99퍼센트로 'binary_crossentropy'
                                       # 컴파일에있는 metrics는 평가지표라고도 읽힘
 
-
 earlyStopping = EarlyStopping(monitor='val_loss', patience=600, mode='auto', verbose=1, 
                               restore_best_weights=True)        
 
                   #restore_best_weights false 로 하면 중단한 지점의 웨이트값을 가져옴 true로하면 끊기기 전의 최적의 웨이트값을 가져옴
 
-
-
 model.fit(x_train, y_train, epochs=3000, batch_size=100,
                  validation_split=0.2,
                  callbacks=[earlyStopping],
                  verbose=1)
-
-
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -161,9 +154,7 @@ print(submission_set)
 submission_set['Survived'] = y_summit
 print(submission_set)
 
-
 submission_set.to_csv(path + 'submission.csv', index = True)
-
 
 acc= accuracy_score(y_test, y_predict)
 print('loss : ' , loss)

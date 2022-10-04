@@ -45,6 +45,7 @@ model.add(Dense(32,activation='relu'))
 model.add(Dense(32))
 model.add(Dense(16))
 model.add(Dense(3, activation='softmax')) # y의 분류하는 개수와 노드의 개수 동일
+# 3개 이상으로 분류하는 다중 클래스 분류에서 사용되는 함수
 
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam',

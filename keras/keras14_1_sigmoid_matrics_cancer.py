@@ -26,6 +26,7 @@ model.add(Dense(32))
 model.add(Dense(16,activation='relu'))  # 'relu' 히든 레이어에서만 사용 가능(음수는 없애고, linear와 동일)
 model.add(Dense(8,activation='sigmoid'))
 model.add(Dense(1,activation='sigmoid')) # 이진분류 마지막은 무조건 'sigmoid'(0 ~ 1까지), loss='binary_crossentropy'
+# sigmoid를 사용하면 0과 1에 가까운 값을 통해 이진분류 할 수 있다
 
 #3. 컴파일, 훈련
 model.compile(loss='binary_crossentropy', optimizer='adam',
@@ -37,7 +38,7 @@ es = EarlyStopping(monitor='val_loss', patience=500, mode='min',
 
 hist = model.fit(x_train, y_train,
           epochs=1, batch_size=10,validation_split=0.2,
-          verbose=1,  callbacks=[es] )
+          verbose=1,  callbacks=[es])
 
 y_predict = model.predict(x_test)
 y_predict = y_predict.round(0)

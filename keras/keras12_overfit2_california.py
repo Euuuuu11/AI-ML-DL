@@ -37,7 +37,7 @@ model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-hist = model.fit(x_train, y_train, epochs=500, validation_split=0.2, 
+hist = model.fit(x_train, y_train, epochs=10, validation_split=0.2, 
           batch_size=100, verbose=1)
 
 #4. 평가, 예측
@@ -59,7 +59,7 @@ import matplotlib.pyplot as plt
 matplotlib.rcParams['font.family'] = 'Malgun Gothic'
 matplotlib.rcParams['axes.unicode_minus'] =False
 
-plt.figure(figsize=(9,6))
+plt.figure(figsize=(9,6))   
 plt.plot(hist.history['loss'], marker='.',  c = 'red', label = 'loss')
 plt.plot(hist.history['val_loss'], marker='.',c = 'blue', label = 'val_loss')
 plt.grid()

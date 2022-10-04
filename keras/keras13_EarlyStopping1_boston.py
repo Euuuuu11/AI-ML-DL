@@ -37,6 +37,12 @@ model.compile(loss='mse', optimizer='adam')
 from tensorflow.python.keras.callbacks import EarlyStopping
 es = EarlyStopping(monitor='val_loss', patience=10, mode='min', 
               verbose=1, restore_best_weights=True) 
+# validation_set 의 loss 를 monitoring 한다.
+# Training이 진행됨에도 더이상 monitor되는 값의 개선이 없을 경우, 최적의 monitor 값을 기준으로 몇 번의 epoch을 진행할 지 정하는 값이다.
+# loss 의 경우, 최소화 시키는 방향으로 training 이 진행되므로 min 을 지정함.
+# mode 의 default 는 auto 인데, 이는 keras 에서 알아서 min, max 를 선택함.
+# restore_best_weights=True - training이 끝난 후, model의 weight를 monitor하고 있던 값이 가장 좋았을 때의 weight로 복원.
+# restore_best_weights=False - 마지막 training이 끝난 후의 weight로 놔둔다.
 
 start_time = time.time()
 print(start_time)

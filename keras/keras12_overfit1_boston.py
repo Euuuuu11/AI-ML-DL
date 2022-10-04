@@ -62,12 +62,12 @@ print("loss : ", loss)
 # print("========================")
 # print(hist.history['val_loss'])
 
-import matplotlib.pyplot as plt
-import matplotlib  # 한글 깨짐 방지
-matplotlib.rcParams['font.family'] = 'Malgun Gothic'
-matplotlib.rcParams['axes.unicode_minus'] =False
+# 한글 깨짐 방지
+import matplotlib.pyplot as plt    
+plt.rcParams['font.family'] = 'Malgun Gothic'
+plt.rcParams['axes.unicode_minus'] =False
 
-plt.figure(figsize=(9,6))
+plt.figure(figsize=(9,6))       # figsize=(가로길이,세로길이)   
 plt.plot(hist.history['loss'], marker='.',  c = 'red', label = 'loss')
 plt.plot(hist.history['val_loss'], marker='.',c = 'blue', label = 'val_loss')
 plt.grid()
