@@ -19,8 +19,8 @@ test_set = pd.read_csv(path + 'test.csv')
 
 
 # 수치형 변수와 범주형 변수 찾기
-numerical_feats = train_set.dtypes[train_set.dtypes != "object"].index
-categorical_feats = train_set.dtypes[train_set.dtypes == "object"].index
+numerical_feats = train_set.dtypes[train_set.dtypes != "object"].index      # != 같지않다.  
+categorical_feats = train_set.dtypes[train_set.dtypes == "object"].index    # != 같다.
 # print("Number of Numberical features: ", len(numerical_feats)) # 38
 # print("Number of Categorical features: ", len(categorical_feats)) # 43
 
