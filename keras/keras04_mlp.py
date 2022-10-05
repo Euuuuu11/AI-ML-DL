@@ -33,7 +33,9 @@ loss = model.evaluate(x, y)
 print('loss :', loss)
 result = model.predict([[10, 1.4]])
 print('[10,14]의 예측값 :', result)
-
+a = [[10, 1.4]]
+a = np.array(a)
+print(a.shape)
 
 # loss : 0.7053157091140747
 # [10,14]의 예측값 : [[20.123161]]

@@ -20,6 +20,7 @@ test_set = pd.read_csv(path + 'test.csv')
 
 # 수치형 변수와 범주형 변수 찾기
 numerical_feats = train_set.dtypes[train_set.dtypes != "object"].index      # != 같지않다.  
+print(train_set.dtypes)
 categorical_feats = train_set.dtypes[train_set.dtypes == "object"].index    # != 같다.
 # print("Number of Numberical features: ", len(numerical_feats)) # 38
 # print("Number of Categorical features: ", len(categorical_feats)) # 43
@@ -62,12 +63,15 @@ def detect_outliers(df, n, features):
         outlier_step = 1.5 * IQR
         
         outlier_list_col = df[(df[col] < Q1 - outlier_step) | (df[col] > Q3 + outlier_step)].index
+        print(outlier_list_col)
         outlier_indices.extend(outlier_list_col)
+        print(np.array(outlier_indices).shape)
     outlier_indices = Counter(outlier_indices)
+    print(outlier_indices)
     multiple_outliers = list(k for k, v in outlier_indices.items() if v > n)
         
-    return multiple_outliers
-        
+    return print(1298 in multiple_outliers)
+print(train_set['MSSubClass'] > np.percentile(train_set['MSSubClass'], 75) +((np.percentile(train_set['MSSubClass'], 75) - np.percentile(train_set['MSSubClass'], 25))*1.5))        
 Outliers_to_drop = detect_outliers(train_set, 2,['Id', 'MSSubClass', 'LotFrontage', 'LotArea', 'OverallQual',
        'OverallCond', 'YearBuilt', 'YearRemodAdd', 'MasVnrArea', 'BsmtFinSF1',
        'BsmtFinSF2', 'BsmtUnfSF', 'TotalBsmtSF', '1stFlrSF', '2ndFlrSF',
@@ -119,7 +123,7 @@ for col in cols_fillna:
 total = train_set.isnull().sum().sort_values(ascending=False)
 percent = (train_set.isnull().sum()/train_set.isnull().count()).sort_values(ascending=False)
 missing_data = pd.concat([total, percent], axis=1, keys=['Total', 'Percent'])
-missing_data.head(5)
+print(missing_data.head(5))
 
 # 결측치 확인
 # print(train_set.isnull().sum().sum(), test_set.isnull().sum().sum())

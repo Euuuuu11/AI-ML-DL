@@ -15,6 +15,7 @@ test_set = pd.read_csv(path + 'test.csv')
 # print(test_set.shape)   # (6493, 9)
 # train_set.info() # 데이터 온전한지 확인.
 print(train_set['datetime'][:3])
+print(train_set)
 train_set['datetime'] = pd.to_datetime(train_set['datetime']) 
 print(train_set['datetime'][:3])
 #datetime은 날짜와 시간을 나타내는 정보이므로 DTYPE을 datetime으로 변경.
@@ -35,7 +36,9 @@ train_set = pd.get_dummies(train_set, columns=['season','weather'])
 print(train_set.columns)
 print(train_set[:10])
 
-train_set.drop(['casual', 'registered'], inplace=True, axis=1)
+print(train_set[['casual', 'registered']])
+train_set = train_set.drop(['casual', 'registered'], inplace=False, axis=1)
+# print(train_set[['casual', 'registered']])
 train_set.drop('atemp', inplace=True, axis=1)
 
 test_set['datetime'] = pd.to_datetime(test_set['datetime'])
@@ -57,7 +60,7 @@ print(y.shape) # (10886, )
 x_train, x_test, y_train, y_test = train_test_split(x,y,
              train_size=0.9, shuffle=True, random_state=66)
 
-print(x_train.shape) # (10886, 15)
+print(x_train.shape) # (9797, 15)
 print(y_train.shape) #
 
 #2. 모델구성
