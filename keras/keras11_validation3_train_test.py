@@ -22,7 +22,7 @@ model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train,y_train, epochs=100, batch_size=1,
+model.fit(x_train,y_train, epochs=100, batch_size=16,
           validation_data=(x_val, y_bal))
 
 #4. 평가, 예측
