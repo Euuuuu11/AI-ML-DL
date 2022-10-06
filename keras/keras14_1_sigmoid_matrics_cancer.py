@@ -33,11 +33,11 @@ model.compile(loss='binary_crossentropy', optimizer='adam',
               metrics=['accuracy']) # 2개 이상은 list
 
 from tensorflow.python.keras.callbacks import EarlyStopping
-es = EarlyStopping(monitor='val_loss', patience=500, mode='min', 
+es = EarlyStopping(monitor='val_loss', patience=50, mode='min', 
               verbose=1, restore_best_weights=True) 
 
 hist = model.fit(x_train, y_train,
-          epochs=1, batch_size=10,validation_split=0.2,
+          epochs=1000, batch_size=10,validation_split=0.2,
           verbose=1,  callbacks=[es])
 
 y_predict = model.predict(x_test)
