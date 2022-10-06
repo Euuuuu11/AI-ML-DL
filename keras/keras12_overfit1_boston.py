@@ -75,5 +75,5 @@ plt.title('보스턴')
 plt.ylabel('loss')
 plt.xlabel('epochs')
 # plt.legend(loc='upper right') # 라벨 값 명칭의 위치
-plt.legend
+plt.legend()
 plt.show()

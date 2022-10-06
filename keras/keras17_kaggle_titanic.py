@@ -75,10 +75,10 @@ train_set = pd.get_dummies(train_set,drop_first=True)
 test_set = pd.get_dummies(test_set,drop_first=True)
 
 test_set.Age = test_set.Age.fillna(value=test_set.Age.mean())
-test_set.Fare = test_set.Fare.fillna(value=test_set.Fare.mode())
+test_set.Fare = test_set.Fare.fillna(value=test_set.Fare.mode())    # 최빈값 제일 자주 나오는 값
 
 print(train_set, test_set, train_set.shape, test_set.shape)
-
+ 
 ############################
 
 
@@ -121,7 +121,7 @@ earlyStopping = EarlyStopping(monitor='val_loss', patience=600, mode='auto', ver
 
                   #restore_best_weights false 로 하면 중단한 지점의 웨이트값을 가져옴 true로하면 끊기기 전의 최적의 웨이트값을 가져옴
 
-model.fit(x_train, y_train, epochs=3000, batch_size=100,
+model.fit(x_train, y_train, epochs=30, batch_size=100,
                  validation_split=0.2,
                  callbacks=[earlyStopping],
                  verbose=1)
@@ -146,6 +146,7 @@ oh = OneHotEncoder(sparse=False) # sparse=true 는 매트릭스반환 False는 a
 y_summit = oh.fit_transform(df)
 print(y_summit)
 y_summit = np.argmax(y_summit, axis= 1)
+print(y_summit)
 submission_set = pd.read_csv(path + 'gender_submission.csv', # + 명령어는 문자를 앞문자와 더해줌
                              index_col=0) # index_col=n n번째 컬럼을 인덱스로 인식
 
