@@ -26,7 +26,8 @@ model.add(Dense(64))
 model.add(Dense(32,activation='relu'))
 model.add(Dense(32))
 model.add(Dense(16,activation='relu'))
-model.add(Dense(3, activation='softmax'))
+model.add(Dense(3, activation='softmax')) # softmax : 다중분류일때 아웃풋에 활성화함수로 넣어줌, 아웃풋에서 소프트맥스 활성화 함수를 씌워 주면 그 합은 무조건 1로 변함
+                                                                 # ex 70, 20, 10 -> 0.7, 0.2, 0.1
 
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam',
