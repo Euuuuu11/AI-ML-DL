@@ -38,7 +38,7 @@ from tensorflow.python.keras.callbacks import EarlyStopping
 es = EarlyStopping(monitor='val_loss', patience=300, mode='min', 
               verbose=1, restore_best_weights=True) 
 
-hist = model.fit(x_train, y_train, epochs=1000, validation_split=0.2,
+hist = model.fit(x_train, y_train, epochs=100, validation_split=0.2,
                  batch_size=15, verbose=1, callbacks=[es])
 
 y_predict = model.predict(x_test)
