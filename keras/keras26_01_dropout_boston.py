@@ -41,7 +41,7 @@ model.add(Dropout(0.2))
 model.add(Dense(16,activation="relu"))
 model.add(Dense(1))
 model.summary()
-
+# Dropout  / 과적합 방지, 
 import time
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')

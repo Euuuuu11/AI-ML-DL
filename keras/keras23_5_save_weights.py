@@ -42,7 +42,7 @@ model.summary()
 
 
 # model.save("./_save/keras23_1_save_model.h5") # 모델만 저장
-model.save_weights("./_save/keras23_5_save_weights1.h5")
+# model.save_weights("./_save/keras23_5_save_weights1.h5")
 
 # model = load_model("./_save/keras23_3_save_model.h5")
                    
