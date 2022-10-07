@@ -15,16 +15,16 @@ y = datasets. target
 x_train, x_test, y_train, y_test = train_test_split(x,y,
              train_size=0.8, shuffle=True, random_state=66)
 
-# scaler = MinMaxScaler()
-# scaler = StandardScaler()
+# scaler = MinMaxScaler() 0~1사이
+# scaler = StandardScaler() 
 # scaler = MaxAbsScaler()
 scaler = RobustScaler()
 
 # scaler.fit(x_train)
 # #print(x_train)
 # x_train = scaler.transform(x_train)
-x_test = scaler.transform(x_test) #x_train이작업된 범위에 맞춰서 진행
 x_train = scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test) #x_train이작업된 범위에 맞춰서 진행
 
 
 #2. 모델구성
