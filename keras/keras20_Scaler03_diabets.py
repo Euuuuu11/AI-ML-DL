@@ -30,14 +30,14 @@ x_test = scaler.transform(x_test)
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(10, input_dim=10,activation='relu'))
-model.add(Dense(50,activation='relu'))
-model.add(Dense(40,activation='relu'))
-model.add(Dense(50,activation='relu'))
-model.add(Dense(60,activation='relu'))
-model.add(Dense(20,activation='relu'))
-model.add(Dense(10,activation='relu'))
-model.add(Dense(10,activation='relu'))
+model.add(Dense(16, input_dim=10,activation='relu'))
+model.add(Dense(32,activation='relu'))
+model.add(Dense(64,activation='relu'))
+model.add(Dense(128,activation='relu'))
+model.add(Dense(128,activation='relu'))
+model.add(Dense(64,activation='relu'))
+model.add(Dense(32,activation='relu'))
+model.add(Dense(16,activation='relu'))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
