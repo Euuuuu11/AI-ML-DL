@@ -48,7 +48,7 @@ start_time = time.time()
 print(start_time)
 
 model.fit(x_train, y_train,
-          epochs=1000, batch_size=1,validation_split=0.2,
+          epochs=100, batch_size=1,validation_split=0.2,
           verbose=1, callbacks=[es] )
 
 end_time = time.time() - start_time
