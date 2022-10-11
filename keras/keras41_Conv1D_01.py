@@ -17,8 +17,8 @@ x = x.reshape(7, 3, 1)
 
 #2. 모델구성   
 model = Sequential()
-# model.add(SimpleRNN(10, input_shape=(3, 1),return_sequences=True))
-model.add(Conv1D(10, 2, input_shape=(3,1)))
+model.add(SimpleRNN(10, input_shape=(3, 1),return_sequences=True))
+# model.add(Conv1D(10, 2, input_shape=(3,1)))
 model.add(Flatten())
 model.add(Dense(60, activation = 'relu'))
 model.add(Dropout(0.2))

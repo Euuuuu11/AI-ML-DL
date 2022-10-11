@@ -28,7 +28,6 @@ y_test = to_categorical(y_test)
 
 
 #2. 모델구성
-model = Sequential()
 input1 = Input(shape=(28,28,1))
 Cov2D1 = Conv2D(64,3)(input1)
 Map1 = (MaxPooling2D())(Cov2D1)

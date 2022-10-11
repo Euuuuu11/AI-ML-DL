@@ -8,9 +8,9 @@ import numpy as np
 #1. 데이터
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
-# print(x_train.shape, y_train.shape)
-# print(x_test.shape, y_test.shape) 
-
+print(x_train.shape, y_train.shape)
+print(x_test.shape, y_test.shape) 
+# exit()
 x_train = x_train.reshape(60000, 784)
 x_test = x_test.reshape(10000, 784 )
 print(x_train.shape)         
