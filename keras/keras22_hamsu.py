@@ -25,9 +25,9 @@ from tensorflow.python.keras.layers import Dense, Input
 
 # 함수형 모델은 레이어 구성 후 모델정의
 input1 = Input(shape=(3,))
-dense1 = Dense(10)(input1)
-dense2 = Dense(5,activation="relu")(dense1)
-dense3 = Dense(3)(dense2)
+dense1 = Dense(16)(input1)
+dense2 = Dense(8,activation="relu")(dense1)
+dense3 = Dense(4)(dense2)
 output1 = Dense(1)(dense3)
 model = Model(inputs=input1, outputs=output1)
 
