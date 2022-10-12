@@ -6,7 +6,7 @@ from pandas import DataFrame
 
 path = './_data\kaggle_jena/'
 df  = pd.read_csv(path + 'jena_climate_2009_2016.csv')
-df.describe()   # 다양한 통계량을 요약해준다.
+# df.describe()   # 다양한 통계량을 요약해준다.
 # print(df.shape) # (420551, 15)
 # df.info()
 
@@ -20,7 +20,7 @@ df.describe()   # 다양한 통계량을 요약해준다.
 # df = df.drop(['Date Time'],axis=1)
 
 
-df.info()
+# df.info()
 # print(df.shape)   # (420551, 19)
 
 size = 13
@@ -28,6 +28,7 @@ size = 13
 def split_x(datasets, size):
     aaa = []
     for i in range(len(datasets) - size + 1):
+        # print(len(datasets))
         subset = datasets[i : (i + size)]
         aaa.append(subset)
     return np.array(aaa)
@@ -38,7 +39,7 @@ bbb = split_x(df, size)
 
 x = bbb[:, :-1]
 y = bbb[:, -1]
-# print(x.shape, y.shape) # (420539, 12, 15) (420539, 15)
+print(x.shape, y.shape) # (420539, 12, 15) (420539, 15)
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(x,y,

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 
 path = './_data/kaggle_jena/'
-df_weather=pd.read_csv(path + 'kaggle_jena.csv', index_col=0)
+df_weather=pd.read_csv(path + 'jena_climate_2009_2016.csv')
 df_weather.describe()
 
 print(df_weather.columns)
@@ -53,7 +53,9 @@ TEST_SIZE = 200
 train = df_scaled[:-TEST_SIZE]
 test = df_scaled[-TEST_SIZE:]
 
-def make_dataset(data, label, window_size=20):
+# print(train.shape, test.shape)  # (420351, 14) (200, 14)
+
+def make_dataset(data, label, window_size=20):  # window_size 과거 n일을 기반으로 예측
     feature_list = []
     label_list = []
     for i in range(len(data) - window_size):
@@ -71,6 +73,7 @@ feature_cols = ['p (mbar)', 'Tpot (K)', 'Tdew (degC)', 'rh (%)',
 label_cols = ['T (degC)']
 
 train_feature = train[feature_cols]
+# print(train[feature_cols])
 train_label = train[label_cols]
 
 
@@ -106,6 +109,8 @@ model.add(Dropout(0.2))
 model.add(Dense(50, activation='relu'))
 model.add(Dense(1))
 
+print(train_feature.shape[1].shape)
+print(train_feature.shape[2].shape)
 
 #3. 컴파일, 훈련
 
