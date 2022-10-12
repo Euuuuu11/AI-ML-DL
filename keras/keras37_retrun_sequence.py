@@ -29,7 +29,6 @@ model.compile(loss='mse', optimizer='adam')
 # from tensorflow.python.keras.callbacks import EarlyStopping
 # es = EarlyStopping(monitor='loss', patience=300, mode='auto', verbose=1, 
 #                               restore_best_weights=True) 
-
 model.fit(x, y, epochs=100)
 
 #4. 평가, 예측
