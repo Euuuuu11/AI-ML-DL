@@ -59,7 +59,7 @@ print(np.tile(x_train1[0].reshape(28*28), augument_size).reshape(-1, 28, 28, 1).
 # print(np.zeros(augument_size).shape)    # (100,)
 
 x_data = test_datagen.flow(
-    x_train1.reshape(-1, 2/784, 1),    # x
+    x_train1.reshape(-1, 28, 28, 1),    # x
     np.zeros(20),                                                     # y
     batch_size=20,
     shuffle=False,
