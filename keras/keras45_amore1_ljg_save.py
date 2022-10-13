@@ -106,6 +106,7 @@ df_scaled = scaler.fit_transform(df[scale_cols])
 
 df_scaled = pd.DataFrame(df_scaled)
 df_scaled.columns = scale_cols
+
 x1_train, x1_test, x2_train, x2_test, y_train, y_test = train_test_split(x1, x2, y, test_size=0.2, shuffle=False)
 
 # print(x1_train.shape, x1_test.shape)    # (2532, 5, 8) (634, 5, 8)

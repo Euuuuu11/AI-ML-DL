@@ -90,9 +90,9 @@ print('accuracy:', accuracy[-1])
 print('val_accuracy :', val_accuracy[-1])
 
 # # 그림그려....
-# import matplotlib.pyplot as plt
-# plt.plot(accuracy,'gray')
-# plt.show()
+import matplotlib.pyplot as plt
+plt.plot(accuracy,'gray')
+plt.show()
 # loss : 0.04705163463950157
 # accuracy: 0.9925000071525574
 
