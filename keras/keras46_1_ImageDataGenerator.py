@@ -28,7 +28,7 @@ xy_train = train_datagen.flow_from_directory(   # directory = 폴더
     )   # Found 160 images belonging to 2 classes.
    
 xy_test = test_datagen.flow_from_directory(   # directory = 폴더
-    'd:/study_data/_data/cat_dog/',
+    'd:/study_data/_data/image/brain/test/',
     target_size=(200, 200), # 크기 맞추기
     batch_size=5,
     class_mode='binary',
