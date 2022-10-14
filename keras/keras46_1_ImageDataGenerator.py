@@ -19,7 +19,7 @@ test_datagen = ImageDataGenerator(  # test 데이터는 증폭할 필요가 없�
     rescale=1./255
 )
 xy_train = train_datagen.flow_from_directory(   # directory = 폴더
-    'd:/study_data/_data/cat_dog/',
+    'd:/study_data/_data/image/brain/train/',
     target_size=(200, 200), # 크기 맞추기
     batch_size=5,
     class_mode='binary',
