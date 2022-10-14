@@ -19,7 +19,7 @@ test_datagen = ImageDataGenerator(  # test 데이터는 증폭할 필요가 없�
     rescale=1./255
 )
 xy_train = train_datagen.flow_from_directory(   # directory = 폴더
-    'd:/_data/image/brain/train/',
+    'd:/study_data/_data/image/brain/train/',
     target_size=(100, 100), # 크기 맞추기
     batch_size=5,
     class_mode='binary',
@@ -28,7 +28,7 @@ xy_train = train_datagen.flow_from_directory(   # directory = 폴더
     )   # Found 160 images belonging to 2 classes.
    
 xy_test = test_datagen.flow_from_directory(   # directory = 폴더
-    'd:/_data/image/brain/test/',
+    'd:/study_data/_data/image/brain/test/',
     target_size=(100, 100), # 크기 맞추기
     batch_size=5,
     class_mode='binary',
