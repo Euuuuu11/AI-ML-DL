@@ -20,12 +20,12 @@ vgg19 = VGG19(weights='imagenet', include_top=False, input_shape=(150, 150, 3))
 
 model = Sequential()
 model.add(vgg19)
-model.add(Conv2D(64, (2,2), input_shape=(150,150,3), activation='relu'))
-model.add(Conv2D(128, (3,3), activation='relu'))
+model.add(Conv2D(32, (2,2), input_shape=(150,150,3), activation='relu'))
+model.add(Conv2D(64, (3,3), activation='relu'))
 model.add(GlobalAveragePooling2D())
 model.add(Flatten())
-model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
+model.add(Dense(16, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 
 # 3. 컴파일, 훈련
