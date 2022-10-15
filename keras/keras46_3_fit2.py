@@ -87,8 +87,8 @@ hist = model.fit(xy_train, epochs=30, steps_per_epoch=32,  # 한 epoch 종료 �
                     validation_steps=4)
 
 ####################### fit이 먹힌다는 얘기는 validation_split 먹히겠지 ?.##############################################
-hist = model.fit(xy_train, epochs=30, steps_per_epoch=32,  # 한 epoch 종료 시 마다 검증할 때 사용되는 검증 스텝 수를 지정   
-                           validation_split=0.2)           # 전체데이터/batch = 160/5 = 32
+# hist = model.fit(xy_train, epochs=30, steps_per_epoch=32,  # 한 epoch 종료 시 마다 검증할 때 사용되는 검증 스텝 수를 지정   
+#                            validation_split=0.2)           # 전체데이터/batch = 160/5 = 32
 
 
 accuracy = hist.history['accuracy']

@@ -63,13 +63,13 @@ from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D
 
 model = Sequential()
-model.add(Conv2D(20,(2,2), input_shape=(100,100,1), activation='relu'))
+model.add(Conv2D(32,(2,2), input_shape=(100,100,1), activation='relu'))
 model.add(MaxPooling2D())
-model.add(Conv2D(10,(3,3), activation='relu'))
+model.add(Conv2D(64,(3,3), activation='relu'))
 model.add(MaxPooling2D())   # 안넣으면 결과값이 안좋아진다.
-model.add(Conv2D(20,(3,3), activation='relu'))
+model.add(Conv2D(32,(3,3), activation='relu'))
 model.add(MaxPooling2D())
-model.add(Conv2D(10,(3,3), activation='relu'))
+model.add(Conv2D(16,(3,3), activation='relu'))
 model.add(Flatten())
 model.add(Dense(16, activation='relu'))
 model.add(Dense(2, activation='softmax'))
