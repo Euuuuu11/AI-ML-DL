@@ -11,7 +11,7 @@ print(token.word_index)
 # '먹었다': 9, '지구용사': 10, '이재근이다': 11, '멋있다': 12, '얘기해봐': 13}
 
 x = token.texts_to_sequences([text1, text2])
-print(x)
+# print(x)
 # [[2, 5, 3, 3, 6, 7, 8, 1, 1, 1, 9], [2, 10, 11, 12, 4, 4, 13]]
 
 from tensorflow.python.keras.utils.np_utils import to_categorical
@@ -21,6 +21,8 @@ import numpy as np
 x_new = x[0] + x[1]
 print(x_new)
 x_new = np.array(x_new)
+print(x_new)
+
 x_new = x_new.reshape(18,1)
 # [2, 5, 3, 3, 6, 7, 8, 1, 1, 1, 9, 2, 10, 11, 12, 4, 4, 13]
 
