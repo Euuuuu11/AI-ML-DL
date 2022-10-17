@@ -22,13 +22,16 @@ print('뉴스기사의 최대길이 :', max(len(i) for i in x_train))    #  2376
 print('뉴스기사의 평균길이 : ', (sum(map(len,x_train))/ len(x_train)))  # 145.5398574927633
 
 #전처리
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 from keras.utils.np_utils import to_categorical
 
 x_train = pad_sequences(x_train, padding='pre', maxlen=100, truncating='pre')
                             # (8982, ) -> (8982, 100)    
 x_test = pad_sequences(x_test, padding='pre', maxlen=100, truncating='pre')
-    
+
+# print(x_train.shape, y_train.shape) # (8982, 100) (8982, 46)
+# print(x_test.shape, y_test.shape)   # (2246, 100) (2246,)
+
 y_train = to_categorical(y_train)
 y_test = to_categorical(y_test)
 

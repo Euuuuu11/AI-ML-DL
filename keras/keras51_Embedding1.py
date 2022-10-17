@@ -34,6 +34,7 @@ print(pad_x.shape)      # (14, 5)
 word_size = len(token.word_index)
 print("word_size :", word_size) # 단어사전의 개수 : 30
 print(token.word_index)
+
 print(np.unique(pad_x, return_counts=True))
 # (array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
 #        17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30])

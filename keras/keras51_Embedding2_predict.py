@@ -31,7 +31,7 @@ b = token.texts_to_sequences(a)
 print(b)
 
 
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 # 앞에 0을 채워주는게 더 효율적이다.
 pad_x = pad_sequences(x, padding='pre', maxlen=5)       # pre 앞 post 뒤
 pad_b = pad_sequences(b, padding='pre', maxlen=4, truncating='post')
@@ -42,11 +42,17 @@ print(pad_b)
 print(pad_b.shape)      # (21, 5)
 
 word_size = len(token.word_index)
-print("word_size :", word_size) # 단어사전의 개수 : 30
+print("word_size :", word_size) # 단어사전의 개수 : 33
 
 print(np.unique(pad_x, return_counts=True))
-# (array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
-#        17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30])
+# (array([ 0,  1,  2,  3,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17,
+#        18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]), array([37,  2,  3,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+#         1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
+#       dtype=int64))
+print(np.unique(pad_x, return_counts=False))
+# [ 0  1  2  3  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+#  25 26 27 28 29 30 31]
+
 from tensorflow.python.keras.utils.np_utils import to_categorical
 
 #2. 모델 구성
