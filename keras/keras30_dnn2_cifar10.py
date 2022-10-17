@@ -11,7 +11,7 @@ import numpy as np
 # print(x_train.shape, y_train.shape) # (50000, 32, 32, 3) (50000, 1)
 # print(x_test.shape, y_test.shape)   # (10000, 32, 32, 3) (10000, 1)
 
-x_train = x_train.reshape(50000, 3072 )
+x_train = x_train.reshape(50000, 32*32*3 )
 x_test = x_test.reshape(10000, 3072)
 # print(x_train.shape)             # (50000, 32, 32, 3)
 # print(np.unique(y_train, return_counts=True))
