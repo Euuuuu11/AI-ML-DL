@@ -17,7 +17,7 @@ model.add(Conv2D(32, (2,2),
                  activation="relu")) 
 model.add(Flatten())  # (N, )
 model.add(Dense(32, activation="relu"))
-model.add(Dense(32, activation="relu"))
+model.add(Dense(16, activation="relu"))
 model.add(Dense(10, activation="softmax"))
 
 model.summary()
