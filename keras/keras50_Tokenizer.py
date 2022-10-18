@@ -58,7 +58,7 @@ print(x)
 
 ohe = OneHotEncoder(sparse=True)
 x = ohe.fit_transform(x)
-print(x)
+print(x.shape)
 #   (7, 14)       1.0
 #   (8, 1)        1.0
 #   (8, 2)        1.0

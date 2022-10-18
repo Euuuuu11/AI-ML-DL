@@ -16,10 +16,6 @@ labels = np.array([1,1,1,1,1,0,0,0,0,0,0,1,1,0])        # (14, )
 token = Tokenizer()
 token.fit_on_texts(docs)
 # print(token.word_index)
-# {'참': 1, '너무': 2, '재밋어요': 3, '최고에요': 4, '잘': 5, '만든': 6, '영화에요': 7, '추천하고': 8, '싶은': 9,
-#  '영화입니다': 10, '한': 11, '번': 12, '더': 13, '보고': 14, '싶네요': 15, '글세요': 16, '별로
-# 에요': 17, '생각보다': 18, '지루해요': 19, '연기가': 20, '어색해요': 21, '재미없어요': 22, '재미없다': 23, '재밋네요': 24,
-# '민수가': 25, '못': 26, '생기긴': 27, '했어요': 28, '안결': 29, '혼해요': 30}  
 token.fit_on_texts(a)
 print(token.word_index)
 
@@ -35,7 +31,10 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 # 앞에 0을 채워주는게 더 효율적이다.
 pad_x = pad_sequences(x, padding='pre', maxlen=5)       # pre 앞 post 뒤
 pad_b = pad_sequences(b, padding='pre', maxlen=4, truncating='post')
-pad_b = pad_sequences(pad_b, padding='pre', maxlen=5)       
+print(pad_b)
+pad_b = pad_sequences(pad_b, padding='pre', maxlen=5)   
+print(pad_b)
+    
 print(pad_x)
 print(pad_x.shape)      # (14, 5)
 print(pad_b)

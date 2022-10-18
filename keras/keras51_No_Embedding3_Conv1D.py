@@ -31,7 +31,7 @@ b = token.texts_to_sequences(a)
 print(b)
 
 
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 # 앞에 0을 채워주는게 더 효율적이다.
 pad_x = pad_sequences(x, padding='pre', maxlen=5)       # pre 앞 post 뒤
 pad_b = pad_sequences(b, padding='pre', maxlen=4, truncating='post')
@@ -62,10 +62,10 @@ model = Sequential()            # input (14, 5)
 # model.add(Embedding(31, 10, input_length=5))
 # model.add(Embedding(input_dim=30, output_dim=10))
 # model.add(Embedding(34,10))
-model.add(Conv1D(32, 2, input_shape=(5,1)))
+model.add(Conv1D(32, 4, input_shape=(5,1)))
 model.add(Dense(32, input_shape=(5,)))
 model.add(Dense(1, activation='sigmoid'))
-# model.summary()
+model.summary()
 
 
 #3. 컴파일, 훈련

@@ -5,7 +5,7 @@ import numpy as np
     num_words=10000 # 단어사전 개수
 ) 
 
-print(x_train)
+# print(x_train)
 print(x_train.shape, x_test.shape)    # (25000,) (25000,)
 print(y_train)
 print(np.unique(y_train,return_counts=True)) # 46   

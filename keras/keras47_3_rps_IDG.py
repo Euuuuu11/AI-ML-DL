@@ -26,13 +26,17 @@ xy_data = train_datagen.flow_from_directory(   # directory = 폴더
     shuffle=True,
     )
 x = xy_data[0][0]
+print(x)
+
 y = xy_data[0][1]
+print(y)
 
 from sklearn.model_selection import train_test_split
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7, random_state=66)
 
 print((x_train.shape),(y_train.shape))  # (1764, 150, 150, 3) (1764, 3)
 # # 현재 5,200,200,1 짜리 데이터가 32덩어리
+print(arr=x_train)
 
 np.save('d:/study_data/_save/_npy/keras47_3_train_x.npy', arr=x_train)
 np.save('d:/study_data/_save/_npy/keras47_3_train_y.npy', arr=y_train)
