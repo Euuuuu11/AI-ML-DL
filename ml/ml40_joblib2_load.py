@@ -22,7 +22,7 @@ x_test = scaler.transform(x_test)
 
 n_splits = 5
 
-kfold = StratifiedKFold(n_splits=n_splits ,shuffle=True, random_state=123)
+kfold = StratifiedKFold(n_splits=n_splits ,shuffle=True, random_state=12)
 
 
 #2. 모델 
