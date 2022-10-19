@@ -19,7 +19,7 @@ print(y.shape) #(10,2)
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(5,input_dim=3))
+model.add(Dense(32,input_dim=3))
 model.add(Dense(16))
 model.add(Dense(16))
 model.add(Dense(8))
