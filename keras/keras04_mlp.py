@@ -19,8 +19,8 @@ print(x)
 #2. 모델구성
 model = Sequential()
 model.add(Dense(5,input_dim=2))
-model.add(Dense(32))
 model.add(Dense(16))
+model.add(Dense(32))
 model.add(Dense(8))
 model.add(Dense(1))
 
