@@ -16,7 +16,7 @@ y = datasets.target
 
 pca = PCA(n_components=12)   # 주성분 분석, 차원축소(차원 = 컬럼)
 x = pca.fit_transform(x)
-print(x.shape) # (506, 2)
+print(x.shape) # (506, 12)
 
 x_train, x_test, y_train, y_test = train_test_split(x, y,
                 train_size=0.8, random_state=123, shuffle=True)
