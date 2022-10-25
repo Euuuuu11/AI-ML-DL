@@ -19,7 +19,7 @@ y = datasets.target
 x_train, x_test, y_train, y_test = train_test_split(x, y,
         train_size=0.8, shuffle=True, random_state=666)
 
-n_splits = 5
+n_splits = 6
 kfold = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=66)
 
 parameters = [
