@@ -20,7 +20,7 @@ model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mae',optimizer='adam')
-model.fit(x, y, epochs=1600)
+model.fit(x, y, epochs=100)
 
 #4. 평가, 예측
 loss = model.evaluate(x, y)
