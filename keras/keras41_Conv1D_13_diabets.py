@@ -27,10 +27,10 @@ x_test = x_test.reshape(89, 5, 2)
 
 #2. 모델구성
 model = Sequential()
-model.add(Conv1D(10, 2, input_shape=(5,2)))
+model.add(Conv1D(32, 2, input_shape=(5,2)))
 model.add(Flatten())
-model.add(Dense(80))
-model.add(Dense(60))
+model.add(Dense(16))
+model.add(Dense(16))
 model.add(Dense(1, activation = 'relu'))
 
 
