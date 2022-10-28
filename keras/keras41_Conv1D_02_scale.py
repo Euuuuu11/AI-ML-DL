@@ -16,9 +16,9 @@ print(x.shape)
 
 #2. 모델구성       # Bidirectional에서는 return_sequences을 제공하지 않는다. 그러므로 RNN 안에서 return_sequences을 사용해야한다. 
 model = Sequential() 
-model.add(Conv1D(10, 2, input_shape=(3,1)))
+model.add(Conv1D(64, 2, input_shape=(3,1)))
 model.add(Flatten())
-model.add(Dense(60, activation = 'relu'))
+model.add(Dense(32, activation = 'relu'))
 model.add(Dropout(0.2))
 model.add(Dense(1))
 model.summary() 
