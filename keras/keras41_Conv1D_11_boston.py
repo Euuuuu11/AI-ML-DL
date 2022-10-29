@@ -37,7 +37,7 @@ print(x_train.shape,x_test.shape)             # (404, 13, 1) (102, 13, 1)
 
 # 2. 모델구성
 model = Sequential()
-model.add(Conv1D(16, 2, input_shape=(13,1)))
+model.add(Conv1D(32, 2, input_shape=(13,1)))
 model.add(Flatten())
 model.add(Dense(8, activation = 'relu'))
 model.add(Dense(16, activation = 'relu'))
